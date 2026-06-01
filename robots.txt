@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://allforwardllc.com/sitemap.xml
