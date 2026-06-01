@@ -3,3 +3,8 @@ node_modules/
 *.log
 
 .claude/
+
+# Local Netlify folder
+.netlify
+HANDOFF.md
+DEPLOY_VIA_TERMINAL.md
