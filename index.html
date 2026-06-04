@@ -1572,6 +1572,7 @@
 
   <ul class="nav-links">
     <li><a href="#manual">Field Manuals</a></li>
+    <li><a href="#membership">Membership</a></li>
     <li><a href="#serve">Who We Serve</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="#why">Why Us</a></li>
@@ -1588,6 +1589,7 @@
 <!-- Mobile Menu -->
 <div class="mobile-menu" id="mobileMenu">
   <a href="#manual" onclick="toggleMenu()">Field Manuals</a>
+  <a href="#membership" onclick="toggleMenu()">Membership</a>
   <a href="#serve" onclick="toggleMenu()">Who We Serve</a>
   <a href="#services" onclick="toggleMenu()">Services</a>
   <a href="#why" onclick="toggleMenu()">Why Us</a>
@@ -1717,7 +1719,7 @@
 </div>
 
 <!-- ─── FIELD MANUALS (Gumroad) — TOP PLACEMENT ─── -->
-<!-- TODO: replace the Gumroad store-root links below with each product's direct URL (allforwardllc.gumroad.com/l/<slug>) once listings are live. -->
+<!-- Links use canonical Gumroad slugs (allforwardllc.gumroad.com/l/<slug>). When creating each product in Gumroad, set its URL to the matching slug so these resolve. See automation/gumroad-publish.js registry for the slug list. -->
 <section id="manual" style="background:linear-gradient(135deg,#0a1733 0%,#0f255c 100%);color:#fff;padding:64px 24px;">
   <div style="max-width:1140px;margin:0 auto;">
     <div style="text-align:center;max-width:780px;margin:0 auto;">
@@ -1731,43 +1733,105 @@
         <div style="font-size:1.35rem;font-weight:800;">The Arsenal Bundle — all 5 systems</div>
         <div style="color:#cdd8ef;font-size:.95rem;">Everything below, deployed together. <span style="text-decoration:line-through;color:#9fb2da;">$425</span> <strong style="color:#ff9800;">$297</strong> · save $128</div>
       </div>
-      <a href="https://allforwardllc.gumroad.com" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:15px 30px;border-radius:10px;white-space:nowrap;box-shadow:0 8px 24px rgba(41,121,255,.35);">Get the Bundle — $297 →</a>
+      <a href="https://allforwardllc.gumroad.com/l/arsenal-bundle" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:15px 30px;border-radius:10px;white-space:nowrap;box-shadow:0 8px 24px rgba(41,121,255,.35);">Get the Bundle — $297 →</a>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+    <h3 style="font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:#9fb2da;margin:8px 0 14px;">Field Manuals — built for who you are</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;">
+      <div style="background:rgba(245,124,0,.07);border:1px solid rgba(245,124,0,.35);border-radius:14px;padding:22px;display:flex;flex-direction:column;">
+        <span style="font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#ff9800;margin-bottom:6px;">Start Here · Entry · Any Industry</span>
+        <h3 style="font-size:1.05rem;margin:0 0 6px;line-height:1.3;">SAM.gov Field Manual</h3>
+        <p style="color:#cdd8ef;font-size:.88rem;margin:0 0 16px;flex:1;">Get SAM.gov-registered, NAICS-aligned &amp; bid-ready in 30 days. The fastest on-ramp to federal work.</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:1.3rem;font-weight:800;color:#ff9800;">$37</span><a href="https://allforwardllc.gumroad.com/l/sam-gov-field-manual" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:.85rem;">Get it →</a></div>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:22px;display:flex;flex-direction:column;">
+        <span style="font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#4fc3f7;margin-bottom:6px;">For Construction</span>
+        <h3 style="font-size:1.05rem;margin:0 0 6px;line-height:1.3;">Construction Field Manual</h3>
+        <p style="color:#cdd8ef;font-size:.88rem;margin:0 0 16px;flex:1;">Win federal, FEMA, HUD &amp; CDBG-DR construction work. Includes Davis-Bacon + Section 3 systems.</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:1.3rem;font-weight:800;color:#ff9800;">$57</span><a href="https://allforwardllc.gumroad.com/l/construction-federal-field-manual" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:.85rem;">Get it →</a></div>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:22px;display:flex;flex-direction:column;">
+        <span style="font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#4fc3f7;margin-bottom:6px;">For Logistics</span>
+        <h3 style="font-size:1.05rem;margin:0 0 6px;line-height:1.3;">Logistics Field Manual</h3>
+        <p style="color:#cdd8ef;font-size:.88rem;margin:0 0 16px;flex:1;">Trucking, freight, warehousing &amp; distribution → federal, DLA, GSA &amp; FEMA work. SCA + DOT systems.</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:1.3rem;font-weight:800;color:#ff9800;">$57</span><a href="https://allforwardllc.gumroad.com/l/logistics-federal-field-manual" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:.85rem;">Get it →</a></div>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:22px;display:flex;flex-direction:column;">
+        <span style="font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#4fc3f7;margin-bottom:6px;">For Nonprofits</span>
+        <h3 style="font-size:1.05rem;margin:0 0 6px;line-height:1.3;">Nonprofit Field Manual</h3>
+        <p style="color:#cdd8ef;font-size:.88rem;margin:0 0 16px;flex:1;">Win federal grants, CDBG-DR subawards &amp; FEMA funding. SAM+Grants.gov, 2 CFR 200, Single Audit.</p>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:1.3rem;font-weight:800;color:#ff9800;">$57</span><a href="https://allforwardllc.gumroad.com/l/nonprofit-federal-field-manual" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:.85rem;">Get it →</a></div>
+      </div>
+    </div>
+
+    <h3 style="font-size:.85rem;letter-spacing:.1em;text-transform:uppercase;color:#9fb2da;margin:34px 0 14px;">Complete Systems — go all-in</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;">
       <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:22px;display:flex;flex-direction:column;">
         <h3 style="font-size:1.05rem;margin:0 0 6px;line-height:1.3;">Federal Contracting Mastery</h3>
         <p style="color:#cdd8ef;font-size:.88rem;margin:0 0 16px;flex:1;">Registration → first bid in 30 days. For contractors new to federal contracting.</p>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:1.3rem;font-weight:800;color:#ff9800;">$97</span><a href="https://allforwardllc.gumroad.com" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:.85rem;">Get it →</a></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:1.3rem;font-weight:800;color:#ff9800;">$97</span><a href="https://allforwardllc.gumroad.com/l/federal-contracting-mastery" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:.85rem;">Get it →</a></div>
       </div>
       <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:22px;display:flex;flex-direction:column;">
         <h3 style="font-size:1.05rem;margin:0 0 6px;line-height:1.3;">Federal Compliance Mastery System</h3>
         <p style="color:#cdd8ef;font-size:.88rem;margin:0 0 16px;flex:1;">Davis-Bacon, Section 3 &amp; audit-proofing. For contractors implementing prevailing wage.</p>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:1.3rem;font-weight:800;color:#ff9800;">$87</span><a href="https://allforwardllc.gumroad.com" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:.85rem;">Get it →</a></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:1.3rem;font-weight:800;color:#ff9800;">$87</span><a href="https://allforwardllc.gumroad.com/l/federal-compliance-mastery" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:.85rem;">Get it →</a></div>
       </div>
       <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:22px;display:flex;flex-direction:column;">
         <h3 style="font-size:1.05rem;margin:0 0 6px;line-height:1.3;">CDBG-DR Mastery Program</h3>
         <p style="color:#cdd8ef;font-size:.88rem;margin:0 0 16px;flex:1;">The $100B+ disaster funding stream, decoded. For contractors &amp; nonprofits seeking federal funding.</p>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:1.3rem;font-weight:800;color:#ff9800;">$77</span><a href="https://allforwardllc.gumroad.com" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:.85rem;">Get it →</a></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:1.3rem;font-weight:800;color:#ff9800;">$77</span><a href="https://allforwardllc.gumroad.com/l/cdbg-dr-mastery" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:.85rem;">Get it →</a></div>
       </div>
       <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:22px;display:flex;flex-direction:column;">
         <h3 style="font-size:1.05rem;margin:0 0 6px;line-height:1.3;">Past Performance &amp; Bid Strategy</h3>
         <p style="color:#cdd8ef;font-size:.88rem;margin:0 0 16px;flex:1;">Win the right bids with evaluation-ready past performance and disciplined bid strategy.</p>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:1.3rem;font-weight:800;color:#ff9800;">$67</span><a href="https://allforwardllc.gumroad.com" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:.85rem;">Get it →</a></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:1.3rem;font-weight:800;color:#ff9800;">$67</span><a href="https://allforwardllc.gumroad.com/l/bid-strategy-mastery" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:.85rem;">Get it →</a></div>
       </div>
       <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:22px;display:flex;flex-direction:column;">
         <h3 style="font-size:1.05rem;margin:0 0 6px;line-height:1.3;">Disaster Recovery Accelerator</h3>
         <p style="color:#cdd8ef;font-size:.88rem;margin:0 0 16px;flex:1;">Build a $1M+ disaster recovery firm end-to-end — registration to scaling and recurring revenue.</p>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:1.3rem;font-weight:800;color:#ff9800;">$97</span><a href="https://allforwardllc.gumroad.com" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:.85rem;">Get it →</a></div>
-      </div>
-      <div style="background:rgba(245,124,0,.07);border:1px solid rgba(245,124,0,.35);border-radius:14px;padding:22px;display:flex;flex-direction:column;">
-        <span style="font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#ff9800;margin-bottom:6px;">Start Here · Entry</span>
-        <h3 style="font-size:1.05rem;margin:0 0 6px;line-height:1.3;">SAM.gov Field Manual</h3>
-        <p style="color:#cdd8ef;font-size:.88rem;margin:0 0 16px;flex:1;">SAM.gov-registered, NAICS-aligned &amp; CDBG-DR bid-ready in 30 days. The fastest on-ramp.</p>
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:1.3rem;font-weight:800;color:#ff9800;">$37</span><a href="https://allforwardllc.gumroad.com/l/sam-gov-field-manual" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:.85rem;">Get it →</a></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:1.3rem;font-weight:800;color:#ff9800;">$97</span><a href="https://allforwardllc.gumroad.com/l/disaster-recovery-accelerator" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:9px 16px;border-radius:8px;font-size:.85rem;">Get it →</a></div>
       </div>
     </div>
     <p style="text-align:center;margin-top:22px;font-size:.85rem;color:#9fb2da;">Instant download on Gumroad · Free SAM.gov readiness checklist preview available</p>
+  </div>
+</section>
+
+<!-- ─── WHO WE SERVE ─── -->
+<!-- ─── MEMBERSHIP (recurring) ─── -->
+<section id="membership" style="background:#0a1428;color:#fff;padding:64px 24px;border-top:1px solid rgba(41,121,255,.18);">
+  <div style="max-width:1000px;margin:0 auto;">
+    <div style="text-align:center;max-width:760px;margin:0 auto 30px;">
+      <span style="display:inline-block;background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:6px 14px;border-radius:30px;">The Command Room · Membership</span>
+      <h2 style="font-size:2.1rem;line-height:1.15;margin:18px 0 12px;">Stay current — or fall <span style="color:#ff9800;">out of compliance.</span></h2>
+      <p style="font-size:1.05rem;color:#cdd8ef;margin:0;">Wage determinations change. Section 3 benchmarks change. CDBG-DR notices change. Membership keeps every manual current, unlocks the full library, and puts a 25-year FEMA/HUD/CDBG practitioner in your corner every month.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-bottom:30px;">
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:22px;">
+        <div style="font-size:1.6rem;">📚</div><h3 style="font-size:1rem;margin:8px 0 6px;">Full Library Access</h3>
+        <p style="color:#cdd8ef;font-size:.88rem;margin:0;">Every field manual + premium system — and every new release — included while you're a member.</p>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:22px;">
+        <div style="font-size:1.6rem;">🔄</div><h3 style="font-size:1rem;margin:8px 0 6px;">Monthly Regulatory Updates</h3>
+        <p style="color:#cdd8ef;font-size:.88rem;margin:0;">Wage determinations, Section 3 benchmarks, and CDBG-DR notices — tracked and explained so your systems never go stale.</p>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:22px;">
+        <div style="font-size:1.6rem;">🎙️</div><h3 style="font-size:1rem;margin:8px 0 6px;">Monthly Office Hours</h3>
+        <p style="color:#cdd8ef;font-size:.88rem;margin:0;">Live Q&amp;A with the operator — bring your registration, bid, or compliance question and get a straight answer.</p>
+      </div>
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:22px;">
+        <div style="font-size:1.6rem;">🤝</div><h3 style="font-size:1rem;margin:8px 0 6px;">Operator Community</h3>
+        <p style="color:#cdd8ef;font-size:.88rem;margin:0;">A private room of contractors, subs, and nonprofits sharing primes, teaming leads, and what's actually winning.</p>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(90deg,rgba(245,124,0,.16),rgba(41,121,255,.12));border:1px solid rgba(255,152,0,.45);border-radius:16px;padding:26px 28px;display:flex;flex-wrap:wrap;gap:18px;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-size:1.5rem;font-weight:800;">$39<span style="font-size:1rem;color:#9fb2da;font-weight:600;">/month</span> &nbsp;·&nbsp; <span style="font-size:1.1rem;">$390<span style="font-size:.9rem;color:#9fb2da;font-weight:600;">/yr</span></span> <span style="font-size:.85rem;color:#ff9800;">(2 months free)</span></div>
+        <div style="color:#cdd8ef;font-size:.95rem;margin-top:4px;">⚡ Founding rate: <strong style="color:#ff9800;">first 100 members lock $29/mo for life.</strong></div>
+      </div>
+      <a href="https://allforwardllc.gumroad.com/l/command-room" target="_blank" rel="noopener noreferrer" style="background:linear-gradient(90deg,#1565c0,#2979ff);color:#fff;font-weight:700;text-decoration:none;padding:15px 30px;border-radius:10px;white-space:nowrap;box-shadow:0 8px 24px rgba(41,121,255,.35);">Join the Command Room →</a>
+    </div>
   </div>
 </section>
 
