@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SAM.gov Activation Strike Pack — Free Operator Edition | All Forward LLC</title>
+<meta name="description" content="Free 30-day SAM.gov activation system for disaster recovery vendors. Get registered, NAICS-aligned, and CDBG-DR bid-ready. Built by a 25-year CDBG-DR compliance operator.">
+<meta name="author" content="Francisco Pellerano — All Forward LLC">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Serif+Display:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0d0d0f;--bg2:#131316;--bg3:#1a1a1f;--bg4:#222228;
+  --teal:#00c9a7;--teal2:#00a888;--gold:#f0b429;--gold2:#c98b00;
+  --white:#f5f5f0;--muted:#8888a0;--border:#2a2a35;
+  --red:#e05555;--green:#22c55e;
+}
+body,html{background:var(--bg);color:var(--white);font-family:'Space Mono','Courier New',monospace;-webkit-font-smoothing:antialiased}
+.doc{max-width:880px;margin:0 auto;padding:2rem 1.5rem}
+
+/* ACTION BAR (sticky, top) */
+.actionbar{position:sticky;top:0;z-index:50;background:rgba(13,13,15,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:.7rem 1rem;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;justify-content:center}
+.ab-brand{font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;color:var(--teal);letter-spacing:3px;margin-right:auto}
+.ab-btn{background:var(--bg3);border:1px solid var(--border);color:var(--white);font-family:'Bebas Neue',Impact,sans-serif;font-size:12px;padding:.5rem .9rem;letter-spacing:2px;cursor:pointer;transition:.15s}
+.ab-btn:hover{background:var(--teal);color:#0d0d0f;border-color:var(--teal)}
+.ab-btn.gold{border-color:var(--gold);color:var(--gold)}
+.ab-btn.gold:hover{background:var(--gold);color:#0d0d0f}
+.ab-btn.red{border-color:var(--red);color:var(--red)}
+.ab-btn.red:hover{background:var(--red);color:#0d0d0f}
+.save-pulse{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);margin-right:.4rem;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* HOW TO USE — first-load instructions */
+.howto{background:linear-gradient(135deg,rgba(0,201,167,0.08),rgba(240,180,41,0.05));border:1px solid var(--teal);border-left:4px solid var(--teal);padding:1.4rem 1.6rem;margin-bottom:2rem;border-radius:2px}
+.howto-title{font-family:'Bebas Neue',Impact,sans-serif;font-size:18px;color:var(--teal);letter-spacing:3px;margin-bottom:.8rem}
+.howto-list{display:grid;gap:.5rem;font-size:13px;line-height:1.5}
+.howto-list li{display:flex;gap:.6rem;color:var(--white);list-style:none}
+.howto-num{font-family:'Bebas Neue',Impact,sans-serif;color:var(--gold);font-size:15px;min-width:18px;line-height:1.2}
+.howto-close{margin-top:1rem;background:transparent;border:1px solid var(--border);color:var(--muted);font-family:'Space Mono',monospace;font-size:11px;padding:.3rem .8rem;cursor:pointer}
+.howto-close:hover{color:var(--teal);border-color:var(--teal)}
+
+/* COVER */
+.cover{background:var(--bg2);border:1px solid var(--border);border-top:4px solid var(--teal);padding:3.5rem 3rem 3rem;margin-bottom:2rem;position:relative;overflow:hidden}
+.cover::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;border:40px solid rgba(0,201,167,0.06)}
+.cover::after{content:'';position:absolute;bottom:-40px;left:40px;width:140px;height:140px;border-radius:50%;border:30px solid rgba(240,180,41,0.07)}
+.cover-eyebrow{font-family:'Bebas Neue',Impact,sans-serif;font-size:13px;letter-spacing:3px;color:var(--teal);margin-bottom:1rem}
+.cover-title{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(42px,7vw,72px);line-height:1;color:var(--white);margin-bottom:.4rem}
+.cover-title span{color:var(--teal)}
+.cover-subtitle{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(18px,3vw,26px);color:var(--gold);letter-spacing:2px;margin-bottom:1.8rem}
+.cover-promise{background:rgba(0,201,167,0.1);border-left:3px solid var(--teal);padding:.9rem 1.2rem;font-size:13px;line-height:1.7;color:var(--white);margin-bottom:2rem}
+.cover-meta{font-size:11px;color:var(--muted);letter-spacing:1px;border-top:1px solid var(--border);padding-top:1.2rem}
+.cover-meta strong{color:var(--gold)}
+.price-badge{display:inline-block;background:var(--gold);color:#0d0d0f;font-family:'Bebas Neue',Impact,sans-serif;font-size:28px;padding:.3rem 1.2rem;letter-spacing:2px;position:absolute;top:3.5rem;right:3rem}
+
+/* SECTIONS */
+.section{margin-bottom:2rem}
+.section-header{display:flex;align-items:baseline;gap:1rem;margin-bottom:1.2rem;padding-bottom:.6rem;border-bottom:1px solid var(--border)}
+.section-num{font-family:'Bebas Neue',Impact,sans-serif;font-size:36px;color:var(--teal);line-height:1;flex-shrink:0}
+.section-title{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(18px,2.5vw,22px);letter-spacing:2px;color:var(--white)}
+.section-body{font-size:13px;line-height:1.85;color:#c0c0d0}
+.section-body p{margin-bottom:.8rem}
+
+/* CALLOUT */
+.callout{background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--gold);padding:1rem 1.2rem;margin:1rem 0;font-size:12.5px;line-height:1.7}
+.callout.teal{border-left-color:var(--teal)}
+.callout.red{border-left-color:var(--red)}
+.callout strong{color:var(--gold)}
+.callout.teal strong{color:var(--teal)}
+.callout.red strong{color:var(--red)}
+
+/* SCORECARD TABLE */
+.table-wrap{overflow-x:auto;margin:1rem 0}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:var(--bg4);color:var(--teal);font-family:'Bebas Neue',Impact,sans-serif;font-size:13px;letter-spacing:1px;padding:.7rem .8rem;text-align:left;border:1px solid var(--border)}
+td{padding:.65rem .8rem;border:1px solid var(--border);color:var(--white);vertical-align:top}
+tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
+.score-input{background:transparent;border:none;border-bottom:1px solid var(--teal);color:var(--teal);width:50px;font-family:'Space Mono',monospace;font-size:12px;text-align:center}
+.score-input:focus{outline:none}
+.kill{color:var(--red);font-size:11px}
+.action-field{background:transparent;border:1px solid var(--border);color:var(--white);width:100%;font-family:'Space Mono',monospace;font-size:11px;padding:.4rem;resize:vertical;min-height:40px}
+.action-field:focus{outline:none;border-color:var(--teal)}
+
+/* TIMELINE */
+.timeline{display:grid;gap:.6rem;margin:1rem 0}
+.tl-row{display:grid;grid-template-columns:2fr 1fr 2fr;gap:1rem;align-items:center;background:var(--bg3);border:1px solid var(--border);padding:.7rem 1rem;font-size:12px}
+.tl-step{color:var(--white);font-weight:700}
+.tl-time{color:var(--gold);text-align:center}
+.tl-note{color:var(--muted)}
+
+/* NAICS */
+.naics-grid{display:grid;gap:.6rem;margin:1rem 0}
+.naics-card{background:var(--bg3);border:1px solid var(--border);padding:1rem;display:grid;grid-template-columns:auto 1fr auto;gap:.8rem;align-items:center}
+.naics-priority{font-family:'Bebas Neue',Impact,sans-serif;font-size:28px;color:var(--teal);line-height:1}
+.naics-code{font-size:13px;color:var(--gold);font-weight:700}
+.naics-desc{font-size:12px;color:var(--white);margin:.1rem 0}
+.naics-why{font-size:11px;color:var(--muted)}
+.naics-size{font-size:11px;color:var(--teal);text-align:right}
+
+/* TRANSLATION TABLE */
+.trans-table td:first-child{color:var(--muted);font-size:11.5px}
+.trans-table td:last-child{color:var(--teal);font-size:11.5px}
+.trans-table td:last-child::before{content:'→ ';color:var(--gold)}
+
+/* WEEK TRACKER */
+.tracker{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1rem 0}
+.week-card{background:var(--bg3);border:1px solid var(--border);padding:1rem}
+.week-label{font-family:'Bebas Neue',Impact,sans-serif;font-size:18px;color:var(--gold);margin-bottom:.8rem;border-bottom:1px solid var(--border);padding-bottom:.4rem}
+.check-item{display:flex;align-items:flex-start;gap:.6rem;margin-bottom:.5rem;font-size:12px;color:#c0c0d0;cursor:pointer}
+.check-item input[type=checkbox]{accent-color:var(--teal);flex-shrink:0;margin-top:2px}
+.check-item.done{color:var(--muted);text-decoration:line-through}
+
+/* PITFALLS */
+.audit-grid{display:grid;gap:.6rem;margin:1rem 0}
+.audit-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;background:var(--bg3);border:1px solid var(--border);padding:.8rem 1rem;font-size:12px}
+.audit-trigger{color:var(--red)}
+.audit-avoid{color:var(--teal)}
+
+/* PIPELINE */
+.source-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.6rem;margin:1rem 0}
+.source-item{background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--teal);padding:.7rem 1rem;font-size:12px;color:var(--white)}
+.prime-list{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0}
+.prime-badge{background:var(--bg4);border:1px solid var(--border);color:var(--gold);font-family:'Bebas Neue',Impact,sans-serif;font-size:15px;padding:.3rem .8rem;letter-spacing:1px}
+
+/* FOOTER */
+.footer{background:var(--bg2);border:1px solid var(--border);border-top:2px solid var(--teal);padding:1.5rem 2rem;text-align:center;margin-top:2rem}
+.footer-brand{font-family:'Bebas Neue',Impact,sans-serif;font-size:24px;color:var(--teal);letter-spacing:3px}
+.footer-sub{font-size:11px;color:var(--muted);margin-top:.4rem;line-height:1.7}
+
+/* CAPABILITY TEMPLATE */
+.cap-block{background:var(--bg3);border:1px solid var(--border);padding:1.5rem;margin:1rem 0}
+.cap-header{display:grid;grid-template-columns:1fr auto;align-items:start;margin-bottom:1rem;padding-bottom:.8rem;border-bottom:1px solid var(--border)}
+.cap-company{font-family:'Bebas Neue',Impact,sans-serif;font-size:20px;color:var(--white)}
+.cap-meta{font-size:10px;color:var(--muted);text-align:right;line-height:1.8}
+.cap-meta span{color:var(--teal)}
+.cap-section{margin-bottom:1rem}
+.cap-label{font-family:'Bebas Neue',Impact,sans-serif;font-size:13px;color:var(--gold);letter-spacing:2px;margin-bottom:.4rem;display:flex;justify-content:space-between;align-items:center}
+.cap-label .ok{font-size:10px;color:var(--green);letter-spacing:1px;font-family:'Space Mono',monospace}
+.cap-label .fail{font-size:10px;color:var(--red);letter-spacing:1px;font-family:'Space Mono',monospace}
+.cap-field{background:transparent;border:none;border-bottom:1px dashed var(--border);color:var(--white);width:100%;font-family:'Space Mono',monospace;font-size:12px;padding:.3rem 0}
+.cap-field:focus{outline:none;border-bottom-color:var(--teal)}
+.cap-field::placeholder{color:var(--muted)}
+.before-after{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0}
+.ba-card{background:var(--bg3);border:1px solid var(--border);padding:1rem}
+.ba-label{font-size:10px;letter-spacing:2px;margin-bottom:.5rem;font-family:'Bebas Neue',Impact,sans-serif;font-size:13px}
+.ba-card:first-child .ba-label{color:var(--red)}
+.ba-card:last-child .ba-label{color:var(--teal)}
+.ba-text{font-size:12px;line-height:1.6;color:#c0c0d0}
+
+/* CO-POV CRITIQUE ENGINE (the killer feature) */
+.co-pov{background:#06121f;border:1px solid #1a3556;border-left:4px solid var(--red);padding:1.4rem 1.6rem;margin-top:1.2rem}
+.co-pov-head{font-family:'DM Serif Display','Times New Roman',serif;font-style:italic;font-size:18px;color:#e6ecf5;margin-bottom:1rem;line-height:1.3}
+.co-pov-item{font-size:13px;line-height:1.55;margin-bottom:.7rem;padding-left:.9rem;border-left:3px solid #3b5683;color:#cdd8ea}
+.co-pov-item.cut{border-left-color:var(--red);color:#fecaca}
+.co-pov-item.win{border-left-color:var(--green);color:#bbf7d0}
+.co-pov-item.cut::before{content:'✕ ';color:var(--red);font-weight:700}
+.co-pov-item.win::before{content:'✓ ';color:var(--green);font-weight:700}
+.co-pov-item.rule::before{content:'→ ';color:#3b5683}
+.co-pov-fname{margin-top:1rem;font-size:11px;font-family:'Space Mono',monospace;background:rgba(255,255,255,0.05);padding:.5rem .7rem;color:#9fb4d4;letter-spacing:.5px}
+.cap-actions{display:flex;gap:.5rem;margin-top:1rem;flex-wrap:wrap}
+
+/* RED FLAGS */
+.flag-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.6rem;margin:1rem 0}
+.flag-item{background:var(--bg3);border:1px solid var(--border);border-left:3px solid var(--red);padding:.7rem 1rem;font-size:12px;color:var(--white);display:flex;align-items:flex-start;gap:.5rem}
+.flag-dot{width:8px;height:8px;background:var(--red);border-radius:50%;flex-shrink:0;margin-top:4px}
+
+/* ADJACENT CODES */
+.code-chips{display:flex;flex-wrap:wrap;gap:.5rem;margin:1rem 0}
+.code-chip{background:var(--bg4);border:1px solid var(--border);color:var(--muted);font-size:11px;padding:.3rem .7rem}
+.code-chip span{color:var(--white)}
+
+.divider{border:none;border-top:1px solid var(--border);margin:2rem 0}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--teal);color:#0d0d0f;font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;padding:.7rem 1.4rem;letter-spacing:2px;border-radius:2px;box-shadow:0 6px 24px rgba(0,201,167,0.4);z-index:100;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.show{opacity:1}
+
+/* PRINT STYLES — for buyers who want PDF */
+@media print{
+  body,html{background:#fff;color:#000;font-size:11pt}
+  .actionbar,.howto,.cap-actions,.co-pov-fname{display:none !important}
+  .doc{max-width:100%;padding:0}
+  .cover,.section,.callout,.cap-block,.co-pov,.week-card,.naics-card,.flag-item,.tl-row,.audit-row,.source-item,.ba-card,.footer{background:#fff !important;color:#000 !important;border-color:#999 !important;break-inside:avoid;box-shadow:none}
+  .cover::before,.cover::after{display:none}
+  .cover-title,.section-title,.section-num,.cover-eyebrow,.cover-subtitle{color:#000 !important}
+  .price-badge{background:#000;color:#fff !important}
+  .section-body,.section-body p,.naics-desc,.naics-why,.tl-step,.tl-time,.tl-note,td,th,.check-item,.flag-item,.source-item,.prime-badge,.ba-text,.co-pov-head,.co-pov-item{color:#000 !important;background:#fff !important;border-color:#999 !important}
+  .cap-field,.action-field,.score-input{border:1px solid #999 !important;color:#000 !important;background:#fff !important}
+  .section{page-break-inside:avoid}
+  .section-header{break-after:avoid}
+  hr.divider{page-break-after:always;border:none;margin:0}
+  a{color:#000;text-decoration:none}
+  th{background:#eee !important}
+}
+
+/* MOBILE TWEAKS */
+@media (max-width:600px){
+  .cover{padding:2.5rem 1.4rem 2rem}
+  .price-badge{position:static;display:inline-block;margin-bottom:1rem;top:auto;right:auto}
+  .before-after,.audit-row,.cap-header{grid-template-columns:1fr}
+  .tl-row{grid-template-columns:1fr}
+  .naics-card{grid-template-columns:auto 1fr;grid-template-rows:auto auto}
+  .naics-size{grid-column:1 / -1;text-align:left}
+}
+</style>
+</head>
+<body>
+
+<!-- STICKY ACTION BAR -->
+<div class="actionbar no-print">
+  <div class="ab-brand">ALL FORWARD · STRIKE PACK</div>
+  <div style="font-size:11px;color:var(--muted);margin-right:.6rem"><span class="save-pulse"></span>Auto-saved locally</div>
+  <button class="ab-btn" onclick="window.print()">⎙ Print / PDF</button>
+  <button class="ab-btn gold" onclick="copyCapStatement()">⧉ Copy Cap Statement</button>
+  <button class="ab-btn red" onclick="resetProgress()">↻ Reset</button>
+</div>
+
+<div class="doc">
+
+<!-- HOW TO USE — collapsible, hides after first close -->
+<div class="howto" id="howto">
+  <div class="howto-title">▸ HOW TO USE THIS FILE</div>
+  <ol class="howto-list">
+    <li><span class="howto-num">01</span><span>Work top to bottom. Each section unlocks the next. Don't skip the readiness scorecard.</span></li>
+    <li><span class="howto-num">02</span><span>Everything you type or check is <strong style="color:var(--teal)">auto-saved to your browser</strong>. Close the tab and come back — your progress is still here. Works offline.</span></li>
+    <li><span class="howto-num">03</span><span>When you're done, hit <strong style="color:var(--gold)">Print / PDF</strong> in the top bar to export a clean printable version of your filled-in playbook.</span></li>
+    <li><span class="howto-num">04</span><span>Section 05 has a <strong style="color:var(--teal)">live CO-POV audit</strong> — fill in your capability statement and the contracting-officer feedback engine grades it in real time.</span></li>
+    <li><span class="howto-num">05</span><span>This file is yours. Back it up. Make copies for each agency you target.</span></li>
+  </ol>
+  <button class="howto-close" onclick="closeHowto()">Got it — hide this</button>
+</div>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="price-badge" style="background:var(--teal)">FREE</div>
+  <div class="cover-eyebrow">DISASTER RECOVERY VENDOR EDITION · 2026</div>
+  <div class="cover-title">SAM.gov<br><span>Activation</span><br>Strike Pack™</div>
+  <div class="cover-subtitle">Free Operator Edition</div>
+  <div class="cover-promise">
+    Get SAM.gov-registered, NAICS-aligned, and CDBG-DR bid-ready in <strong>30 days</strong> — without the bureaucratic stalls that kill 80% of first-time disaster recovery vendors.
+  </div>
+  <div style="display:flex;gap:1.5rem;margin-bottom:1.5rem;flex-wrap:wrap">
+    <div style="font-size:12px;color:var(--muted)">✦ <span style="color:var(--white)">35 Pages</span></div>
+    <div style="font-size:12px;color:var(--muted)">✦ <span style="color:var(--white)">Fillable Scorecards</span></div>
+    <div style="font-size:12px;color:var(--muted)">✦ <span style="color:var(--white)">30-Day Tracker</span></div>
+    <div style="font-size:12px;color:var(--muted)">✦ <span style="color:var(--white)">CO-POV Cap Statement Audit</span></div>
+  </div>
+  <div class="cover-meta">
+    <strong>Francisco Pellerano</strong> · All Forward LLC · CDBG-DR Compliance Operator<br>
+    25+ years · HUD/CDBG federal grant compliance · Disaster recovery funding execution
+  </div>
+</div>
+
+<!-- WHO IT'S FOR -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">WHO</div>
+    <div class="section-title">This System Is Built For</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+    <div>
+      <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;color:var(--teal);letter-spacing:2px;margin-bottom:.8rem">THIS IS FOR YOU</div>
+      <div style="display:grid;gap:.4rem">
+        <div style="font-size:12px;color:var(--white)">✦ Disaster recovery &amp; remediation vendors</div>
+        <div style="font-size:12px;color:var(--white)">✦ Construction &amp; demo crews</div>
+        <div style="font-size:12px;color:var(--white)">✦ Emergency relief &amp; facilities teams</div>
+        <div style="font-size:12px;color:var(--white)">✦ Local service operators adding CDBG-DR revenue</div>
+      </div>
+    </div>
+    <div>
+      <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;color:var(--red);letter-spacing:2px;margin-bottom:.8rem">NOT FOR</div>
+      <div style="display:grid;gap:.4rem">
+        <div style="font-size:12px;color:var(--muted)">✗ People expecting overnight contracts</div>
+        <div style="font-size:12px;color:var(--muted)">✗ Passive learners</div>
+        <div style="font-size:12px;color:var(--muted)">✗ Businesses without clean legal/financial records</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 1 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">01</div>
+    <div class="section-title">Executive Briefing</div>
+  </div>
+  <div class="section-body">
+    <p>SAM.gov is not difficult because it's technical. It's difficult because most small businesses approach it <strong style="color:var(--white)">without systems.</strong></p>
+    <p>This Strike Pack gives you the exact operational system to execute under pressure: clean registration, professional capability statement, and first CDBG-DR contract pipeline in 30 days.</p>
+  </div>
+  <div class="callout teal">
+    <strong>Your Edge:</strong> You already run tight ships on storm sites. Federal contracting rewards exactly what you do daily — compliance, procurement, workflows, cash flow control under CDBG-DR guidelines.
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 2 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">02</div>
+    <div class="section-title">Pre-Registration Audit &amp; Business Readiness Scorecard</div>
+  </div>
+  <div class="callout">
+    <strong>Operator Note:</strong> Treat SAM registration like setting up a FEMA mobilization site — clean records, clean banking, clean perimeter.
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="min-width:140px">Area</th>
+          <th style="min-width:110px">Your Score (1–10)</th>
+          <th style="min-width:160px">Red Flag Killers</th>
+          <th>Action Needed</th>
+        </tr>
+      </thead>
+      <tbody id="scorecard-body"></tbody>
+    </table>
+  </div>
+  <div style="margin-top:1rem">
+    <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:16px;color:var(--red);letter-spacing:2px;margin-bottom:.8rem">Red Flag Killers — 2026 Edition</div>
+    <div class="flag-grid" id="flag-grid"></div>
+  </div>
+  <div class="callout red">
+    <strong>Fix these before you log in.</strong> 80% of delays die here.
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 3 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">03</div>
+    <div class="section-title">Registration Walkthrough</div>
+  </div>
+  <div class="timeline" id="timeline"></div>
+  <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:16px;color:var(--red);letter-spacing:2px;margin:1rem 0 .8rem">Critical Failure Points — 2026</div>
+  <div class="flag-grid" id="crit-flags"></div>
+  <div class="callout red" style="margin-top:1rem">
+    <strong>Entity Validation Stall:</strong> This is where 70% of remediation vendors lose weeks. Your LLC docs, IRS letter, bank statements, and physical address must match exactly. One typo = debarred from bidding until fixed. Treat it like mismatched equipment on a job site — <strong>dead stop.</strong>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 4 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">04</div>
+    <div class="section-title">NAICS / PSC Selector Worksheets</div>
+  </div>
+  <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;color:var(--teal);letter-spacing:2px;margin-bottom:.8rem">Primary Codes — Disaster Recovery &amp; Emergency Response</div>
+  <div class="naics-grid" id="naics-grid"></div>
+  <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;color:var(--gold);letter-spacing:2px;margin:1rem 0 .6rem">Adjacent Codes DR Vendors Should Hold</div>
+  <div class="code-chips" id="adjacent-codes"></div>
+  <div class="callout teal" style="margin-top:1rem">
+    <strong>How CDBG-DR Primes Filter SAM:</strong> They search exact NAICS + keywords: "debris management," "CDBG-DR compliance," "Davis-Bacon," "environmental review," "rapid mobilization." Precise codes + operator language = you show up on their sub lists.
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 5 — CAPABILITY STATEMENT + CO-POV AUDIT -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">05</div>
+    <div class="section-title">Capability Statement Framework + Live CO Audit</div>
+  </div>
+
+  <div class="callout teal">
+    <strong>The 6-Second Test:</strong> A contracting officer spends ~6 seconds deciding if you're worth a call. This section builds the version that survives those seconds — then grades it from the CO's chair before you ever send it.
+  </div>
+
+  <div class="before-after">
+    <div class="ba-card">
+      <div class="ba-label">❌ Bad</div>
+      <div class="ba-text">"We provide quality remediation services."</div>
+    </div>
+    <div class="ba-card">
+      <div class="ba-label">✦ Operator Grade</div>
+      <div class="ba-text">"Rapid-response remediation operator delivering CDBG-DR compliant debris removal, environmental stabilization, and workflow execution under HUD guidelines with zero compliance violations."</div>
+    </div>
+  </div>
+
+  <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;color:var(--gold);letter-spacing:2px;margin:1.2rem 0 .6rem">Storm Cleanup Skills → CDBG-DR Operator Language</div>
+  <div class="table-wrap">
+    <table class="trans-table" id="trans-table"></table>
+  </div>
+
+  <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;color:var(--teal);letter-spacing:2px;margin:1.5rem 0 .6rem">1-Page Capability Statement Template — Fill In Below</div>
+
+  <div class="cap-block">
+    <div class="cap-header">
+      <div>
+        <input class="cap-field" id="cap-name" placeholder="[Company Name]" style="font-family:'Bebas Neue',Impact,sans-serif;font-size:20px;margin-bottom:.3rem">
+        <div style="font-size:11px;color:var(--muted)">CDBG-DR Compliant · Federal Contractor Ready</div>
+      </div>
+      <div class="cap-meta">
+        UEI: <input class="cap-field" id="cap-uei" placeholder="[UEI]" style="display:inline;width:120px"><br>
+        CAGE: <input class="cap-field" id="cap-cage" placeholder="[CAGE]" style="display:inline;width:120px"><br>
+        NAICS: <input class="cap-field" id="cap-naics" placeholder="562910 | 624230 | 236220" style="display:inline;width:200px">
+      </div>
+    </div>
+    <div class="cap-section">
+      <div class="cap-label">Core Competencies <span id="cc-status" class="ok">—</span></div>
+      <textarea class="action-field" id="cap-cc" placeholder="Rapid-response debris removal · CDBG-DR compliance execution · Davis-Bacon workforce management · Environmental remediation · Subcontractor coordination · Audit-ready documentation" style="min-height:60px"></textarea>
+    </div>
+    <div class="cap-section">
+      <div class="cap-label">Past Performance <span id="pp-status" class="ok">—</span></div>
+      <textarea class="action-field" id="cap-pp" placeholder="[Client | $Value | Year | Measurable outcome — e.g. cleared 1,200 cases, cut intake time 38%]&#10;[Client | $Value | Year | Measurable outcome]" style="min-height:60px"></textarea>
+    </div>
+    <div class="cap-section">
+      <div class="cap-label">Differentiators <span id="df-status" class="ok">—</span></div>
+      <textarea class="action-field" id="cap-df" placeholder="Zero audit flags · 24-hr mobilization capability · Certified Davis-Bacon payroll · Pre-packaged compliance docs" style="min-height:50px"></textarea>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+      <div class="cap-section">
+        <div class="cap-label">Contact</div>
+        <input class="cap-field" id="cap-contact1" placeholder="Name · Title">
+        <input class="cap-field" id="cap-contact2" placeholder="Phone · Email" style="margin-top:.4rem">
+      </div>
+      <div class="cap-section">
+        <div class="cap-label">Compliance Block</div>
+        <input class="cap-field" id="cap-comp1" placeholder="SAM Active · Liability Ins. · Workers Comp">
+        <input class="cap-field" id="cap-comp2" placeholder="State License #" style="margin-top:.4rem">
+      </div>
+    </div>
+  </div>
+
+  <!-- CO-POV LIVE AUDIT ENGINE -->
+  <div class="co-pov">
+    <div class="co-pov-head">"I'm the contracting officer. Here's what I'd cut you for."</div>
+    <div id="co-pov-feedback"></div>
+    <div class="co-pov-fname" id="co-fname">Save your file as: Company_CapabilityStatement_2026.pdf</div>
+    <div class="cap-actions">
+      <button class="ab-btn gold" onclick="copyCapStatement()">⧉ Copy Capability Statement</button>
+      <button class="ab-btn" onclick="window.print()">⎙ Print / Export PDF</button>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 6 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">06</div>
+    <div class="section-title">30-Day Activation Tracker</div>
+  </div>
+  <div class="tracker" id="tracker"></div>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 7 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">07</div>
+    <div class="section-title">Pitfalls &amp; Recovery Systems</div>
+  </div>
+  <div class="section-body">
+    <p><strong style="color:var(--white)">Why Most Small Businesses Fail in GovCon:</strong> No systems · No follow-up discipline · Weak capability statements · Chasing every bid instead of strategic ones</p>
+  </div>
+  <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;color:var(--gold);letter-spacing:2px;margin:1rem 0 .6rem">CDBG-DR Audit Triggers → How to Avoid Them</div>
+  <div class="audit-grid" id="audit-grid">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;padding:.5rem 1rem">
+      <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:13px;color:var(--red);letter-spacing:2px">Trigger</div>
+      <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:13px;color:var(--teal);letter-spacing:2px">How to Avoid</div>
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- SECTION 8 -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num">08</div>
+    <div class="section-title">First Contract Pipeline System</div>
+  </div>
+  <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;color:var(--teal);letter-spacing:2px;margin-bottom:.8rem">Where to Find Opportunities</div>
+  <div class="source-list" id="sources"></div>
+  <div class="callout teal" style="margin-top:1rem">
+    <strong>Start as Subcontractor First (operator move):</strong> Prime contractors need reliable operators like you. Build relationships now. Position yourself: <em style="color:var(--white)">"CDBG-DR compliant remediation operator with clean SAM, proven mobilization, and zero audit flags. Ready for 1099/sub bench on next event."</em>
+  </div>
+  <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;color:var(--gold);letter-spacing:2px;margin:1rem 0 .6rem">Specific Primes to Target</div>
+  <div class="prime-list" id="primes"></div>
+</div>
+
+<!-- UPSELL CTA — only in free edition -->
+<div style="background:linear-gradient(135deg,var(--bg2),var(--bg3));border:1px solid var(--gold);border-left:4px solid var(--gold);padding:2rem 2rem;margin:2rem 0;border-radius:2px">
+  <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;color:var(--gold);letter-spacing:3px;margin-bottom:.6rem">▸ READY FOR THE FULL SYSTEM?</div>
+  <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(22px,3.5vw,32px);color:var(--white);line-height:1.1;margin-bottom:1rem">You've got the playbook.<br>Now get the tactical reference.</div>
+  <div style="font-size:13px;color:#c0c0d0;line-height:1.7;margin-bottom:1.4rem;max-width:640px">
+    This Strike Pack is the system. The <strong style="color:var(--teal)">Disaster Recovery Subcontractor's SAM.gov Field Manual</strong> ($27) is the line-by-line walkthrough — screenshots, exact form-field wording, copy-paste templates. The <strong style="color:var(--gold)">Federal Compliance Toolkit</strong> ($97) layers in audit-response templates, Davis-Bacon payroll, and Section 3 tracking. One playbook, one reference, one toolkit. Built by the same operator.
+  </div>
+  <div style="display:flex;gap:.8rem;flex-wrap:wrap;align-items:center">
+    <a href="https://allforwardllc.gumroad.com" target="_blank" rel="noopener" style="background:var(--teal);color:#0d0d0f;font-family:'Bebas Neue',Impact,sans-serif;font-size:15px;padding:.7rem 1.4rem;letter-spacing:2px;text-decoration:none;display:inline-block">▸ GET THE FIELD MANUAL · $27</a>
+    <a href="https://allforwardllc.gumroad.com" target="_blank" rel="noopener" style="background:var(--gold);color:#0d0d0f;font-family:'Bebas Neue',Impact,sans-serif;font-size:15px;padding:.7rem 1.4rem;letter-spacing:2px;text-decoration:none;display:inline-block">▸ GET THE TOOLKIT · $97</a>
+    <a href="https://allforwardllc.com" target="_blank" rel="noopener" style="color:var(--muted);font-size:12px;text-decoration:none;border-bottom:1px dashed var(--muted)">or learn more at allforwardllc.com</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-brand">ALL FORWARD LLC</div>
+  <div class="footer-sub">
+    Francisco Pellerano · CDBG-DR Compliance Operator<br>
+    SAM.gov Activation Strike Pack™ · Free Operator Edition · 2026 · Built for operators. Not consultants.<br>
+    <span style="color:var(--muted);font-size:10px">© All Forward LLC · Free to share with operators in your network · For the deeper tactical reference, see allforwardllc.gumroad.com</span>
+  </div>
+  <div style="margin-top:1rem;display:flex;justify-content:center;gap:1rem;flex-wrap:wrap">
+    <div style="background:var(--teal);color:#0d0d0f;font-family:'Bebas Neue',Impact,sans-serif;font-size:13px;padding:.3rem 1rem;letter-spacing:2px">YOU ARE HERE · FREE</div>
+    <div style="background:var(--bg4);border:1px solid var(--border);color:var(--white);font-family:'Bebas Neue',Impact,sans-serif;font-size:13px;padding:.3rem 1rem;letter-spacing:2px">FIELD MANUAL · $27</div>
+    <div style="background:var(--gold);color:#0d0d0f;font-family:'Bebas Neue',Impact,sans-serif;font-size:13px;padding:.3rem 1rem;letter-spacing:2px">TOOLKIT · $97</div>
+  </div>
+</div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">Copied</div>
+
+<script>
+// ============================================================
+// DATA — content for every dynamically-built section
+// ============================================================
+const scoreData = [
+  ['Banking Readiness','Personal checking account'],
+  ['EIN / IRS Verification','Name/address mismatch'],
+  ['Licensing / Insurance','Expired docs or gaps'],
+  ['Bookkeeping Maturity','No P&L or cash flow discipline'],
+  ['Operational Capacity','No SOPs or scalability proof'],
+  ['Documentation Discipline','Missing notarized letter or entity docs'],
+];
+
+const flags = ['IRS name/address mismatch on CP 575','USPS formatting errors (no PO Boxes)','Inactive LLC or entity status','Personal accounts instead of business','Duplicate UEI requests','No notarized Entity Administrator letter'];
+
+const tlData = [
+  ['Login.gov setup + ID proofing','20 min','Do this first'],
+  ['UEI request','15–45 min','Instant if records clean'],
+  ['Core Entity Registration','2–4 hours','One sitting — no half measures'],
+  ['Reps & Certs','30–45 min','Review every box like a compliance audit'],
+  ['Notarized letter submission','1–2 days (mail)','Get this notarized same day'],
+];
+
+const critData = ['Address mismatches between IRS, bank, and SAM','Over-selecting NAICS codes','Skipping reps/certs review','No capability statement drafted before validation'];
+
+const naicsData = [
+  [1,'562910','Remediation Services','$25M revenue','Debris removal, mold, environmental cleanup — core CDBG-DR work'],
+  [2,'624230','Emergency Relief Services','$47M revenue','Feeding, shelter, rapid response crews'],
+  [3,'236220','Commercial Construction','$47M revenue','Demo, rebuild, site stabilization post-storm'],
+];
+
+const adjacent = ['561210 Facilities Support','561720 Janitorial','561730 Landscaping','238990 Specialty Trade Contractors','541611 Admin Mgmt Consulting'];
+
+const transData = [
+  ['Debris management & hauling','Procurement coordination & margin control'],
+  ['Crew scheduling under 24-hr pressure','Workforce mobilization & Davis-Bacon compliance'],
+  ['Equipment staging & logistics','Asset deployment & inventory control'],
+  ['Site safety & inspections','Environmental review & audit systems'],
+  ['Multi-crew coordination','Subcontractor management & scalability'],
+];
+
+const trackerData = [
+  {week:'Week 1',items:['Login.gov + UEI','IRS verification + docs collection','Business Readiness Scorecard complete']},
+  {week:'Week 2',items:['Full SAM registration','NAICS/PSC selection','Capability statement first draft']},
+  {week:'Week 3',items:['DSBS optimization','SAM validation + reps/certs','Agency research (state OCDs, local primes)']},
+  {week:'Week 4',items:['First bid pipeline setup','Subcontractor outreach list','Initial capability statement distribution']},
+];
+
+const auditData = [
+  ['Davis-Bacon wage violations','Pre-approved payroll system + daily logs'],
+  ['Environmental review gaps','Pre-packaged docs checklist'],
+  ['Duplication of Benefits','Cross-check with FEMA/insurance before draw'],
+  ['Section 3 economic opportunities','Track local hiring metrics from day one'],
+  ['Slums & Blight / LMI documentation','Template folders ready before mobilization'],
+];
+
+const sourcesData = ['SAM.gov Search & Opportunities','SBA SUB-Net','USAspending.gov','Agency Forecasts & Disaster Response Registry','Local Municipalities','Prime Contractor Networks'];
+
+const primesData = ['ICF','Hagerty','IEM','Horne','Cloudburst','Tetra Tech'];
+
+// ============================================================
+// BUILD SECTIONS
+// ============================================================
+const sb = document.getElementById('scorecard-body');
+scoreData.forEach(([area,kill], i) => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${area}</td><td style="text-align:center"><input class="score-input persist" data-key="sc${i}" type="number" min="1" max="10" placeholder="—"></td><td class="kill">${kill}</td><td><textarea class="action-field persist" data-key="sn${i}" placeholder="Notes..."></textarea></td>`;
+  sb.appendChild(tr);
+});
+
+const fg = document.getElementById('flag-grid');
+flags.forEach(f => {
+  const d = document.createElement('div');
+  d.className = 'flag-item';
+  d.innerHTML = `<div class="flag-dot"></div><span>${f}</span>`;
+  fg.appendChild(d);
+});
+
+const tl = document.getElementById('timeline');
+tlData.forEach(([step,time,note]) => {
+  const d = document.createElement('div');
+  d.className = 'tl-row';
+  d.innerHTML = `<div class="tl-step">${step}</div><div class="tl-time">${time}</div><div class="tl-note">${note}</div>`;
+  tl.appendChild(d);
+});
+
+const cf = document.getElementById('crit-flags');
+critData.forEach(f => {
+  const d = document.createElement('div');
+  d.className = 'flag-item';
+  d.innerHTML = `<div class="flag-dot"></div><span>${f}</span>`;
+  cf.appendChild(d);
+});
+
+const ng = document.getElementById('naics-grid');
+naicsData.forEach(([p,code,desc,size,why]) => {
+  const d = document.createElement('div');
+  d.className = 'naics-card';
+  d.innerHTML = `<div class="naics-priority">${p}</div><div class="naics-info"><div class="naics-code">${code}</div><div class="naics-desc">${desc}</div><div class="naics-why">${why}</div></div><div class="naics-size">${size}</div>`;
+  ng.appendChild(d);
+});
+
+const ac = document.getElementById('adjacent-codes');
+adjacent.forEach(c => {
+  const [code, ...rest] = c.split(' ');
+  const d = document.createElement('div');
+  d.className = 'code-chip';
+  d.innerHTML = `<span>${code}</span> ${rest.join(' ')}`;
+  ac.appendChild(d);
+});
+
+const tt = document.getElementById('trans-table');
+const ttHead = document.createElement('thead');
+ttHead.innerHTML = '<tr><th>Storm Cleanup Skill</th><th>CDBG-DR Translation</th></tr>';
+tt.appendChild(ttHead);
+const ttBody = document.createElement('tbody');
+transData.forEach(([a,b]) => {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${a}</td><td>${b}</td>`;
+  ttBody.appendChild(tr);
+});
+tt.appendChild(ttBody);
+
+const trk = document.getElementById('tracker');
+trackerData.forEach(({week, items}, wi) => {
+  const d = document.createElement('div');
+  d.className = 'week-card';
+  const items_html = items.map((item, i) => `<label class="check-item"><input type="checkbox" class="persist" data-key="wk${wi}_${i}" onchange="this.parentElement.classList.toggle('done',this.checked);saveAll()"> ${item}</label>`).join('');
+  d.innerHTML = `<div class="week-label">${week}</div>${items_html}`;
+  trk.appendChild(d);
+});
+
+const ag = document.getElementById('audit-grid');
+auditData.forEach(([trigger, avoid]) => {
+  const d = document.createElement('div');
+  d.className = 'audit-row';
+  d.innerHTML = `<div class="audit-trigger">⚠ ${trigger}</div><div class="audit-avoid">✦ ${avoid}</div>`;
+  ag.appendChild(d);
+});
+
+const sl = document.getElementById('sources');
+sourcesData.forEach(s => {
+  const d = document.createElement('div');
+  d.className = 'source-item';
+  d.textContent = s;
+  sl.appendChild(d);
+});
+
+const pl = document.getElementById('primes');
+primesData.forEach(p => {
+  const d = document.createElement('div');
+  d.className = 'prime-badge';
+  d.textContent = p;
+  pl.appendChild(d);
+});
+
+// ============================================================
+// LOCAL STORAGE PERSISTENCE — buyer's progress survives tab close
+// ============================================================
+const STORAGE_KEY = 'allforward_strikepack_v1';
+
+function saveAll() {
+  const state = {};
+  document.querySelectorAll('.persist, .cap-field, #cap-cc, #cap-pp, #cap-df').forEach(el => {
+    const key = el.id || el.dataset.key;
+    if (!key) return;
+    state[key] = el.type === 'checkbox' ? el.checked : el.value;
+  });
+  state._howtoClosed = document.getElementById('howto').style.display === 'none';
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e) {}
+}
+
+function loadAll() {
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) {}
+  document.querySelectorAll('.persist, .cap-field, #cap-cc, #cap-pp, #cap-df').forEach(el => {
+    const key = el.id || el.dataset.key;
+    if (!key || !(key in state)) return;
+    if (el.type === 'checkbox') {
+      el.checked = !!state[key];
+      el.parentElement.classList.toggle('done', el.checked);
+    } else {
+      el.value = state[key];
+    }
+  });
+  if (state._howtoClosed) document.getElementById('howto').style.display = 'none';
+  runCritique();
+}
+
+document.addEventListener('input', e => {
+  if (e.target.matches('.persist, .cap-field, #cap-cc, #cap-pp, #cap-df')) {
+    saveAll();
+    runCritique();
+  }
+});
+
+function closeHowto() {
+  document.getElementById('howto').style.display = 'none';
+  saveAll();
+}
+
+function resetProgress() {
+  if (!confirm('Reset ALL your progress in this Strike Pack? This clears every field, checkbox, and score. Cannot be undone.')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
+// ============================================================
+// CO-POV LIVE CRITIQUE ENGINE — the killer feature
+// ============================================================
+const FILLER_TERMS = ['quality','experience','customer satisfaction','committed to excellence','best in class','decades of combined','innovative','trusted partner','world class','dedicated to','passionate about'];
+
+function hasMetric(text) {
+  return /\d|%|\$|reduc|increas|improv|saved|uptime|on-time|zero |cleared/i.test(text || '');
+}
+
+function isFiller(text) {
+  const lower = (text || '').toLowerCase();
+  return FILLER_TERMS.some(f => lower.includes(f)) && !hasMetric(text);
+}
+
+function runCritique() {
+  const name = document.getElementById('cap-name').value.trim();
+  const uei = document.getElementById('cap-uei').value.trim();
+  const cage = document.getElementById('cap-cage').value.trim();
+  const cc = document.getElementById('cap-cc').value.trim();
+  const pp = document.getElementById('cap-pp').value.trim();
+  const df = document.getElementById('cap-df').value.trim();
+
+  const flags = [];
+  const wins = [];
+
+  // Core competencies check
+  const ccStatus = document.getElementById('cc-status');
+  if (!cc) {
+    ccStatus.textContent = 'EMPTY';
+    ccStatus.className = 'fail';
+    flags.push({type:'cut', text:'Core competencies are empty. This is the FIRST thing I read — without it you don\'t survive the 6-second scan.'});
+  } else if (cc.length < 40) {
+    ccStatus.textContent = 'TOO THIN';
+    ccStatus.className = 'fail';
+    flags.push({type:'cut', text:'Core competencies are too thin. I need 4–6 concrete capabilities, scannable as bullets, not a one-liner.'});
+  } else {
+    ccStatus.textContent = 'OK';
+    ccStatus.className = 'ok';
+    wins.push('Core competencies have enough substance for the 6-second scan.');
+  }
+
+  // Past performance check (metric required)
+  const ppStatus = document.getElementById('pp-status');
+  if (!pp) {
+    ppStatus.textContent = 'EMPTY';
+    ppStatus.className = 'fail';
+    flags.push({type:'cut', text:'No past performance listed. With nothing to verify, I can\'t assess scale — you go in the "maybe later" pile.'});
+  } else if (!hasMetric(pp)) {
+    ppStatus.textContent = 'NO METRIC';
+    ppStatus.className = 'fail';
+    flags.push({type:'cut', text:'Past performance has no measurable outcome. "Provided services" tells me nothing. Give me a %, a $, a count, or a timeline I can verify.'});
+  } else {
+    ppStatus.textContent = 'METRIC ✓';
+    ppStatus.className = 'ok';
+    wins.push('Past performance has a measurable outcome. I can assess your scale.');
+  }
+
+  // Differentiators check (filler killer)
+  const dfStatus = document.getElementById('df-status');
+  if (!df) {
+    dfStatus.textContent = 'EMPTY';
+    dfStatus.className = 'fail';
+    flags.push({type:'cut', text:'No differentiators. Without them, I can\'t tell you apart from the 200 other vendors I scanned today.'});
+  } else if (isFiller(df)) {
+    dfStatus.textContent = 'FILLER';
+    dfStatus.className = 'fail';
+    flags.push({type:'cut', text:'Your differentiators read like filler — "quality," "experience," "satisfaction." Every vendor writes that. Tell me something only YOU can claim (a cert + a contract vehicle + a specialty).'});
+  } else {
+    dfStatus.textContent = 'SPECIFIC';
+    dfStatus.className = 'ok';
+    wins.push('Your differentiators are specific, not filler. That survives the scan.');
+  }
+
+  // SAM consistency reminder
+  flags.push({type:'rule', text:'Your UEI, CAGE, and NAICS must match SAM.gov EXACTLY. If your statement and your registration disagree, that\'s a red flag and I move on.'});
+
+  // Format rules
+  flags.push({type:'rule', text:'Left-align everything. I scan, I don\'t read centered text. Bullets over paragraphs.'});
+  flags.push({type:'rule', text:'Save it as a text-searchable PDF — I search my files by keyword. A scanned image is invisible to me.'});
+
+  // Render
+  const out = document.getElementById('co-pov-feedback');
+  out.innerHTML = '';
+  flags.forEach(f => {
+    const d = document.createElement('div');
+    d.className = 'co-pov-item ' + f.type;
+    d.textContent = f.text;
+    out.appendChild(d);
+  });
+  wins.forEach(w => {
+    const d = document.createElement('div');
+    d.className = 'co-pov-item win';
+    d.textContent = w;
+    out.appendChild(d);
+  });
+
+  // Auto-generate file name
+  const safe = (name || 'Company').replace(/[^a-zA-Z0-9]/g, '');
+  document.getElementById('co-fname').textContent = `Save your file as: ${safe}_CapabilityStatement_2026.pdf`;
+}
+
+// ============================================================
+// COPY CAPABILITY STATEMENT — plain text export
+// ============================================================
+function copyCapStatement() {
+  const get = id => document.getElementById(id).value.trim();
+  const name = get('cap-name') || '[COMPANY NAME]';
+  const text = [
+    name.toUpperCase() + ' — CAPABILITY STATEMENT',
+    'CDBG-DR Compliant · Federal Contractor Ready',
+    '',
+    `UEI: ${get('cap-uei') || '[UEI]'}   CAGE: ${get('cap-cage') || '[CAGE]'}   NAICS: ${get('cap-naics') || '[NAICS]'}`,
+    '',
+    'CORE COMPETENCIES',
+    get('cap-cc') || '[fill in]',
+    '',
+    'PAST PERFORMANCE',
+    get('cap-pp') || '[fill in]',
+    '',
+    'DIFFERENTIATORS',
+    get('cap-df') || '[fill in]',
+    '',
+    'CONTACT',
+    get('cap-contact1') || '[name · title]',
+    get('cap-contact2') || '[phone · email]',
+    '',
+    'COMPLIANCE',
+    get('cap-comp1') || '[SAM · insurance · workers comp]',
+    get('cap-comp2') || '[state license #]',
+  ].join('\n');
+
+  navigator.clipboard?.writeText(text).then(() => {
+    showToast('Capability statement copied');
+  }, () => {
+    // fallback for older browsers / file:// contexts
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); showToast('Copied'); } catch(e) { alert('Copy failed. Manually select and copy from the page.'); }
+    document.body.removeChild(ta);
+  });
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+// ============================================================
+// INIT
+// ============================================================
+loadAll();
+</script>
+</body>
+</html>

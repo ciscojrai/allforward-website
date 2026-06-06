@@ -1575,6 +1575,7 @@
   </a>
 
   <ul class="nav-links">
+    <li><a href="#scorecard">Readiness Test</a></li>
     <li><a href="#manual">Field Manuals</a></li>
     <li><a href="#membership">Membership</a></li>
     <li><a href="#serve">Who We Serve</a></li>
@@ -1592,6 +1593,7 @@
 
 <!-- Mobile Menu -->
 <div class="mobile-menu" id="mobileMenu">
+  <a href="#scorecard" onclick="toggleMenu()">Readiness Test</a>
   <a href="#manual" onclick="toggleMenu()">Field Manuals</a>
   <a href="#membership" onclick="toggleMenu()">Membership</a>
   <a href="#serve" onclick="toggleMenu()">Who We Serve</a>
@@ -1625,8 +1627,8 @@
         When disaster strikes or federal paperwork stalls your progress, <strong>All Forward</strong> cuts through the complexity. Led by a FEMA-certified, HUD-trained operator with 25+ years executing high-stakes operations — and deep, hands-on experience in disaster recovery construction and CDBG-DR programs — we know this system from the inside out, and we fight to get you results.
       </p>
       <div class="hero-btns">
-        <a href="#contact" class="btn-primary">Get a Free Consultation</a>
-        <a href="#services" class="btn-secondary">Explore Services</a>
+        <a href="#scorecard" class="btn-primary">Take the 60-Second Readiness Test →</a>
+        <a href="#contact" class="btn-secondary">Get a Free Consultation</a>
       </div>
     </div>
     <div class="hero-right">
@@ -1701,11 +1703,7 @@
     </div>
     <div class="trust-item">
       <div class="trust-icon">📋</div>
-      <span class="trust-text">SAM.gov Compliance</span>
-    </div>
-    <div class="trust-item">
-      <div class="trust-icon">🌎</div>
-      <span class="trust-text">Nationwide Service</span>
+      <span class="trust-text">FEMA · HUD Certified</span>
     </div>
     <div class="trust-item">
       <div class="trust-icon">🏗️</div>
@@ -1715,12 +1713,291 @@
       <div class="trust-icon">⚡</div>
       <span class="trust-text">Rapid Response Team</span>
     </div>
-    <div class="trust-item">
-      <div class="trust-icon">📍</div>
-      <span class="trust-text">New Orleans HQ</span>
-    </div>
   </div>
 </div>
+
+<!-- ─── FEDERAL READINESS SCORECARD (interactive) ─── -->
+<style>
+  #scorecard { background: linear-gradient(180deg,#060d1f 0%,#0a1733 55%,#060d1f 100%); position:relative; }
+  .afq-wrap { max-width: 820px; margin: 0 auto; padding: 96px 5%; position:relative; z-index:1; }
+  .afq-head { text-align:center; margin-bottom: 36px; }
+  .afq-eyebrow { display:inline-flex; align-items:center; gap:8px; font-family:'Rajdhani',sans-serif; font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--glow-blue); background:rgba(41,121,255,.1); border:1px solid rgba(41,121,255,.3); padding:7px 16px; border-radius:30px; margin-bottom:18px; }
+  .afq-eyebrow .dot { width:6px; height:6px; border-radius:50%; background:var(--electric-blue); animation:pulse 2s infinite; }
+  .afq-head h2 { font-family:'Bebas Neue',sans-serif; font-size:clamp(34px,5vw,56px); letter-spacing:2px; color:#fff; line-height:1; margin-bottom:14px; }
+  .afq-head h2 span { color:var(--orange-bright); }
+  .afq-head p { color:var(--gray); font-size:16px; line-height:1.6; max-width:560px; margin:0 auto; }
+  .afq-card { background:rgba(10,22,40,.72); border:1px solid var(--border); border-radius:14px; padding:38px 34px; backdrop-filter:blur(20px); box-shadow:0 20px 60px rgba(0,0,0,.45); }
+  .afq-progress { height:5px; border-radius:4px; background:rgba(255,255,255,.07); overflow:hidden; margin-bottom:28px; }
+  .afq-progress span { display:block; height:100%; width:0; background:linear-gradient(90deg,var(--electric-blue),var(--orange-bright)); transition:width .4s ease; }
+  .afq-step-count { font-family:'Rajdhani',sans-serif; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); margin-bottom:10px; }
+  .afq-q { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:clamp(20px,3vw,26px); color:#fff; line-height:1.25; margin-bottom:24px; }
+  .afq-opts { display:flex; flex-direction:column; gap:12px; }
+  .afq-opt { display:flex; align-items:center; gap:14px; text-align:left; width:100%; background:rgba(14,36,68,.55); border:1px solid var(--border); border-radius:10px; padding:16px 18px; color:var(--off-white); font-family:'Source Sans 3',sans-serif; font-size:15.5px; cursor:pointer; transition:all .2s ease; }
+  .afq-opt:hover { border-color:var(--electric-blue); background:rgba(41,121,255,.12); transform:translateX(3px); }
+  .afq-opt .tick { width:22px; height:22px; border-radius:50%; border:2px solid rgba(79,195,247,.5); flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:12px; color:transparent; transition:all .2s; }
+  .afq-opt:hover .tick { border-color:var(--electric-blue); color:var(--electric-blue); }
+  .afq-back { margin-top:22px; background:none; border:none; color:var(--text-muted); font-family:'Rajdhani',sans-serif; font-size:13px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; }
+  .afq-back:hover { color:var(--off-white); }
+  /* result */
+  .afq-result { display:none; text-align:center; }
+  .afq-ring { width:180px; height:180px; margin:6px auto 18px; position:relative; }
+  .afq-ring svg { transform:rotate(-90deg); }
+  .afq-ring .track { stroke:rgba(255,255,255,.08); }
+  .afq-ring .fill { stroke:url(#afqGrad); stroke-linecap:round; transition:stroke-dashoffset 1.2s cubic-bezier(.22,1,.36,1); }
+  .afq-ring-num { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .afq-ring-num b { font-family:'Bebas Neue',sans-serif; font-size:54px; color:#fff; line-height:1; }
+  .afq-ring-num small { font-family:'Rajdhani',sans-serif; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--text-muted); }
+  .afq-tier { font-family:'Bebas Neue',sans-serif; font-size:30px; letter-spacing:2px; margin-bottom:8px; }
+  .afq-tier-sub { color:var(--gray); font-size:16px; line-height:1.6; max-width:520px; margin:0 auto 26px; }
+  .afq-gaps { text-align:left; background:rgba(245,124,0,.06); border:1px solid rgba(245,124,0,.28); border-radius:12px; padding:22px 24px; margin:0 auto 26px; max-width:560px; }
+  .afq-gaps h4 { font-family:'Rajdhani',sans-serif; font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--orange-bright); margin-bottom:14px; }
+  .afq-gaps ul { list-style:none; display:flex; flex-direction:column; gap:11px; }
+  .afq-gaps li { display:flex; gap:11px; font-size:14.5px; color:var(--off-white); line-height:1.5; }
+  .afq-gaps li::before { content:'▸'; color:var(--orange-bright); flex-shrink:0; }
+  .afq-gaps li.ok::before { content:'✓'; color:var(--glow-blue); }
+  .afq-rec { background:linear-gradient(90deg,rgba(245,124,0,.16),rgba(41,121,255,.12)); border:1px solid rgba(255,152,0,.4); border-radius:12px; padding:22px 24px; margin:0 auto 24px; max-width:560px; text-align:left; }
+  .afq-rec .lbl { font-family:'Rajdhani',sans-serif; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:#9fb2da; }
+  .afq-rec .nm { font-size:19px; font-weight:800; color:#fff; margin:4px 0 4px; }
+  .afq-rec .ds { color:#cdd8ef; font-size:14px; margin-bottom:16px; }
+  .afq-rec a.buy { display:inline-block; background:linear-gradient(90deg,#1565c0,#2979ff); color:#fff; font-weight:700; text-decoration:none; padding:13px 26px; border-radius:9px; box-shadow:0 8px 24px rgba(41,121,255,.35); }
+  .afq-email { max-width:560px; margin:0 auto; background:rgba(14,36,68,.55); border:1px solid var(--border); border-radius:12px; padding:24px; }
+  .afq-email h4 { font-family:'Rajdhani',sans-serif; font-weight:700; font-size:17px; color:#fff; margin-bottom:6px; }
+  .afq-email p { color:var(--gray); font-size:14px; margin-bottom:16px; line-height:1.5; }
+  .afq-email-row { display:flex; gap:10px; flex-wrap:wrap; }
+  .afq-email input { flex:1; min-width:200px; background:rgba(6,13,31,.6); border:1px solid var(--border); border-radius:8px; padding:14px 16px; color:#fff; font-family:'Source Sans 3',sans-serif; font-size:15px; outline:none; }
+  .afq-email input:focus { border-color:var(--electric-blue); }
+  .afq-email button { background:linear-gradient(135deg,var(--orange),#e65100); color:#fff; border:none; font-family:'Rajdhani',sans-serif; font-weight:700; font-size:14px; letter-spacing:1px; text-transform:uppercase; padding:14px 24px; border-radius:8px; cursor:pointer; transition:all .25s; }
+  .afq-email button:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(245,124,0,.4); }
+  .afq-unlocked { display:none; text-align:center; margin-top:20px; }
+  .afq-unlocked a { display:inline-block; background:rgba(41,121,255,.12); border:1px solid var(--electric-blue); color:var(--glow-blue); font-family:'Rajdhani',sans-serif; font-weight:700; letter-spacing:1px; text-transform:uppercase; font-size:14px; text-decoration:none; padding:14px 28px; border-radius:9px; }
+  .afq-restart { margin-top:24px; background:none; border:none; color:var(--text-muted); font-family:'Rajdhani',sans-serif; font-size:12px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; }
+  .afq-restart:hover { color:var(--off-white); }
+  @media (max-width:600px){ .afq-card{ padding:26px 20px; } }
+</style>
+
+<section id="scorecard">
+  <div class="afq-wrap">
+    <div class="afq-head">
+      <span class="afq-eyebrow"><span class="dot"></span>Free · 60 Seconds · No Login</span>
+      <h2>How <span>Bid-Ready</span> Are You?</h2>
+      <p>Answer 7 quick questions. Get an instant federal-readiness score, your exact gaps, and the one move that closes them — built from 25 years inside FEMA, HUD &amp; CDBG-DR programs.</p>
+    </div>
+
+    <div class="afq-card">
+      <!-- QUIZ -->
+      <div id="afqQuiz">
+        <div class="afq-progress"><span id="afqBar"></span></div>
+        <div class="afq-step-count" id="afqCount">Question 1 of 7</div>
+        <div class="afq-q" id="afqQ"></div>
+        <div class="afq-opts" id="afqOpts"></div>
+        <button class="afq-back" id="afqBack" style="display:none;" onclick="afqPrev()">← Back</button>
+      </div>
+
+      <!-- RESULT -->
+      <div class="afq-result" id="afqResult">
+        <div class="afq-ring">
+          <svg width="180" height="180" viewBox="0 0 180 180">
+            <defs><linearGradient id="afqGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#2979ff"/><stop offset="100%" stop-color="#ff9800"/>
+            </linearGradient></defs>
+            <circle class="track" cx="90" cy="90" r="78" fill="none" stroke-width="12"/>
+            <circle class="fill" id="afqFill" cx="90" cy="90" r="78" fill="none" stroke-width="12" stroke-dasharray="490" stroke-dashoffset="490"/>
+          </svg>
+          <div class="afq-ring-num"><b id="afqScoreNum">0</b><small>Readiness</small></div>
+        </div>
+        <div class="afq-tier" id="afqTier"></div>
+        <p class="afq-tier-sub" id="afqTierSub"></p>
+
+        <div class="afq-gaps">
+          <h4>Your Readiness Breakdown</h4>
+          <ul id="afqGapList"></ul>
+        </div>
+
+        <div class="afq-rec">
+          <div class="lbl">Your recommended next move</div>
+          <div class="nm" id="afqRecName"></div>
+          <div class="ds" id="afqRecDesc"></div>
+          <a class="buy" id="afqRecBuy" href="#" target="_blank" rel="noopener noreferrer"></a>
+        </div>
+
+        <div class="afq-email">
+          <h4>Get your personalized 30-day action plan + the free Strike Pack</h4>
+          <p>We'll email your full plan and unlock the interactive SAM.gov Activation Strike Pack — the live capability-statement audit and 30-day checklist. No spam, ever.</p>
+          <form id="afqForm" class="afq-email-row" name="readiness-scorecard" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="readiness-scorecard">
+            <input type="hidden" name="score" id="afqHidScore">
+            <input type="hidden" name="tier" id="afqHidTier">
+            <input type="hidden" name="industry" id="afqHidIndustry">
+            <p hidden><label>Don't fill this out: <input name="bot-field"></label></p>
+            <input type="email" name="email" id="afqEmail" placeholder="you@email.com" required>
+            <button type="submit">Unlock It →</button>
+          </form>
+          <div class="afq-unlocked" id="afqUnlocked">
+            <p style="color:var(--glow-blue);font-family:'Rajdhani',sans-serif;margin-bottom:14px;">✅ Plan on its way. Here's your Strike Pack:</p>
+            <a href="/strike-pack.html" target="_blank" rel="noopener noreferrer">⚡ Open the Free Strike Pack →</a>
+          </div>
+        </div>
+
+        <button class="afq-restart" onclick="afqRestart()">↻ Retake the test</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Netlify form detection (static copy for build-time registration) -->
+<form name="readiness-scorecard" data-netlify="true" netlify-honeypot="bot-field" hidden>
+  <input type="email" name="email"><input type="text" name="score"><input type="text" name="tier"><input type="text" name="industry"><input name="bot-field">
+</form>
+
+<script>
+(function(){
+  const Q = [
+    { key:'industry', type:'route', q:"What kind of operation do you run?", opts:[
+      { t:"Construction / trades", v:'construction' },
+      { t:"Trucking, freight, warehousing or logistics", v:'logistics' },
+      { t:"Nonprofit or community organization", v:'nonprofit' },
+      { t:"Other contractor or professional service", v:'other' }
+    ]},
+    { key:'sam', max:25, q:"Are you registered in SAM.gov?", opts:[
+      { t:"Yes — active and current", p:25 },
+      { t:"Started it, never finished", p:10 },
+      { t:"It's expired", p:5 },
+      { t:"No, not yet", p:0 }
+    ]},
+    { key:'cap', max:15, q:"Do you have a capability statement?", opts:[
+      { t:"Yes — with hard numbers & past performance", p:15 },
+      { t:"Yes, but it's basic", p:8 },
+      { t:"No", p:0 }
+    ]},
+    { key:'naics', max:15, q:"Do you know your primary NAICS codes?", opts:[
+      { t:"Yes — chosen and aligned to what I do", p:15 },
+      { t:"Sort of — I picked some", p:7 },
+      { t:"No idea what those are", p:0 }
+    ]},
+    { key:'past', max:20, q:"What past performance can you show?", opts:[
+      { t:"Multiple documented references", p:20 },
+      { t:"One or two jobs I could reference", p:10 },
+      { t:"None that's federal/recovery-ready yet", p:0 }
+    ]},
+    { key:'bid', max:15, q:"Have you bid on a federal, FEMA, or CDBG-DR opportunity?", opts:[
+      { t:"Yes — and won at least one", p:15 },
+      { t:"Bid, but haven't won yet", p:8 },
+      { t:"Never bid on one", p:0 }
+    ]},
+    { key:'comp', max:10, q:"How ready are you on compliance (Davis-Bacon, Section 3, 2 CFR 200)?", opts:[
+      { t:"I have systems in place", p:10 },
+      { t:"I've heard of them", p:4 },
+      { t:"No idea where to start", p:0 }
+    ]}
+  ];
+  const GAP = {
+    sam:"Complete & maintain your SAM.gov registration",
+    cap:"Build a metrics-driven capability statement",
+    naics:"Lock in the NAICS codes that match your work",
+    past:"Package past performance evaluators will trust",
+    bid:"Get into the bid pipeline with a real strategy",
+    comp:"Stand up Davis-Bacon / Section 3 / audit systems"
+  };
+  const MAN = {
+    construction:{ name:"Construction Field Manual", price:"$57", slug:"construction-federal-field-manual", ds:"Win federal, FEMA, HUD & CDBG-DR construction work — Davis-Bacon + Section 3 systems included." },
+    logistics:{ name:"Logistics Field Manual", price:"$57", slug:"logistics-federal-field-manual", ds:"Trucking, freight & warehousing into DLA, GSA & FEMA work — SCA + DOT systems." },
+    nonprofit:{ name:"Nonprofit Field Manual", price:"$57", slug:"nonprofit-federal-field-manual", ds:"Win federal grants & CDBG-DR subawards — SAM+Grants.gov, 2 CFR 200, Single Audit." },
+    other:{ name:"SAM.gov Field Manual", price:"$37", slug:"sam-gov-field-manual", ds:"The fastest on-ramp: SAM.gov-registered, NAICS-aligned & bid-ready in 30 days." }
+  };
+  const SAMMAN = { name:"SAM.gov Field Manual", price:"$37", slug:"sam-gov-field-manual", ds:"Start here: get SAM.gov-registered, NAICS-aligned & bid-ready in 30 days — the fastest on-ramp to federal work." };
+  const BID = { name:"Past Performance & Bid Strategy", price:"$67", slug:"bid-strategy-mastery", ds:"You're bid-ready — now win the right ones with evaluation-ready past performance and disciplined bid strategy." };
+
+  let step = 0; const answers = {};
+  const $ = id => document.getElementById(id);
+
+  function render(){
+    const item = Q[step];
+    $('afqBar').style.width = ((step)/Q.length*100)+'%';
+    $('afqCount').textContent = 'Question '+(step+1)+' of '+Q.length;
+    $('afqQ').textContent = item.q;
+    $('afqBack').style.display = step>0 ? 'inline-block' : 'none';
+    const wrap = $('afqOpts'); wrap.innerHTML='';
+    item.opts.forEach(o=>{
+      const b=document.createElement('button');
+      b.className='afq-opt'; b.type='button';
+      b.innerHTML='<span class="tick">✓</span><span>'+o.t+'</span>';
+      b.onclick=()=>choose(item,o);
+      wrap.appendChild(b);
+    });
+  }
+  function choose(item,o){
+    if(item.type==='route') answers[item.key]=o.v;
+    else answers[item.key]={p:o.p,max:item.max};
+    if(step<Q.length-1){ step++; render(); }
+    else finish();
+  }
+  window.afqPrev=function(){ if(step>0){ step--; render(); } };
+
+  function finish(){
+    $('afqBar').style.width='100%';
+    let score=0;
+    Q.forEach(it=>{ if(it.max){ score+=answers[it.key].p; } });
+    score=Math.round(score);
+    const ind=answers.industry||'other';
+
+    // tier
+    let tier,col,sub;
+    if(score<40){ tier='Pre-Registration'; col='#ff9800'; sub="You're not bid-ready yet — but every gap below is fixable in about 30 days with the right system."; }
+    else if(score<70){ tier='Registered, Not Competitive'; col='#4fc3f7'; sub="You've got a foundation. The difference between you and a winning bidder is the few gaps flagged below."; }
+    else { tier='Bid-Ready'; col='#8bc34a'; sub="You're in the top tier. Now it's about winning the right bids and staying current as the rules change."; }
+
+    // recommendation
+    let rec;
+    if(score<40) rec=SAMMAN;
+    else if(score<70) rec=MAN[ind]||MAN.other;
+    else rec=BID;
+
+    // gaps
+    const list=$('afqGapList'); list.innerHTML='';
+    Q.forEach(it=>{
+      if(!it.max) return;
+      const a=answers[it.key];
+      const li=document.createElement('li');
+      if(a.p>=it.max){ li.className='ok'; li.textContent=({sam:'SAM.gov registration is active',cap:'Capability statement is in good shape',naics:'NAICS codes are locked in',past:'Past performance is ready',bid:'You’re already in the bid pipeline',comp:'Compliance systems are in place'})[it.key]; }
+      else { li.textContent=GAP[it.key]; }
+      list.appendChild(li);
+    });
+
+    $('afqTier').textContent=tier; $('afqTier').style.color=col;
+    $('afqTierSub').textContent=sub;
+    $('afqRecName').textContent=rec.name+' · '+rec.price;
+    $('afqRecDesc').textContent=rec.ds;
+    const buy=$('afqRecBuy'); buy.href='https://allforwardllc.gumroad.com/l/'+rec.slug;
+    buy.textContent='Get the '+rec.name+' '+rec.price+' →';
+    $('afqHidScore').value=score; $('afqHidTier').value=tier; $('afqHidIndustry').value=ind;
+
+    $('afqQuiz').style.display='none';
+    $('afqResult').style.display='block';
+    // animate ring + number
+    const circ=490, off=circ-(score/100*circ);
+    setTimeout(()=>{ $('afqFill').style.strokeDashoffset=off; },80);
+    let n=0; const tgt=score; const iv=setInterval(()=>{ n+=Math.ceil(tgt/40)||1; if(n>=tgt){n=tgt;clearInterval(iv);} $('afqScoreNum').textContent=n; },28);
+  }
+
+  window.afqRestart=function(){ step=0; for(const k in answers) delete answers[k];
+    $('afqResult').style.display='none'; $('afqQuiz').style.display='block';
+    $('afqFill').style.strokeDashoffset=490; $('afqScoreNum').textContent='0';
+    $('afqUnlocked').style.display='none'; $('afqForm').style.display='flex'; render();
+  };
+
+  // Netlify AJAX submit
+  const enc=o=>Object.keys(o).map(k=>encodeURIComponent(k)+'='+encodeURIComponent(o[k])).join('&');
+  $('afqForm').addEventListener('submit',function(e){
+    e.preventDefault();
+    const data={ 'form-name':'readiness-scorecard', email:$('afqEmail').value, score:$('afqHidScore').value, tier:$('afqHidTier').value, industry:$('afqHidIndustry').value, 'bot-field':'' };
+    fetch('/',{ method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:enc(data) })
+      .then(()=>{ $('afqForm').style.display='none'; $('afqUnlocked').style.display='block'; })
+      .catch(()=>{ $('afqForm').style.display='none'; $('afqUnlocked').style.display='block'; });
+  });
+
+  render();
+})();
+</script>
 
 <!-- ─── FIELD MANUALS (Gumroad) — TOP PLACEMENT ─── -->
 <!-- Links use canonical Gumroad slugs (allforwardllc.gumroad.com/l/<slug>). When creating each product in Gumroad, set its URL to the matching slug so these resolve. See automation/gumroad-publish.js registry for the slug list. -->
@@ -2155,11 +2432,8 @@
         </a>
         <p>Forward Thinking. Federal Funding. Expert federal contracting, disaster recovery funding, procurement, and compliance consulting — from New Orleans to nationwide.</p>
         <p style="margin-top:16px; font-size:13px; color: var(--gray); line-height:1.7;">
-          Led by <strong style="color:var(--off-white);">Francisco Pellerano</strong> — Principal Consultant.
-          25+ years executing high-stakes operations across restaurant management, real estate and mortgage brokering, and federal, state, private, city, veteran, and disability grant programs.
-          Deep, hands-on experience in disaster recovery construction and CDBG-DR program execution — full procurement lifecycle, multi-source funding, compliance, and grant administration. Documented adherence to FEMA, HUD, and CDBG compliance protocols.
-          FEMA-certified. HUD-trained in Seattle. Formerly licensed real estate agent (LA & FL), mortgage loan originator, and lead paint inspector — credentials that brought a full understanding of real estate, lending, and property compliance to every case.
-          When federal bureaucracy stands between your clients and their recovery — we clear the path.
+          Led by <strong style="color:var(--off-white);">Francisco Pellerano</strong>, Principal Consultant — a FEMA-certified, HUD-trained operator with 25+ years inside federal, disaster recovery, and CDBG-DR programs.
+          <a href="/about-francisco-pellerano" class="fp-inline-link">Read Francisco's full background →</a>
         </p>
 
         <a href="https://www.linkedin.com/in/franciscopellerano" target="_blank" rel="noopener noreferrer" class="fp-linkedin-badge" aria-label="Francisco Pellerano on LinkedIn">
