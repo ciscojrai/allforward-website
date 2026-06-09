@@ -4,32 +4,11 @@
 (function () {
   "use strict";
 
-  // Load Leaflet CSS and JS dynamically
-  function loadLeaflet() {
-    return new Promise((resolve, reject) => {
-      if (window.L) {
-        resolve();
-        return;
-      }
-
-      const link = document.createElement("link");
-      link.rel = "stylesheet";
-      link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-      document.head.appendChild(link);
-
-      const script = document.createElement("script");
-      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
-      script.onload = resolve;
-      script.onerror = reject;
-      document.head.appendChild(script);
-    });
-  }
-
   // Initialize map on DOM ready
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => loadLeaflet().then(initFemaMap));
+    document.addEventListener("DOMContentLoaded", initFemaMap);
   } else {
-    loadLeaflet().then(initFemaMap);
+    initFemaMap();
   }
 
   function initFemaMap() {
