@@ -67,32 +67,13 @@
 
   /* ---------- map load ---------- */
   function loadMap() {
-    var mount = $("#map-mount");
-    if (!mount) return Promise.resolve();
-    return fetch("assets/us-states-clean.svg")
-      .then(function (r) { return r.text(); })
-      .then(function (svg) { mount.innerHTML = svg; })
-      .catch(function (e) {
-        console.warn("map svg failed", e);
-        mount.innerHTML = '<p class="drawer-loading">Map unavailable.</p>';
-      });
+    // FEMA map is initialized in fema-hazard-map.js
+    return Promise.resolve();
   }
 
   /* ---------- map wiring ---------- */
   function wireMap() {
-    var nodes = document.querySelectorAll("#us-map .state");
-    nodes.forEach(function (n) {
-      var code = n.id;
-      var entry = byCode[code];
-      if (entry) {
-        var t = n.querySelector("title");
-        if (t) t.textContent = entry.state;
-      }
-      n.addEventListener("click", function () { openDrawer(code); });
-      n.addEventListener("keydown", function (e) { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openDrawer(code); } });
-      n.setAttribute("tabindex", "0");
-      n.setAttribute("role", "button");
-    });
+    // Map wiring is handled within the new FEMA map component
   }
 
   /* ---------- live hydration ---------- */
@@ -145,15 +126,7 @@
   }
 
   function applyChoropleth(level) {
-    var nodes = document.querySelectorAll("#us-map .state");
-    nodes.forEach(function (n) {
-      var entry = byCode[n.id];
-      n.classList.remove("lvl-watch", "lvl-warn");
-      if (!entry) return;
-      var lv = level[entry.fips];
-      if (lv === 2) n.classList.add("lvl-warn");
-      else if (lv === 1) n.classList.add("lvl-watch");
-    });
+    // Choropleth logic is integrated into the FEMA hazard map rendering
   }
 
   function hydrateStorms() {
