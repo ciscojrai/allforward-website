@@ -30,7 +30,9 @@
       .then(function (data) {
         STATES = data.states || [];
         STATES.forEach(function (s) { byCode[s.code] = s; byFips[s.fips] = s; });
+        exposeStateDrawer();
         populateFormStates();
+        renderStateSelector();
         renderFunding();
         return loadMap();
       })
@@ -45,6 +47,9 @@
     var cb = $("#drawer-close");
     if (cb) cb.addEventListener("click", closeDrawer);
     document.addEventListener("keydown", function (e) { if (e.key === "Escape") closeDrawer(); });
+    document.addEventListener("ops:state-selected", function (e) {
+      if (e.detail && e.detail.code) openDrawer(e.detail.code);
+    });
 
     var alertsMod = $('[data-mod="alerts"]');
     if (alertsMod) alertsMod.addEventListener("click", function () {
@@ -73,7 +78,58 @@
 
   /* ---------- map wiring ---------- */
   function wireMap() {
-    // Map wiring is handled within the new FEMA map component
+    exposeStateDrawer();
+  }
+
+  function exposeStateDrawer() {
+    window.openOpsStateDrawer = openDrawer;
+    window.opsStateName = function (code) {
+      return byCode[code] ? byCode[code].state : code;
+    };
+  }
+
+  function renderStateSelector() {
+    var head = $(".map-head");
+    if (!head || $("#state-brief-select")) return;
+
+    var picker = el("div", "state-brief-picker");
+    var label = el("label", null, "State brief");
+    label.setAttribute("for", "state-brief-select");
+
+    var controls = el("div", "state-brief-controls");
+    var select = document.createElement("select");
+    select.id = "state-brief-select";
+    select.setAttribute("aria-label", "Select a state recovery brief");
+
+    var empty = el("option", null, "Select a state...");
+    empty.value = "";
+    select.appendChild(empty);
+
+    STATES.forEach(function (s) {
+      var option = el("option", null, s.state);
+      option.value = s.code;
+      select.appendChild(option);
+    });
+
+    var button = el("button", "state-brief-button", "Open brief");
+    button.type = "button";
+
+    function openSelected() {
+      if (!select.value) {
+        select.focus();
+        return;
+      }
+      openDrawer(select.value);
+    }
+
+    select.addEventListener("change", openSelected);
+    button.addEventListener("click", openSelected);
+
+    controls.appendChild(select);
+    controls.appendChild(button);
+    picker.appendChild(label);
+    picker.appendChild(controls);
+    head.appendChild(picker);
   }
 
   /* ---------- live hydration ---------- */
@@ -176,6 +232,8 @@
     document.querySelectorAll("#us-map .state.selected").forEach(function (n) { n.classList.remove("selected"); });
     var node = document.getElementById(code);
     if (node) node.classList.add("selected");
+    var select = $("#state-brief-select");
+    if (select) select.value = code;
 
     $("#drawer-title").textContent = entry.state;
     $("#drawer-code").textContent = entry.code + " · FIPS " + entry.fips;

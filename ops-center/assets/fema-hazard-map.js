@@ -82,8 +82,8 @@
     // Add mock hazard layers (simulating real FEMA GIS feeds)
     addHazardLayers(map);
 
-    // Load US States GeoJSON for clicking
-    fetch("assets/us-states-clean.svg") // Fallback to SVG path if geojson not available, but for now we'll just handle clicks on the map
+    // Add clickable state boundaries that open the recovery drawer.
+    addStateBoundaries(mapContainer);
     
     console.log("Professional FEMA Hazard Map initialized successfully.");
     
@@ -129,5 +129,52 @@
         fillOpacity: 1
       }).addTo(map);
     });
+  }
+
+  function addStateBoundaries(mapContainer) {
+    fetch("assets/us-states-clean.svg")
+      .then(response => {
+        if (!response.ok) throw new Error("state svg unavailable");
+        return response.text();
+      })
+      .then(svgText => {
+        const doc = new DOMParser().parseFromString(svgText, "image/svg+xml");
+        const svg = doc.documentElement;
+        svg.classList.add("leaflet-state-boundaries");
+        svg.setAttribute("aria-label", "Clickable U.S. state recovery briefs");
+
+        svg.querySelectorAll(".state").forEach(state => {
+          const code = state.id;
+          const name = window.opsStateName ? window.opsStateName(code) : code;
+          state.setAttribute("tabindex", "0");
+          state.setAttribute("role", "button");
+          state.setAttribute("aria-label", `${name} recovery brief`);
+
+          const title = state.querySelector("title");
+          if (title) title.textContent = name;
+
+          const open = () => {
+            document.dispatchEvent(new CustomEvent("ops:state-selected", {
+              detail: { code }
+            }));
+          };
+
+          state.addEventListener("click", open);
+          state.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              open();
+            }
+          });
+        });
+
+        const overlay = document.createElement("div");
+        overlay.className = "state-map-overlay";
+        overlay.appendChild(svg);
+        mapContainer.appendChild(overlay);
+      })
+      .catch(error => {
+        console.warn("State boundary layer unavailable", error);
+      });
   }
 })();
