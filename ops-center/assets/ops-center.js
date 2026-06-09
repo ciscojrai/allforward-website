@@ -255,15 +255,18 @@
   }
 
   function hydrateStorms() {
-    fetch(NHC)
+    // NHC blocks browser CORS, so go through our server-side proxy. Real count;
+    // genuinely 0 in the off-season (not a failure dash).
+    fetch("/.netlify/functions/storms")
       .then(function (r) { return r.json(); })
       .then(function (j) {
-        var storms = (j && j.activeStorms) || [];
-        var n = storms.length;
-        setModule("storms", String(n), n ? "active tropical systems" : "no active tropical systems", n > 0);
+        if (j.count == null) throw new Error(j.error || "no count");
+        var n = j.count;
+        var status = n ? (n + " active tropical system" + (n > 1 ? "s" : "")) : "no active tropical systems";
+        setModule("storms", String(n), status, n > 0);
       })
       .catch(function (e) {
-        console.warn("NHC unavailable", e);
+        console.warn("storms unavailable", e);
         setModule("storms", "—", "feed unavailable");
       });
   }
