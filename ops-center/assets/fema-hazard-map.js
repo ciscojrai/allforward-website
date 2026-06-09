@@ -68,7 +68,16 @@
       center: [39.8283, -98.5795], // Center of US
       zoom: 4,
       zoomControl: false,
-      attributionControl: false
+      attributionControl: false,
+      // Static backdrop: the clickable state SVG overlay is NOT georeferenced to the
+      // basemap, so freeze all map interaction to keep the two layers in sync — and to
+      // stop scroll-wheel zoom from hijacking the page scroll.
+      scrollWheelZoom: false,
+      dragging: false,
+      doubleClickZoom: false,
+      boxZoom: false,
+      touchZoom: false,
+      keyboard: false
     });
 
     // Add Dark Basemap (CartoDB Dark Matter)
@@ -76,8 +85,7 @@
       maxZoom: 19
     }).addTo(map);
 
-    // Add professional zoom controls
-    L.control.zoom({ position: 'topleft' }).addTo(map);
+    // Map is a frozen backdrop (no zoom control — interaction is disabled above).
 
     // Add mock hazard layers (simulating real FEMA GIS feeds)
     addHazardLayers(map);
