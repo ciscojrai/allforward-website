@@ -8,8 +8,8 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
-# Site-wide security headers (no-breakage set; CSP intentionally omitted because the
-# ops-center dashboard fetches several external APIs — add CSP separately after testing).
+# Site-wide security headers (no-breakage set; CSP omitted globally because the
+# marketing pages are not yet audited for inline/third-party content).
 [[headers]]
   for = "/*"
   [headers.values]
@@ -17,3 +17,18 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# Enforcing CSP scoped to the Ops Center (fully controlled + tested against its live
+# data feeds). Allowlist derived empirically from the dashboard's network calls:
+#   connect: FEMA OpenFEMA (drawer), NWS alerts, NHC storms, NIFC wildfires, Google Analytics
+#   script:  self + GA tag manager (+ 'unsafe-inline' for the inline gtag/yr snippets)
+#   style:   self + 'unsafe-inline' (inline style attributes in the markup)
+# Re-declares the base headers so Ops Center keeps them regardless of Netlify's merge order.
+[[headers]]
+  for = "/ops-center/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com; font-src 'self'; connect-src 'self' https://www.fema.gov https://api.weather.gov https://www.nhc.noaa.gov https://services3.arcgis.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
