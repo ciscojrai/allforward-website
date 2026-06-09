@@ -41,24 +41,6 @@
     mapEl.innerHTML = '<p style="color: #9aa3b8; text-align: center; padding-top: 250px;">Initializing professional GIS map...</p>';
     mapContainer.appendChild(mapEl);
 
-    // Add controls overlay (Legend and Panel)
-    const controlsOverlay = document.createElement("div");
-    controlsOverlay.className = "fema-map-controls";
-    controlsOverlay.style.cssText = "position: absolute; inset: 0; pointer-events: none; z-index: 1000;";
-    controlsOverlay.innerHTML = `
-      <div class="fema-legend" style="position: absolute; bottom: 20px; right: 20px; background: rgba(36, 43, 61, 0.9); border: 1px solid #343d52; border-radius: 8px; padding: 12px; pointer-events: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.5); color: #f0f2f5; font-family: system-ui, sans-serif; font-size: 0.8rem; width: 220px;">
-        <div style="font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #9aa3b8; margin-bottom: 10px; border-bottom: 1px solid #343d52; padding-bottom: 6px;">Hazard Legend</div>
-        <div style="display: flex; flex-direction: column; gap: 8px;">
-          <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 12px; height: 12px; background: #dc2626; border-radius: 2px; border: 1px solid rgba(255,255,255,0.2);"></span><span>Active Fire / Danger</span></div>
-          <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 12px; height: 12px; background: #f59e0b; border-radius: 2px; border: 1px solid rgba(255,255,255,0.2);"></span><span>Fire Warning / Alert</span></div>
-          <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 12px; height: 12px; background: #0d9488; border-radius: 2px; border: 1px solid rgba(255,255,255,0.2);"></span><span>Flood Zone / Alert</span></div>
-          <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 12px; height: 12px; background: #2563eb; border-radius: 2px; border: 1px solid rgba(255,255,255,0.2);"></span><span>Tornado / Storm Watch</span></div>
-          <div style="display: flex; align-items: center; gap: 8px;"><span style="width: 12px; height: 12px; background: #a855f7; border-radius: 2px; border: 1px solid rgba(255,255,255,0.2);"></span><span>Severe Weather Alert</span></div>
-        </div>
-      </div>
-    `;
-    mapContainer.appendChild(controlsOverlay);
-
     // Replace the map mount content
     mapMount.innerHTML = "";
     mapMount.appendChild(mapContainer);
@@ -69,7 +51,7 @@
       zoom: 4,
       minZoom: 3,
       maxZoom: 8,
-      maxBounds: [[15, -180], [72, -50]],   // keep the US in view (incl. AK / HI / PR)
+      maxBounds: [[5, -180], [72, -50]],    // keep US in view incl. AK/HI/PR + Gulf/EPAC storms
       maxBoundsViscosity: 0.8,
       zoomControl: false,
       attributionControl: false,
@@ -92,8 +74,8 @@
 
     L.control.zoom({ position: "topleft" }).addTo(map);
 
-    // Add mock hazard layers (simulating real FEMA GIS feeds)
-    addHazardLayers(map);
+    // Real active storms are plotted by ops-center.js (hydrateStorms -> plotStorms)
+    // from the live NHC proxy. No mock hazard pins.
 
     // Clickable state GeoJSON layer is added by ops-center.js once states.json loads
     // (it owns the state data, severity choropleth, and recovery drawer).
@@ -103,45 +85,6 @@
     // Dispatch event for other scripts to know map is ready
     window.femaMap = map;
     window.dispatchEvent(new Event('fema-map-ready'));
-  }
-
-  function addHazardLayers(map) {
-    // Mock data for professional hazard visualization
-    const hazards = [
-      // Fires (Red)
-      { name: "California Wildfire Complex", coords: [38.5, -121.5], color: "#dc2626", radius: 50000 },
-      { name: "Oregon Fire Warning", coords: [44.0, -120.5], color: "#f59e0b", radius: 30000 },
-      
-      // Floods (Teal)
-      { name: "Mississippi Basin Flood Watch", coords: [32.5, -91.0], color: "#0d9488", radius: 80000 },
-      { name: "Gulf Coast Surge Alert", coords: [29.5, -94.0], color: "#0d9488", radius: 60000 },
-
-      // Tornadoes (Blue)
-      { name: "Midwest Tornado Watch", coords: [38.5, -95.5], color: "#2563eb", radius: 100000 },
-      { name: "Oklahoma Storm Cell", coords: [35.5, -97.5], color: "#2563eb", radius: 40000 },
-
-      // Severe Weather (Purple)
-      { name: "Northeast Severe Weather", coords: [41.0, -74.0], color: "#a855f7", radius: 70000 }
-    ];
-
-    hazards.forEach(h => {
-      L.circle(h.coords, {
-        color: h.color,
-        fillColor: h.color,
-        fillOpacity: 0.3,
-        weight: 1,
-        radius: h.radius
-      }).addTo(map).bindPopup(`<strong>${h.name}</strong><br>Status: Active Alert`);
-
-      // Add a smaller pulse point
-      L.circleMarker(h.coords, {
-        radius: 6,
-        color: '#fff',
-        weight: 1,
-        fillColor: h.color,
-        fillOpacity: 1
-      }).addTo(map);
-    });
   }
 
 })();

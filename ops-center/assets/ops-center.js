@@ -17,6 +17,7 @@
   var drawerCache = {};     // code -> fetched FEMA declarations
   var STATE_GEO = null;     // L.geoJSON layer (clickable states on the basemap)
   var stateLayers = {};     // code -> Leaflet layer
+  var stormLayer = null;    // L.layerGroup of live NHC storm markers
 
   function $(s, r) { return (r || document).querySelector(s); }
   function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
@@ -134,6 +135,35 @@
     });
     var ly = stateLayers[code];
     if (ly && ly.bringToFront) ly.bringToFront();
+  }
+
+  /* ---------- live storm markers (real NHC positions via the proxy) ---------- */
+  function stormColor(c) {
+    c = (c || "").toUpperCase();
+    if (c === "HU" || c === "MH") return "#dc2626";        // hurricane
+    if (c === "TS" || c === "STS") return "#f59e0b";       // tropical/subtropical storm
+    return "#2563eb";                                      // depression / potential
+  }
+  function stormLabel(c) {
+    var m = { HU: "Hurricane", MH: "Major Hurricane", TS: "Tropical Storm", TD: "Tropical Depression",
+      STS: "Subtropical Storm", SD: "Subtropical Depression", PTC: "Potential Tropical Cyclone", PTS: "Post-Tropical" };
+    return m[(c || "").toUpperCase()] || c || "Tropical System";
+  }
+  function plotStorms(storms) {
+    var map = window.femaMap;
+    if (!map || !window.L) return;
+    if (stormLayer) { map.removeLayer(stormLayer); stormLayer = null; }
+    if (!storms || !storms.length) return;
+    stormLayer = window.L.layerGroup().addTo(map);
+    storms.forEach(function (s) {
+      if (typeof s.lat !== "number" || typeof s.lon !== "number") return;
+      var col = stormColor(s.classification);
+      var label = stormLabel(s.classification);
+      window.L.circleMarker([s.lat, s.lon], { radius: 8, color: "#fff", weight: 1.5, fillColor: col, fillOpacity: .95 })
+        .addTo(stormLayer)
+        .bindTooltip(s.name + " — " + label, { direction: "top" })
+        .bindPopup("<strong>" + s.name + "</strong><br>" + label + (s.intensity ? (" · " + s.intensity + " kt") : ""));
+    });
   }
 
   /* ---------- map wiring ---------- */
@@ -264,6 +294,7 @@
         var n = j.count;
         var status = n ? (n + " active tropical system" + (n > 1 ? "s" : "")) : "no active tropical systems";
         setModule("storms", String(n), status, n > 0);
+        plotStorms(j.storms || []);
       })
       .catch(function (e) {
         console.warn("storms unavailable", e);
