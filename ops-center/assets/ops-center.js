@@ -380,6 +380,11 @@
     var sp = $("#d-statepage");
     sp.href = entry.slug + ".html";
     sp.textContent = "View full " + entry.state + " recovery profile →";
+    var cal = $("#d-calendar");
+    if (cal) {
+      cal.href = "/ops-center/calendar/?state=" + entry.code;
+      cal.textContent = "View " + entry.state + " hazard & funding calendar →";
+    }
 
     // live FEMA declarations
     var decl = $("#d-decl");
