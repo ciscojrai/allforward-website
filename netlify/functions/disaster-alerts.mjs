@@ -25,7 +25,7 @@
 export const config = { schedule: "0 13 * * *" };
 
 const FEMA_URL = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries";
-const FORM_NAME = "ops-alerts";
+const FORM_NAME = "ops-alerts-confirmed"; // double-opt-in: only confirmed subscribers
 const DEFAULT_FROM = "All Forward Ops Center <alerts@allforwardllc.com>";
 const SITE = "https://allforwardllc.com";
 

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Alerts Activated — Francisco Pellerano · All Forward Operations Center</title>
+<title>Confirm your alerts — Francisco Pellerano · All Forward Operations Center</title>
 <meta name="robots" content="noindex,follow">
 <link rel="icon" href="/favicon.ico">
 <link rel="stylesheet" href="assets/ops-center.css">
@@ -20,21 +20,14 @@
 </header>
 <main>
   <div class="wrap" style="padding:80px 24px;text-align:center;max-width:640px">
-    <div style="font-size:3rem;line-height:1;margin-bottom:18px">✅</div>
-    <h2 style="font-size:1.8rem;margin:0 0 12px">Confirmed — your alerts are active.</h2>
-    <p style="color:var(--text-2);font-size:1.05rem">You're verified and on the list. We'll flag FEMA declarations, CDBG-DR openings, and funding deadlines for the states and hazards you selected. Keep an eye on your inbox.</p>
+    <div style="font-size:3rem;line-height:1;margin-bottom:18px">📨</div>
+    <h2 style="font-size:1.8rem;margin:0 0 12px">Almost there — check your inbox.</h2>
+    <p style="color:var(--text-2);font-size:1.05rem">We just emailed you a confirmation link. <strong>Click it to activate your alerts.</strong> You won't receive any FEMA declaration alerts until you confirm — this keeps the list to real, opted-in subscribers.</p>
+    <p style="color:var(--text-2);margin-top:14px;font-size:.95rem">No email after a minute? Check spam, or re-submit the form.</p>
     <p style="margin-top:30px">
       <a class="drawer-cta" style="display:inline-block;padding:12px 26px" href="/ops-center/">← Back to the Operations Center</a>
     </p>
-    <p style="margin-top:16px"><a href="/strike-pack.html">Need help pursuing recovery work now? See the Strike Pack →</a></p>
   </div>
 </main>
-<!-- Hidden form so Netlify detects "ops-alerts-confirmed"; the confirm function POSTs verified subscribers here. -->
-<form name="ops-alerts-confirmed" data-netlify="true" hidden>
-  <input type="text" name="name">
-  <input type="email" name="email">
-  <input type="text" name="states">
-  <input type="text" name="disaster_types">
-</form>
 </body>
 </html>
