@@ -122,19 +122,28 @@ a:hover{text-decoration:underline}
 /* Hide the map's hazard legend while the recovery drawer is open so they don't overlap. */
 body.ops-drawer-open .fema-legend{opacity:0; visibility:hidden; transition:opacity .2s}
 .map-foot{font-size:.68rem;color:var(--text-2);padding:10px 2px 4px;font-family:var(--mono)}
-/* ---------- 31-day hazard ribbon ---------- */
+/* ---------- 31-day hazard outlook (week-block calendar) ---------- */
 .forecast31{padding:14px 0 0}
 .forecast31 .map-foot a{color:var(--blue)}
-.f31-range{color:var(--text-2);font-size:.72rem;font-family:var(--mono)}
-#f31-mount{overflow-x:auto;padding-bottom:6px}
-.f31-grid{display:grid;gap:3px;align-items:center;min-width:600px}
-.f31-date{font-size:.58rem;color:var(--text-2);text-align:center;padding:2px 0;line-height:1}
-.f31-date.month-start{color:var(--text);font-weight:700}
-.f31-date.today{color:var(--gold);font-weight:700}
-.f31-label{display:flex;align-items:center;gap:7px;font-size:.76rem;color:var(--text);white-space:nowrap;padding-right:10px}
-.f31-dot{width:9px;height:9px;border-radius:50%;flex:none}
-.f31-cell{height:15px;border-radius:2px;background:rgba(255,255,255,.05)}
-.f31-cell.today{outline:2px solid var(--gold);outline-offset:-2px}
+.forecast31 .f31-card{max-width:540px;margin-right:auto}  /* narrow + left so the drawer doesn't overlap it */
+.f31-headrow{align-items:flex-start;gap:12px;flex-wrap:wrap}
+.f31-range{display:block;color:var(--text-2);font-size:.72rem;font-family:var(--mono);margin-top:3px}
+.f31-controls{display:flex;align-items:center;gap:8px}
+.f31-controls label{font-size:.64rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-2)}
+.f31-controls select{background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:6px 9px;font-size:.82rem;font-family:var(--sans);max-width:180px}
+.wkcal{display:flex;flex-direction:column;gap:5px;margin-top:12px}
+.wkcal-row{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.wkcal-wd{text-align:center;font-size:.6rem;color:var(--text-2);font-weight:700;letter-spacing:.05em}
+.wkcal-cell{min-height:46px;border:1px solid var(--border);border-radius:7px;background:var(--bg);padding:5px 6px;display:flex;flex-direction:column;gap:4px}
+.wkcal-cell.out{opacity:.3}
+.wkcal-cell.today{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold)}
+.wkcal-dnum{font-size:.72rem;color:var(--text);font-family:var(--mono);line-height:1}
+.wkcal-cell.out .wkcal-dnum{color:var(--text-2)}
+.wkcal-dots{display:flex;flex-wrap:wrap;gap:3px;margin-top:auto}
+.wkcal-dot{width:8px;height:8px;border-radius:50%;flex:none}
+.f31-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+.f31-legend .f31-lg{display:flex;align-items:center;gap:6px;font-size:.74rem;color:var(--text-2)}
+@media(max-width:600px){ .forecast31 .f31-card{max-width:none} .wkcal-cell{min-height:40px} }
 
 /* ---------- State drawer ---------- */
 .drawer-backdrop{position:fixed; inset:0; background:rgba(8,11,18,.55); opacity:0; visibility:hidden; transition:opacity .25s; z-index:1990}

@@ -116,15 +116,19 @@
     </div>
   </section>
 
-  <!-- ===== 31-day hazard ribbon ===== -->
-  <section class="wrap forecast31" aria-label="Next 31 days hazard outlook">
-    <div class="map-card">
-      <div class="map-head">
-        <h3>Next 31 Days — Hazard Outlook</h3>
-        <span class="f31-range" id="f31-range"></span>
+  <!-- ===== 31-day hazard outlook (week-block calendar) ===== -->
+  <section class="wrap forecast31" aria-label="31-day hazard outlook">
+    <div class="map-card f31-card">
+      <div class="map-head f31-headrow">
+        <div><h3>Next 31 Days — Hazard Outlook</h3><span class="f31-range" id="f31-range"></span></div>
+        <div class="f31-controls">
+          <label for="f31-state">View</label>
+          <select id="f31-state" aria-label="Outlook: select a state or national"><option value="">United States</option></select>
+        </div>
       </div>
       <div id="f31-mount"><p class="drawer-loading">Building outlook…</p></div>
-      <div class="map-foot">Typical hazard seasons across the U.S. — planning windows, not a forecast. <a href="/ops-center/calendar/">Full calendar by state →</a></div>
+      <div class="f31-legend" id="f31-legend"></div>
+      <div class="map-foot">Typical hazard seasons — planning windows, not a forecast. <a href="/ops-center/calendar/">Full calendar by state →</a></div>
     </div>
   </section>
 
