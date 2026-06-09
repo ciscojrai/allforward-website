@@ -66,7 +66,14 @@
   .nav-links a{color:var(--off-white);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:16px;letter-spacing:.5px;transition:color .2s;}
   .nav-links a:hover{color:var(--glow-blue);}
   .nav-cta{background:linear-gradient(135deg,var(--orange),var(--orange-bright));color:#fff !important;padding:8px 16px;border-radius:6px;}
-  @media(max-width:860px){.nav-links{display:none;}}
+  .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;}
+  .hamburger span{width:24px;height:2px;background:var(--white);transition:all .3s;display:block;}
+  .mobile-menu{display:none;position:fixed;top:76px;left:0;right:0;background:rgba(6,13,31,0.98);border-bottom:1px solid var(--border);z-index:999;padding:20px 6vw;flex-direction:column;gap:4px;}
+  .mobile-menu.open{display:flex;}
+  .mobile-menu a{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:16px;letter-spacing:1px;text-transform:uppercase;color:var(--off-white);text-decoration:none;padding:13px 0;border-bottom:1px solid var(--border);}
+  .mobile-menu a:last-child{border:none;}
+  .mobile-menu a:hover{color:var(--glow-blue);}
+  @media(max-width:860px){.nav-links{display:none;}.hamburger{display:flex;}}
   .blog-hero{padding:80px 6vw 40px;background:radial-gradient(1000px 500px at 80% -10%,rgba(41,121,255,.18),transparent),radial-gradient(800px 400px at 0% 110%,rgba(245,124,0,.10),transparent);border-bottom:1px solid var(--border);}
   .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:2px;text-transform:uppercase;font-size:13px;color:var(--glow-blue);border:1px solid var(--border);border-radius:30px;padding:7px 16px;margin-bottom:20px;}
   .blog-hero h1{font-family:'Bebas Neue',sans-serif;font-weight:400;font-size:clamp(2.6rem,6vw,4.4rem);line-height:1;letter-spacing:1px;color:var(--white);margin-bottom:16px;}
@@ -91,7 +98,7 @@
 </style>
 </head>
 <body>
-<nav>
+<nav id="navbar">
   <a href="/" class="nav-logo"><img src="/logo.png" alt="All Forward logo" style="height:48px;width:auto;border-radius:8px;display:block;"></a>
   <ul class="nav-links">
     <li><a href="/#services">Services</a></li>
@@ -101,7 +108,16 @@
     <li><a href="/#contact">Contact</a></li>
     <li><a href="tel:5045719320" class="nav-cta">📞 504-571-9320</a></li>
   </ul>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/#services" onclick="toggleMenu()">Services</a>
+  <a href="/#serve" onclick="toggleMenu()">Who We Serve</a>
+  <a href="/blog" onclick="toggleMenu()">Blog</a>
+  <a href="/about-francisco-pellerano" onclick="toggleMenu()">About</a>
+  <a href="/#contact" onclick="toggleMenu()">Contact</a>
+  <a href="tel:5045719320" onclick="toggleMenu()">📞 504-571-9320</a>
+</div>
 
 <header class="blog-hero">
   <div class="eyebrow">Insights &amp; Field Guides</div>
@@ -155,5 +171,9 @@
     </div>
   </div>
 </footer>
+<script>
+  function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
+  document.addEventListener('click',(e)=>{const m=document.getElementById('mobileMenu'),n=document.getElementById('navbar');if(n&&m&&!n.contains(e.target)&&!m.contains(e.target))m.classList.remove('open');});
+</script>
 </body>
 </html>

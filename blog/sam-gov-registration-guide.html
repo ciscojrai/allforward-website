@@ -65,7 +65,14 @@
   .nav-links a{color:var(--off-white);text-decoration:none;font-family:'Rajdhani',sans-serif;font-weight:600;font-size:16px;letter-spacing:.5px;transition:color .2s;}
   .nav-links a:hover{color:var(--glow-blue);}
   .nav-cta{background:linear-gradient(135deg,var(--orange),var(--orange-bright));color:#fff !important;padding:8px 16px;border-radius:6px;}
-  @media(max-width:860px){.nav-links{display:none;}}
+  .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;}
+  .hamburger span{width:24px;height:2px;background:var(--white);transition:all .3s;display:block;}
+  .mobile-menu{display:none;position:fixed;top:76px;left:0;right:0;background:rgba(6,13,31,0.98);border-bottom:1px solid var(--border);z-index:999;padding:20px 6vw;flex-direction:column;gap:4px;}
+  .mobile-menu.open{display:flex;}
+  .mobile-menu a{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:16px;letter-spacing:1px;text-transform:uppercase;color:var(--off-white);text-decoration:none;padding:13px 0;border-bottom:1px solid var(--border);}
+  .mobile-menu a:last-child{border:none;}
+  .mobile-menu a:hover{color:var(--glow-blue);}
+  @media(max-width:860px){.nav-links{display:none;}.hamburger{display:flex;}}
   .article-hero{padding:70px 6vw 36px;background:radial-gradient(1000px 500px at 85% -10%,rgba(41,121,255,.16),transparent);border-bottom:1px solid var(--border);}
   .crumb{font-family:'Rajdhani',sans-serif;font-weight:600;letter-spacing:1px;text-transform:uppercase;font-size:13px;color:var(--gray);margin-bottom:18px;}
   .crumb a{color:var(--glow-blue);text-decoration:none;}
@@ -103,7 +110,7 @@
 </style>
 </head>
 <body>
-<nav>
+<nav id="navbar">
   <a href="/" class="nav-logo"><img src="/logo.png" alt="All Forward logo" style="height:48px;width:auto;border-radius:8px;display:block;"></a>
   <ul class="nav-links">
     <li><a href="/#services">Services</a></li>
@@ -113,7 +120,16 @@
     <li><a href="/#contact">Contact</a></li>
     <li><a href="tel:5045719320" class="nav-cta">📞 504-571-9320</a></li>
   </ul>
+  <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/#services" onclick="toggleMenu()">Services</a>
+  <a href="/#serve" onclick="toggleMenu()">Who We Serve</a>
+  <a href="/blog" onclick="toggleMenu()">Blog</a>
+  <a href="/about-francisco-pellerano" onclick="toggleMenu()">About</a>
+  <a href="/#contact" onclick="toggleMenu()">Contact</a>
+  <a href="tel:5045719320" onclick="toggleMenu()">📞 504-571-9320</a>
+</div>
 
 <header class="article-hero">
   <div class="crumb"><a href="/">Home</a> / <a href="/blog">Blog</a> / SAM.gov Guide</div>
@@ -235,5 +251,9 @@
     </div>
   </div>
 </footer>
+<script>
+  function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
+  document.addEventListener('click',(e)=>{const m=document.getElementById('mobileMenu'),n=document.getElementById('navbar');if(n&&m&&!n.contains(e.target)&&!m.contains(e.target))m.classList.remove('open');});
+</script>
 </body>
 </html>
