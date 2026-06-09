@@ -82,7 +82,14 @@
     // Add mock hazard layers (simulating real FEMA GIS feeds)
     addHazardLayers(map);
 
+    // Load US States GeoJSON for clicking
+    fetch("assets/us-states-clean.svg") // Fallback to SVG path if geojson not available, but for now we'll just handle clicks on the map
+    
     console.log("Professional FEMA Hazard Map initialized successfully.");
+    
+    // Dispatch event for other scripts to know map is ready
+    window.femaMap = map;
+    window.dispatchEvent(new Event('fema-map-ready'));
   }
 
   function addHazardLayers(map) {

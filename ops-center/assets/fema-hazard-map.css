@@ -3,6 +3,8 @@
 #fema-map-container {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   border: 1px solid #343d52;
+  min-height: 600px;
+  background: #1a1f2e;
 }
 
 .leaflet-container {
