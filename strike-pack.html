@@ -20,16 +20,17 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0d0d0f;--bg2:#131316;--bg3:#1a1a1f;--bg4:#222228;
-  --teal:#00c9a7;--teal2:#00a888;--gold:#f0b429;--gold2:#c98b00;
-  --white:#f5f5f0;--muted:#8888a0;--border:#2a2a35;
+  /* Aligned to the All Forward site theme: navy + electric blue + orange */
+  --bg:#060d1f;--bg2:#0a1628;--bg3:#0e2444;--bg4:#13294a;
+  --teal:#4fc3f7;--teal2:#2979ff;--gold:#ff9800;--gold2:#f57c00;
+  --white:#e8edf5;--muted:#94a3b8;--border:rgba(41,121,255,0.22);
   --red:#e05555;--green:#22c55e;
 }
 body,html{background:var(--bg);color:var(--white);font-family:'Space Mono','Courier New',monospace;-webkit-font-smoothing:antialiased}
 .doc{max-width:880px;margin:0 auto;padding:2rem 1.5rem}
 
 /* ACTION BAR (sticky, top) */
-.actionbar{position:sticky;top:0;z-index:50;background:rgba(13,13,15,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:.7rem 1rem;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;justify-content:center}
+.actionbar{position:sticky;top:0;z-index:50;background:rgba(6,13,31,0.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:.7rem 1rem;display:flex;gap:.6rem;align-items:center;flex-wrap:wrap;justify-content:center}
 .ab-brand{font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;color:var(--teal);letter-spacing:3px;margin-right:auto}
 .ab-btn{background:var(--bg3);border:1px solid var(--border);color:var(--white);font-family:'Bebas Neue',Impact,sans-serif;font-size:12px;padding:.5rem .9rem;letter-spacing:2px;cursor:pointer;transition:.15s}
 .ab-btn:hover{background:var(--teal);color:#0d0d0f;border-color:var(--teal)}
@@ -41,7 +42,7 @@ body,html{background:var(--bg);color:var(--white);font-family:'Space Mono','Cour
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
 
 /* HOW TO USE — first-load instructions */
-.howto{background:linear-gradient(135deg,rgba(0,201,167,0.08),rgba(240,180,41,0.05));border:1px solid var(--teal);border-left:4px solid var(--teal);padding:1.4rem 1.6rem;margin-bottom:2rem;border-radius:2px}
+.howto{background:linear-gradient(135deg,rgba(41,121,255,0.08),rgba(255,152,0,0.05));border:1px solid var(--teal);border-left:4px solid var(--teal);padding:1.4rem 1.6rem;margin-bottom:2rem;border-radius:2px}
 .howto-title{font-family:'Bebas Neue',Impact,sans-serif;font-size:18px;color:var(--teal);letter-spacing:3px;margin-bottom:.8rem}
 .howto-list{display:grid;gap:.5rem;font-size:13px;line-height:1.5}
 .howto-list li{display:flex;gap:.6rem;color:var(--white);list-style:none}
@@ -51,13 +52,13 @@ body,html{background:var(--bg);color:var(--white);font-family:'Space Mono','Cour
 
 /* COVER */
 .cover{background:var(--bg2);border:1px solid var(--border);border-top:4px solid var(--teal);padding:3.5rem 3rem 3rem;margin-bottom:2rem;position:relative;overflow:hidden}
-.cover::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;border:40px solid rgba(0,201,167,0.06)}
-.cover::after{content:'';position:absolute;bottom:-40px;left:40px;width:140px;height:140px;border-radius:50%;border:30px solid rgba(240,180,41,0.07)}
+.cover::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;border:40px solid rgba(41,121,255,0.06)}
+.cover::after{content:'';position:absolute;bottom:-40px;left:40px;width:140px;height:140px;border-radius:50%;border:30px solid rgba(255,152,0,0.07)}
 .cover-eyebrow{font-family:'Bebas Neue',Impact,sans-serif;font-size:13px;letter-spacing:3px;color:var(--teal);margin-bottom:1rem}
 .cover-title{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(42px,7vw,72px);line-height:1;color:var(--white);margin-bottom:.4rem}
 .cover-title span{color:var(--teal)}
 .cover-subtitle{font-family:'Bebas Neue',Impact,sans-serif;font-size:clamp(18px,3vw,26px);color:var(--gold);letter-spacing:2px;margin-bottom:1.8rem}
-.cover-promise{background:rgba(0,201,167,0.1);border-left:3px solid var(--teal);padding:.9rem 1.2rem;font-size:13px;line-height:1.7;color:var(--white);margin-bottom:2rem}
+.cover-promise{background:rgba(41,121,255,0.1);border-left:3px solid var(--teal);padding:.9rem 1.2rem;font-size:13px;line-height:1.7;color:var(--white);margin-bottom:2rem}
 .cover-meta{font-size:11px;color:var(--muted);letter-spacing:1px;border-top:1px solid var(--border);padding-top:1.2rem}
 .cover-meta strong{color:var(--gold)}
 .price-badge{display:inline-block;background:var(--gold);color:#0d0d0f;font-family:'Bebas Neue',Impact,sans-serif;font-size:28px;padding:.3rem 1.2rem;letter-spacing:2px;position:absolute;top:3.5rem;right:3rem}
@@ -181,7 +182,7 @@ tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
 .divider{border:none;border-top:1px solid var(--border);margin:2rem 0}
 
 /* TOAST */
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--teal);color:#0d0d0f;font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;padding:.7rem 1.4rem;letter-spacing:2px;border-radius:2px;box-shadow:0 6px 24px rgba(0,201,167,0.4);z-index:100;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--teal);color:#0d0d0f;font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;padding:.7rem 1.4rem;letter-spacing:2px;border-radius:2px;box-shadow:0 6px 24px rgba(41,121,255,0.4);z-index:100;opacity:0;transition:opacity .25s;pointer-events:none}
 .toast.show{opacity:1}
 
 /* PRINT STYLES — for buyers who want PDF */
@@ -200,6 +201,17 @@ tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
   hr.divider{page-break-after:always;border:none;margin:0}
   a{color:#000;text-decoration:none}
   th{background:#eee !important}
+
+  /* Scoped print: capability statement only */
+  body.print-cap .doc > *{display:none !important}
+  body.print-cap .doc > #sec-cap{display:block !important}
+  body.print-cap #sec-cap > *{display:none !important}
+  body.print-cap #sec-cap > .section-header,
+  body.print-cap #sec-cap > #cap-print{display:block !important}
+
+  /* Scoped print: 30-day checklist only */
+  body.print-check .doc > *{display:none !important}
+  body.print-check .doc > #sec-check{display:block !important}
 }
 
 /* MOBILE TWEAKS */
@@ -219,7 +231,8 @@ tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
 <div class="actionbar no-print">
   <div class="ab-brand">ALL FORWARD · STRIKE PACK</div>
   <div style="font-size:11px;color:var(--muted);margin-right:.6rem"><span class="save-pulse"></span>Auto-saved locally</div>
-  <button class="ab-btn" onclick="window.print()">⎙ Print / PDF</button>
+  <button class="ab-btn" onclick="printOnly('cap')">⎙ Cap Statement PDF</button>
+  <button class="ab-btn" onclick="printOnly('check')">⎙ Checklist PDF</button>
   <button class="ab-btn gold" onclick="copyCapStatement()">⧉ Copy Cap Statement</button>
   <button class="ab-btn red" onclick="resetProgress()">↻ Reset</button>
 </div>
@@ -232,7 +245,7 @@ tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
   <ol class="howto-list">
     <li><span class="howto-num">01</span><span>Work top to bottom. Each section unlocks the next. Don't skip the readiness scorecard.</span></li>
     <li><span class="howto-num">02</span><span>Everything you type or check is <strong style="color:var(--teal)">auto-saved to your browser</strong>. Close the tab and come back — your progress is still here. Works offline.</span></li>
-    <li><span class="howto-num">03</span><span>When you're done, hit <strong style="color:var(--gold)">Print / PDF</strong> in the top bar to export a clean printable version of your filled-in playbook.</span></li>
+    <li><span class="howto-num">03</span><span>When you're done, use <strong style="color:var(--gold)">Cap Statement PDF</strong> or <strong style="color:var(--gold)">Checklist PDF</strong> in the top bar to export just that piece — clean, with your filled-in answers.</span></li>
     <li><span class="howto-num">04</span><span>Section 05 has a <strong style="color:var(--teal)">live CO-POV audit</strong> — fill in your capability statement and the contracting-officer feedback engine grades it in real time.</span></li>
     <li><span class="howto-num">05</span><span>This file is yours. Back it up. Make copies for each agency you target.</span></li>
   </ol>
@@ -373,7 +386,7 @@ tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
 <hr class="divider">
 
 <!-- SECTION 5 — CAPABILITY STATEMENT + CO-POV AUDIT -->
-<div class="section">
+<div class="section" id="sec-cap">
   <div class="section-header">
     <div class="section-num">05</div>
     <div class="section-title">Capability Statement Framework + Live CO Audit</div>
@@ -401,10 +414,10 @@ tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
 
   <div style="font-family:'Bebas Neue',Impact,sans-serif;font-size:14px;color:var(--teal);letter-spacing:2px;margin:1.5rem 0 .6rem">1-Page Capability Statement Template — Fill In Below</div>
 
-  <div class="cap-block">
+  <div class="cap-block" id="cap-print">
     <div class="cap-header">
       <div>
-        <input class="cap-field" id="cap-name" placeholder="[Company Name]" style="font-family:'Bebas Neue',Impact,sans-serif;font-size:20px;margin-bottom:.3rem">
+        <input class="cap-field" id="cap-name" autocomplete="organization" placeholder="Company name" style="font-size:20px;font-weight:700;margin-bottom:.3rem">
         <div style="font-size:11px;color:var(--muted)">CDBG-DR Compliant · Federal Contractor Ready</div>
       </div>
       <div class="cap-meta">
@@ -428,8 +441,10 @@ tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
       <div class="cap-section">
         <div class="cap-label">Contact</div>
-        <input class="cap-field" id="cap-contact1" placeholder="Name · Title">
-        <input class="cap-field" id="cap-contact2" placeholder="Phone · Email" style="margin-top:.4rem">
+        <input class="cap-field" id="cap-contact1" autocomplete="name" placeholder="Full name">
+        <input class="cap-field" id="cap-title" autocomplete="organization-title" placeholder="Title" style="margin-top:.4rem">
+        <input class="cap-field" id="cap-phone" type="tel" autocomplete="tel" placeholder="Phone" style="margin-top:.4rem">
+        <input class="cap-field" id="cap-contact2" type="email" autocomplete="email" placeholder="Email" style="margin-top:.4rem">
       </div>
       <div class="cap-section">
         <div class="cap-label">Compliance Block</div>
@@ -446,7 +461,7 @@ tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
     <div class="co-pov-fname" id="co-fname">Save your file as: Company_CapabilityStatement_2026.pdf</div>
     <div class="cap-actions">
       <button class="ab-btn gold" onclick="copyCapStatement()">⧉ Copy Capability Statement</button>
-      <button class="ab-btn" onclick="window.print()">⎙ Print / Export PDF</button>
+      <button class="ab-btn" onclick="printOnly('cap')">⎙ Print / Export PDF</button>
     </div>
   </div>
 </div>
@@ -454,7 +469,7 @@ tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
 <hr class="divider">
 
 <!-- SECTION 6 -->
-<div class="section">
+<div class="section" id="sec-check">
   <div class="section-header">
     <div class="section-num">06</div>
     <div class="section-title">30-Day Activation Tracker</div>
@@ -507,7 +522,7 @@ tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
     This Strike Pack is the system. The <strong style="color:var(--teal)">Disaster Recovery Subcontractor's SAM.gov Field Manual</strong> ($27) is the line-by-line walkthrough — screenshots, exact form-field wording, copy-paste templates. The <strong style="color:var(--gold)">Federal Compliance Toolkit</strong> ($97) layers in audit-response templates, Davis-Bacon payroll, and Section 3 tracking. One playbook, one reference, one toolkit. Built by the same operator.
   </div>
   <div style="display:flex;gap:.8rem;flex-wrap:wrap;align-items:center">
-    <a href="https://allforwardllc.gumroad.com" target="_blank" rel="noopener" style="background:var(--teal);color:#0d0d0f;font-family:'Bebas Neue',Impact,sans-serif;font-size:15px;padding:.7rem 1.4rem;letter-spacing:2px;text-decoration:none;display:inline-block">▸ GET THE FIELD MANUAL · $27</a>
+    <a href="https://allforwardllc.gumroad.com/l/sam-gov-field-manual" target="_blank" rel="noopener" style="background:var(--teal);color:#0d0d0f;font-family:'Bebas Neue',Impact,sans-serif;font-size:15px;padding:.7rem 1.4rem;letter-spacing:2px;text-decoration:none;display:inline-block">▸ GET THE FIELD MANUAL</a>
     <a href="https://allforwardllc.gumroad.com" target="_blank" rel="noopener" style="background:var(--gold);color:#0d0d0f;font-family:'Bebas Neue',Impact,sans-serif;font-size:15px;padding:.7rem 1.4rem;letter-spacing:2px;text-decoration:none;display:inline-block">▸ GET THE TOOLKIT · $97</a>
     <a href="https://allforwardllc.com" target="_blank" rel="noopener" style="color:var(--muted);font-size:12px;text-decoration:none;border-bottom:1px dashed var(--muted)">or learn more at allforwardllc.com</a>
   </div>
@@ -522,7 +537,7 @@ tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
     <span style="color:var(--muted);font-size:10px">© All Forward LLC · Free to share with operators in your network · For the deeper tactical reference, see allforwardllc.gumroad.com</span>
   </div>
   <div style="margin-top:1rem;display:flex;justify-content:center;gap:1rem;flex-wrap:wrap">
-    <div style="background:var(--teal);color:#0d0d0f;font-family:'Bebas Neue',Impact,sans-serif;font-size:13px;padding:.3rem 1rem;letter-spacing:2px">YOU ARE HERE · FREE</div>
+    <div style="background:var(--teal);color:#0d0d0f;font-family:'Bebas Neue',Impact,sans-serif;font-size:13px;padding:.3rem 1rem;letter-spacing:2px">STRIKE PACK · FREE (THIS FILE)</div>
     <div style="background:var(--bg4);border:1px solid var(--border);color:var(--white);font-family:'Bebas Neue',Impact,sans-serif;font-size:13px;padding:.3rem 1rem;letter-spacing:2px">FIELD MANUAL · $27</div>
     <div style="background:var(--gold);color:#0d0d0f;font-family:'Bebas Neue',Impact,sans-serif;font-size:13px;padding:.3rem 1rem;letter-spacing:2px">TOOLKIT · $97</div>
   </div>
@@ -863,8 +878,8 @@ function copyCapStatement() {
     get('cap-df') || '[fill in]',
     '',
     'CONTACT',
-    get('cap-contact1') || '[name · title]',
-    get('cap-contact2') || '[phone · email]',
+    get('cap-contact1') || '[name]',
+    [get('cap-title'), get('cap-phone'), get('cap-contact2')].filter(Boolean).join('  ·  ') || '[title · phone · email]',
     '',
     'COMPLIANCE',
     get('cap-comp1') || '[SAM · insurance · workers comp]',
@@ -889,6 +904,18 @@ function showToast(msg) {
   t.textContent = msg;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+// ============================================================
+// SCOPED PRINT — only the capability statement, or only the checklist
+// ============================================================
+function printOnly(which) {
+  const cls = which === 'check' ? 'print-check' : 'print-cap';
+  document.body.classList.add(cls);
+  const clear = () => { document.body.classList.remove('print-cap', 'print-check'); window.removeEventListener('afterprint', clear); };
+  window.addEventListener('afterprint', clear);
+  setTimeout(clear, 3000);
+  window.print();
 }
 
 // ============================================================
