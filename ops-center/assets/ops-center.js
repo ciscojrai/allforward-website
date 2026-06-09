@@ -137,6 +137,25 @@
         s.appendChild(dot); s.appendChild(el("span", null, hazardLabel(h.haz))); lg.appendChild(s);
       });
     }
+
+    // Side panel: hazards active in the next 30 days (fills the space beside the calendar).
+    var ap = document.getElementById("f31-active");
+    if (ap) {
+      ap.innerHTML = "";
+      ap.appendChild(el("h4", null, "Active next 30 days — " + name));
+      var actives = hazards.filter(function (h) { return outlookInB(today.getMonth(), h.range) || outlookInB(end.getMonth(), h.range); });
+      if (!actives.length) {
+        ap.appendChild(el("div", "none", "No major hazard seasons active in the next 30 days."));
+      } else {
+        actives.forEach(function (h) {
+          var row = el("div", "ai");
+          var dot = el("span", "wkcal-dot"); dot.style.background = OUTLOOK_COLORS[h.haz] || "#9aa3b8"; row.appendChild(dot);
+          row.appendChild(el("span", null, hazardLabel(h.haz)));
+          row.appendChild(el("span", "pk", MON[h.range[0]] + "–" + MON[h.range[1]]));
+          ap.appendChild(row);
+        });
+      }
+    }
   }
   function setupOutlookPicker() {
     var sel = document.getElementById("f31-state");

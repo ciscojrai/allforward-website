@@ -125,13 +125,23 @@ body.ops-drawer-open .fema-legend{opacity:0; visibility:hidden; transition:opaci
 /* ---------- 31-day hazard outlook (week-block calendar) ---------- */
 .forecast31{padding:14px 0 0}
 .forecast31 .map-foot a{color:var(--blue)}
-.forecast31 .f31-card{max-width:540px;margin-right:auto}  /* narrow + left so the drawer doesn't overlap it */
+.forecast31 .f31-card{max-width:760px;margin-right:auto}
 .f31-headrow{align-items:flex-start;gap:12px;flex-wrap:wrap}
 .f31-range{display:block;color:var(--text-2);font-size:.72rem;font-family:var(--mono);margin-top:3px}
 .f31-controls{display:flex;align-items:center;gap:8px}
 .f31-controls label{font-size:.64rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-2)}
 .f31-controls select{background:var(--bg);border:1px solid var(--border);border-radius:7px;color:var(--text);padding:6px 9px;font-size:.82rem;font-family:var(--sans);max-width:180px}
-.wkcal{display:flex;flex-direction:column;gap:5px;margin-top:12px}
+/* legend moved above the calendar (between map and calendar) */
+.f31-legend{display:flex;flex-wrap:wrap;gap:14px;margin:12px 0 0;padding-bottom:13px;border-bottom:1px solid var(--border)}
+.f31-legend .f31-lg{display:flex;align-items:center;gap:6px;font-size:.74rem;color:var(--text-2)}
+/* two columns: calendar | "active now" panel (fills the empty space) */
+.f31-grid2{display:grid;grid-template-columns:minmax(300px,360px) 1fr;gap:24px;margin-top:14px;align-items:start}
+.f31-active h4{font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text-2);margin:2px 0 10px}
+.f31-active .ai{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--border);font-size:.86rem;color:var(--text)}
+.f31-active .ai:last-child{border:none}
+.f31-active .ai .pk{margin-left:auto;color:var(--text-2);font-size:.74rem;font-family:var(--mono)}
+.f31-active .none{color:var(--text-2);font-size:.85rem}
+.wkcal{display:flex;flex-direction:column;gap:5px}
 .wkcal-row{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
 .wkcal-wd{text-align:center;font-size:.6rem;color:var(--text-2);font-weight:700;letter-spacing:.05em}
 .wkcal-cell{min-height:46px;border:1px solid var(--border);border-radius:7px;background:var(--bg);padding:5px 6px;display:flex;flex-direction:column;gap:4px}
@@ -141,9 +151,10 @@ body.ops-drawer-open .fema-legend{opacity:0; visibility:hidden; transition:opaci
 .wkcal-cell.out .wkcal-dnum{color:var(--text-2)}
 .wkcal-dots{display:flex;flex-wrap:wrap;gap:3px;margin-top:auto}
 .wkcal-dot{width:8px;height:8px;border-radius:50%;flex:none}
-.f31-legend{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
-.f31-legend .f31-lg{display:flex;align-items:center;gap:6px;font-size:.74rem;color:var(--text-2)}
-@media(max-width:600px){ .forecast31 .f31-card{max-width:none} .wkcal-cell{min-height:40px} }
+/* when the drawer is open, drop the side panel so the drawer never overlaps content */
+body.ops-drawer-open .f31-active{display:none}
+body.ops-drawer-open .f31-grid2{grid-template-columns:minmax(300px,420px)}
+@media(max-width:700px){ .forecast31 .f31-card{max-width:none} .f31-grid2{grid-template-columns:1fr} .wkcal-cell{min-height:40px} }
 
 /* ---------- State drawer ---------- */
 .drawer-backdrop{position:fixed; inset:0; background:rgba(8,11,18,.55); opacity:0; visibility:hidden; transition:opacity .25s; z-index:1990}
