@@ -26,7 +26,8 @@
 
     const mapEl = document.createElement("div");
     mapEl.id = "leaflet-map";
-    mapEl.style.cssText = "width: 100%; height: 100%; z-index: 1;";
+    mapEl.style.cssText = "width: 100%; height: 100%; min-height: 600px; z-index: 1;";
+    mapEl.innerHTML = '<p style="color: #9aa3b8; text-align: center; padding-top: 250px;">Initializing professional GIS map...</p>';
     mapContainer.appendChild(mapEl);
 
     // Add controls overlay (Legend and Panel)
