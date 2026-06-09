@@ -13,8 +13,12 @@
   }
 
   function initFemaMap() {
+    console.log("Initializing FEMA Hazard Map...");
     const mapMount = document.getElementById("map-mount");
-    if (!mapMount) return;
+    if (!mapMount) {
+      console.error("Map mount not found!");
+      return;
+    }
 
     // Build the map container and controls
     const mapContainer = document.createElement("div");
@@ -104,6 +108,7 @@
     // Initialize the map rendering
     renderFemaMap(canvas);
     wireMapControls();
+    console.log("FEMA Hazard Map initialized successfully.");
   }
 
   function renderFemaMap(canvas) {
