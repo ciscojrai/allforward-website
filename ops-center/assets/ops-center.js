@@ -469,7 +469,7 @@
     sp.textContent = "View full " + entry.state + " recovery profile →";
     var cal = $("#d-calendar");
     if (cal) {
-      cal.href = "/ops-center/calendar/?state=" + entry.code;
+      cal.href = "/ops-center/calendar/" + entry.slug + ".html";
       cal.textContent = "View " + entry.state + " hazard & funding calendar →";
     }
     // Sync the 31-day outlook to the selected state.
