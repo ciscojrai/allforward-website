@@ -119,6 +119,19 @@ a:hover{text-decoration:underline}
 /* Hide the map's hazard legend while the recovery drawer is open so they don't overlap. */
 body.ops-drawer-open .fema-legend{opacity:0; visibility:hidden; transition:opacity .2s}
 .map-foot{font-size:.68rem;color:var(--text-2);padding:10px 2px 4px;font-family:var(--mono)}
+/* ---------- 31-day hazard ribbon ---------- */
+.forecast31{padding:14px 0 0}
+.forecast31 .map-foot a{color:var(--blue)}
+.f31-range{color:var(--text-2);font-size:.72rem;font-family:var(--mono)}
+#f31-mount{overflow-x:auto;padding-bottom:6px}
+.f31-grid{display:grid;gap:3px;align-items:center;min-width:600px}
+.f31-date{font-size:.58rem;color:var(--text-2);text-align:center;padding:2px 0;line-height:1}
+.f31-date.month-start{color:var(--text);font-weight:700}
+.f31-date.today{color:var(--gold);font-weight:700}
+.f31-label{display:flex;align-items:center;gap:7px;font-size:.76rem;color:var(--text);white-space:nowrap;padding-right:10px}
+.f31-dot{width:9px;height:9px;border-radius:50%;flex:none}
+.f31-cell{height:15px;border-radius:2px;background:rgba(255,255,255,.05)}
+.f31-cell.today{outline:2px solid var(--gold);outline-offset:-2px}
 
 /* ---------- State drawer ---------- */
 .drawer-backdrop{position:fixed; inset:0; background:rgba(8,11,18,.55); opacity:0; visibility:hidden; transition:opacity .25s; z-index:1990}

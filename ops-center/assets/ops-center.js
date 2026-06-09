@@ -28,6 +28,7 @@
   /* ---------- boot ---------- */
   function init() {
     startClock();
+    build31Day();
     fetch("states.json")
       .then(function (r) { return r.json(); })
       .then(function (data) {
@@ -60,6 +61,54 @@
       if (f) f.scrollIntoView({ behavior: "smooth" });
       var nm = $("#af-name"); if (nm) setTimeout(function () { nm.focus(); }, 450);
     });
+  }
+
+  /* ---------- 31-day hazard ribbon (under the map) ---------- */
+  function build31Day() {
+    var mount = document.getElementById("f31-mount");
+    if (!mount) return;
+    var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    var COLORS = { "hurricane": "#dc2626", "wildfire": "#f59e0b", "severe-storm": "#a855f7", "flood": "#0d9488", "drought": "#d4a843", "winter-storm": "#4fc3f7" };
+    var SEASONS = [
+      { haz: "hurricane", label: "Hurricane / Tropical", range: [5, 10] }, // Jun–Nov
+      { haz: "severe-storm", label: "Severe / Tornado", range: [2, 5] },   // Mar–Jun
+      { haz: "wildfire", label: "Wildfire (West)", range: [5, 10] },       // Jun–Nov
+      { haz: "flood", label: "Flood", range: [2, 5] },                     // Mar–Jun
+      { haz: "drought", label: "Drought", range: [5, 8] },                 // Jun–Sep
+      { haz: "winter-storm", label: "Winter Storm", range: [11, 1] }       // Dec–Feb (wraps)
+    ];
+    function inB(m, r) { return r[0] <= r[1] ? (m >= r[0] && m <= r[1]) : (m >= r[0] || m <= r[1]); }
+
+    var today = new Date(); today.setHours(0, 0, 0, 0);
+    var days = [];
+    for (var i = 0; i < 31; i++) { var d = new Date(today); d.setDate(today.getDate() + i); days.push(d); }
+    var active = SEASONS.filter(function (s) { return days.some(function (d) { return inB(d.getMonth(), s.range); }); });
+
+    var rg = document.getElementById("f31-range");
+    if (rg) rg.textContent = MONTHS[days[0].getMonth()] + " " + days[0].getDate() + " → " + MONTHS[days[30].getMonth()] + " " + days[30].getDate();
+
+    var grid = el("div", "f31-grid");
+    grid.style.gridTemplateColumns = "minmax(120px,150px) repeat(31, minmax(11px,1fr))";
+
+    grid.appendChild(el("div", null, "")); // corner
+    days.forEach(function (d, i) {
+      var cls = "f31-date" + (i === 0 ? " today" : "") + (d.getDate() === 1 ? " month-start" : "");
+      var h = el("div", cls, i === 0 ? "Today" : String(d.getDate()));
+      h.title = d.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+      grid.appendChild(h);
+    });
+    active.forEach(function (s) {
+      var lab = el("div", "f31-label");
+      var dot = el("span", "f31-dot"); dot.style.background = COLORS[s.haz]; lab.appendChild(dot);
+      lab.appendChild(el("span", null, s.label));
+      grid.appendChild(lab);
+      days.forEach(function (d, i) {
+        var c = el("div", "f31-cell" + (i === 0 ? " today" : ""));
+        if (inB(d.getMonth(), s.range)) { c.style.background = COLORS[s.haz]; c.style.opacity = ".82"; }
+        grid.appendChild(c);
+      });
+    });
+    mount.innerHTML = ""; mount.appendChild(grid);
   }
 
   /* ---------- header clock ---------- */
