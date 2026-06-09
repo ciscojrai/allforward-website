@@ -22,7 +22,7 @@
 //              GET /.netlify/functions/disaster-alerts?send=1&key=<ALERT_TRIGGER_KEY>  (really sends)
 // The scheduled daily run always sends (Netlify POSTs it with a next_run body).
 
-export const config = { schedule: "0 13 * * *" };
+// Scheduling lives in alerts-cron.mjs (it holds ALERT_TRIGGER_KEY and calls runAlerts).
 
 const FEMA_URL = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries";
 const FORM_NAME = "ops-alerts-confirmed"; // double-opt-in: only confirmed subscribers
@@ -58,6 +58,13 @@ function asArray(v) {
   if (Array.isArray(v)) return v.map((x) => String(x).trim()).filter(Boolean);
   if (typeof v === "string") return v.split(",").map((x) => x.trim()).filter(Boolean);
   return [];
+}
+
+// Escape values interpolated into outbound HTML email (subscriber name is user-supplied).
+function esc(s) {
+  return String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+  );
 }
 
 async function getSubscribers() {
@@ -133,12 +140,12 @@ async function getRecentDeclarations(lookbackHours) {
 }
 
 function buildEmail(sub, matches) {
-  const first = sub.name ? sub.name.split(" ")[0] : "there";
+  const first = esc(sub.name ? sub.name.split(" ")[0] : "there");
   const items = matches
     .map(
       (m) =>
-        `<li style="margin:0 0 10px"><strong>${m.state} — ${m.incidentType}</strong><br>` +
-        `${m.title} <span style="color:#7a8aa0">(declared ${String(m.date).slice(0, 10)}, FEMA-${m.disasterNumber})</span></li>`
+        `<li style="margin:0 0 10px"><strong>${esc(m.state)} — ${esc(m.incidentType)}</strong><br>` +
+        `${esc(m.title)} <span style="color:#7a8aa0">(declared ${esc(String(m.date).slice(0, 10))}, FEMA-${esc(m.disasterNumber)})</span></li>`
     )
     .join("");
   const html = `<div style="font-family:Arial,Helvetica,sans-serif;background:#0a1422;color:#e8edf5;padding:28px;border-radius:12px;max-width:600px">
@@ -173,28 +180,9 @@ async function sendEmail(to, subject, body) {
   if (!res.ok) throw new Error(`Resend failed for ${to}: ${res.status} ${await res.text()}`);
 }
 
-export default async (req) => {
+// Core run — shared by the scheduled cron (alerts-cron.mjs) and the manual HTTP handler.
+export async function runAlerts({ dryRun }) {
   const lookback = Number(process.env.ALERT_LOOKBACK_HOURS || 25);
-
-  // Decide whether to actually send.
-  //  - Scheduled invocation: Netlify sends a POST whose JSON body has `next_run`.
-  //    These are the real daily runs → SEND.
-  //  - Manual browser/GET: dry-run by default. To force a real send, call
-  //    ?send=1 and (if ALERT_TRIGGER_KEY is set) &key=<that value>.
-  const method = (req.method || "POST").toUpperCase();
-  let scheduled = false;
-  let manualSend = false;
-  let qs = null;
-  try { qs = new URL(req.url).searchParams; } catch { qs = null; }
-  if (method === "POST") {
-    try { const b = await req.json(); if (b && b.next_run) scheduled = true; } catch { /* no body */ }
-  }
-  if (qs && qs.get("send") === "1") {
-    const key = process.env.ALERT_TRIGGER_KEY;
-    if (!key || qs.get("key") === key) manualSend = true;
-  }
-  const dryRun = !(scheduled || manualSend);
-
   const summary = { subscribers: 0, declarations: 0, emailsSent: 0, dryRun, errors: [] };
   try {
     const [subscribers, declarations] = await Promise.all([
@@ -229,7 +217,28 @@ export default async (req) => {
     summary.errors.push(String(e.message || e));
     console.error("disaster-alerts fatal:", e);
   }
+  return summary;
+}
 
+// Public HTTP endpoint. It NEVER sends and NEVER reveals subscriber data unless
+// the caller proves the trigger key (?send=1&key=<ALERT_TRIGGER_KEY> or header
+// x-alert-key). The daily send is driven by alerts-cron.mjs, which holds the key.
+export default async (req) => {
+  const triggerKey = process.env.ALERT_TRIGGER_KEY;
+  let qs = null;
+  try { qs = new URL(req.url).searchParams; } catch { qs = null; }
+  const provided = (req.headers && req.headers.get && req.headers.get("x-alert-key")) || (qs && qs.get("key")) || null;
+  const authorized = !!triggerKey && provided === triggerKey;
+
+  if (!authorized) {
+    return new Response(JSON.stringify({ ok: true, message: "unauthorized — no action taken" }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const send = qs && qs.get("send") === "1";
+  const summary = await runAlerts({ dryRun: !send });
   return new Response(JSON.stringify(summary, null, 2), {
     headers: { "Content-Type": "application/json" },
   });

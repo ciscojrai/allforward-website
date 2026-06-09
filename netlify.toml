@@ -7,3 +7,13 @@
 [functions]
   directory = "netlify/functions"
   node_bundler = "esbuild"
+
+# Site-wide security headers (no-breakage set; CSP intentionally omitted because the
+# ops-center dashboard fetches several external APIs — add CSP separately after testing).
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "SAMEORIGIN"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
