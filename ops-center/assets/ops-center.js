@@ -167,7 +167,8 @@
             var code = entry.code;
             layer._code = code; layer._lvl = 0;
             stateLayers[code] = layer;
-            layer.bindTooltip(entry.state, { sticky: true, direction: "top" });
+            // Permanent 2-letter state code, centered in the state.
+            layer.bindTooltip(code, { permanent: true, direction: "center", className: "state-label", opacity: 1 });
             layer.on("mouseover", function () { if (!layer._selected) layer.setStyle({ weight: 2, color: "#4fc3f7" }); });
             layer.on("mouseout", function () { paintState(layer); });
             layer.on("click", function () { openDrawer(code); });

@@ -116,6 +116,9 @@ a:hover{text-decoration:underline}
 /* Clickable states are now a Leaflet GeoJSON layer (styled in ops-center.js).
    Cursor affordance + smooth color transitions on the rendered paths: */
 .leaflet-interactive{cursor:pointer; transition:fill-opacity .18s, stroke .18s}
+/* 2-letter state codes centered on the map */
+.leaflet-tooltip.state-label{background:transparent;border:none;box-shadow:none;color:#f4f6fa;font-family:var(--mono);font-weight:700;font-size:10px;letter-spacing:.04em;text-shadow:0 1px 3px rgba(0,0,0,.95),0 0 2px rgba(0,0,0,.85);padding:0;white-space:nowrap;pointer-events:none}
+.leaflet-tooltip.state-label::before,.leaflet-tooltip.state-label::after{display:none !important}
 /* Hide the map's hazard legend while the recovery drawer is open so they don't overlap. */
 body.ops-drawer-open .fema-legend{opacity:0; visibility:hidden; transition:opacity .2s}
 .map-foot{font-size:.68rem;color:var(--text-2);padding:10px 2px 4px;font-family:var(--mono)}
