@@ -2,3 +2,8 @@
 [build]
   publish = "."
   command = ""
+
+# Serverless functions (daily disaster-alert engine lives here)
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
