@@ -4,20 +4,31 @@
 (function () {
   "use strict";
 
-  // Initialize map on DOM ready
+  // Robust initialization with retries
+  let initRetries = 0;
+  function robustInit() {
+    if (window.L) {
+      initFemaMap();
+    } else if (initRetries < 10) {
+      initRetries++;
+      console.log(`Leaflet not ready, retry ${initRetries}...`);
+      setTimeout(robustInit, 500);
+    } else {
+      const mapMount = document.getElementById("map-mount");
+      if (mapMount) mapMount.innerHTML = '<p style="color: #ef4444; text-align: center; padding-top: 250px;">Failed to load map library. Please refresh.</p>';
+    }
+  }
+
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initFemaMap);
+    document.addEventListener("DOMContentLoaded", robustInit);
   } else {
-    initFemaMap();
+    robustInit();
   }
 
   function initFemaMap() {
     console.log("Initializing Professional FEMA Hazard Map...");
     const mapMount = document.getElementById("map-mount");
-    if (!mapMount) {
-      console.error("Map mount not found!");
-      return;
-    }
+    if (!mapMount) return;
 
     // Build the map container and controls
     const mapContainer = document.createElement("div");
