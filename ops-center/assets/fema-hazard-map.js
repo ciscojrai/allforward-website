@@ -67,17 +67,22 @@
     const map = L.map(mapEl, {
       center: [39.8283, -98.5795], // Center of US
       zoom: 4,
+      minZoom: 3,
+      maxZoom: 8,
+      maxBounds: [[15, -180], [72, -50]],   // keep the US in view (incl. AK / HI / PR)
+      maxBoundsViscosity: 0.8,
       zoomControl: false,
       attributionControl: false,
-      // Static backdrop: the clickable state SVG overlay is NOT georeferenced to the
-      // basemap, so freeze all map interaction to keep the two layers in sync — and to
-      // stop scroll-wheel zoom from hijacking the page scroll.
+      // Interactive map. The clickable states are a real GeoJSON layer (added in
+      // ops-center.js), so they pan/zoom WITH the basemap and stay aligned. Scroll-
+      // wheel zoom stays OFF so scrolling the page near the map isn't trapped — pan by
+      // dragging, zoom with the +/- buttons or double-click.
       scrollWheelZoom: false,
-      dragging: false,
-      doubleClickZoom: false,
+      dragging: true,
+      doubleClickZoom: true,
       boxZoom: false,
-      touchZoom: false,
-      keyboard: false
+      touchZoom: true,
+      keyboard: true
     });
 
     // Add Dark Basemap (CartoDB Dark Matter)
@@ -85,14 +90,14 @@
       maxZoom: 19
     }).addTo(map);
 
-    // Map is a frozen backdrop (no zoom control — interaction is disabled above).
+    L.control.zoom({ position: "topleft" }).addTo(map);
 
     // Add mock hazard layers (simulating real FEMA GIS feeds)
     addHazardLayers(map);
 
-    // Add clickable state boundaries that open the recovery drawer.
-    addStateBoundaries(mapContainer);
-    
+    // Clickable state GeoJSON layer is added by ops-center.js once states.json loads
+    // (it owns the state data, severity choropleth, and recovery drawer).
+
     console.log("Professional FEMA Hazard Map initialized successfully.");
     
     // Dispatch event for other scripts to know map is ready
@@ -139,50 +144,4 @@
     });
   }
 
-  function addStateBoundaries(mapContainer) {
-    fetch("assets/us-states-clean.svg")
-      .then(response => {
-        if (!response.ok) throw new Error("state svg unavailable");
-        return response.text();
-      })
-      .then(svgText => {
-        const doc = new DOMParser().parseFromString(svgText, "image/svg+xml");
-        const svg = doc.documentElement;
-        svg.classList.add("leaflet-state-boundaries");
-        svg.setAttribute("aria-label", "Clickable U.S. state recovery briefs");
-
-        svg.querySelectorAll(".state").forEach(state => {
-          const code = state.id;
-          const name = window.opsStateName ? window.opsStateName(code) : code;
-          state.setAttribute("tabindex", "0");
-          state.setAttribute("role", "button");
-          state.setAttribute("aria-label", `${name} recovery brief`);
-
-          const title = state.querySelector("title");
-          if (title) title.textContent = name;
-
-          const open = () => {
-            document.dispatchEvent(new CustomEvent("ops:state-selected", {
-              detail: { code }
-            }));
-          };
-
-          state.addEventListener("click", open);
-          state.addEventListener("keydown", event => {
-            if (event.key === "Enter" || event.key === " ") {
-              event.preventDefault();
-              open();
-            }
-          });
-        });
-
-        const overlay = document.createElement("div");
-        overlay.className = "state-map-overlay";
-        overlay.appendChild(svg);
-        mapContainer.appendChild(overlay);
-      })
-      .catch(error => {
-        console.warn("State boundary layer unavailable", error);
-      });
-  }
 })();

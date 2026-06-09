@@ -15,6 +15,8 @@
   var byCode = {};          // code -> entry
   var byFips = {};          // 2-digit fips -> entry
   var drawerCache = {};     // code -> fetched FEMA declarations
+  var STATE_GEO = null;     // L.geoJSON layer (clickable states on the basemap)
+  var stateLayers = {};     // code -> Leaflet layer
 
   function $(s, r) { return (r || document).querySelector(s); }
   function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
@@ -71,9 +73,67 @@
   }
 
   /* ---------- map load ---------- */
+  // The dark basemap is created in fema-hazard-map.js (window.femaMap). We wait for
+  // it, then add the clickable states as a real GeoJSON layer so they stay aligned
+  // with the basemap on pan/zoom.
   function loadMap() {
-    // FEMA map is initialized in fema-hazard-map.js
-    return Promise.resolve();
+    return waitForMap().then(function (map) { if (map) return addStateLayer(map); });
+  }
+
+  function waitForMap() {
+    return new Promise(function (resolve) {
+      if (window.femaMap) return resolve(window.femaMap);
+      var done = false;
+      function finish() { if (done) return; done = true; resolve(window.femaMap || null); }
+      window.addEventListener("fema-map-ready", finish, { once: true });
+      var t = setInterval(function () { if (window.femaMap) { clearInterval(t); finish(); } }, 150);
+      setTimeout(function () { clearInterval(t); finish(); }, 9000);
+    });
+  }
+
+  function baseStyle() { return { color: "rgba(240,242,245,.28)", weight: 1, fillColor: "#3a445e", fillOpacity: .3 }; }
+  function levelStyle(lvl) {
+    if (lvl === 2) return { fillColor: "#dc2626", fillOpacity: .62, color: "rgba(255,255,255,.35)", weight: 1 };
+    if (lvl === 1) return { fillColor: "#d4a843", fillOpacity: .55, color: "rgba(255,255,255,.3)", weight: 1 };
+    return baseStyle();
+  }
+  function paintState(layer) {
+    if (!layer) return;
+    var s = levelStyle(layer._lvl || 0);
+    if (layer._selected) s = Object.assign({}, s, { color: "#d4a843", weight: 2.5, fillOpacity: Math.max(s.fillOpacity, .5) });
+    layer.setStyle(s);
+  }
+
+  function addStateLayer(map) {
+    if (!map || !window.L) return Promise.resolve();
+    return fetch("assets/us-states.geojson")
+      .then(function (r) { return r.json(); })
+      .then(function (geo) {
+        STATE_GEO = window.L.geoJSON(geo, {
+          style: baseStyle,
+          onEachFeature: function (feature, layer) {
+            var entry = byFips[feature.id];
+            if (!entry) { layer.setStyle({ fillOpacity: .1, weight: .5 }); return; } // PR / unmatched
+            var code = entry.code;
+            layer._code = code; layer._lvl = 0;
+            stateLayers[code] = layer;
+            layer.bindTooltip(entry.state, { sticky: true, direction: "top" });
+            layer.on("mouseover", function () { if (!layer._selected) layer.setStyle({ weight: 2, color: "#4fc3f7" }); });
+            layer.on("mouseout", function () { paintState(layer); });
+            layer.on("click", function () { openDrawer(code); });
+          }
+        }).addTo(map);
+      })
+      .catch(function (e) { console.warn("state geojson unavailable", e); });
+  }
+
+  function highlightState(code) {
+    Object.keys(stateLayers).forEach(function (c) {
+      stateLayers[c]._selected = (c === code);
+      paintState(stateLayers[c]);
+    });
+    var ly = stateLayers[code];
+    if (ly && ly.bringToFront) ly.bringToFront();
   }
 
   /* ---------- map wiring ---------- */
@@ -85,6 +145,9 @@
     window.openOpsStateDrawer = openDrawer;
     window.opsStateName = function (code) {
       return byCode[code] ? byCode[code].state : code;
+    };
+    window.opsFipsToCode = function (fips) {
+      return byFips[fips] ? byFips[fips].code : null;
     };
   }
 
@@ -182,7 +245,13 @@
   }
 
   function applyChoropleth(level) {
-    // Choropleth logic is integrated into the FEMA hazard map rendering
+    // level: fips -> 1 (watch) | 2 (warning). Recolor the GeoJSON state layer.
+    Object.keys(stateLayers).forEach(function (code) {
+      var entry = byCode[code];
+      var lvl = (entry && level[entry.fips]) || 0;
+      stateLayers[code]._lvl = lvl;
+      paintState(stateLayers[code]);
+    });
   }
 
   function hydrateStorms() {
@@ -229,9 +298,8 @@
   function openDrawer(code) {
     var entry = byCode[code];
     if (!entry) return;
-    document.querySelectorAll("#us-map .state.selected").forEach(function (n) { n.classList.remove("selected"); });
-    var node = document.getElementById(code);
-    if (node) node.classList.add("selected");
+    highlightState(code);
+    document.body.classList.add("ops-drawer-open");
     var select = $("#state-brief-select");
     if (select) select.value = code;
 
@@ -345,7 +413,8 @@
   function closeDrawer() {
     var d = $("#drawer"); if (d) d.classList.remove("open");
     var b = $("#drawer-backdrop"); if (b) b.classList.remove("open");
-    document.querySelectorAll("#us-map .state.selected").forEach(function (n) { n.classList.remove("selected"); });
+    document.body.classList.remove("ops-drawer-open");
+    highlightState(null);
   }
 
   /* ---------- alert form ---------- */
