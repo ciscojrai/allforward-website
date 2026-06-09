@@ -23,7 +23,7 @@
 #   connect: FEMA OpenFEMA (drawer), NWS alerts, NHC storms, NIFC wildfires, Google Analytics
 #   script:  self + GA tag manager + unpkg (Leaflet map lib) (+ 'unsafe-inline' for inline snippets)
 #   style:   self + unpkg (Leaflet CSS) + 'unsafe-inline' (inline style attributes in the markup)
-#   img:     self + data: + GA + unpkg (Leaflet marker images)
+#   img:     self + data: + GA + unpkg (Leaflet markers) + CARTO basemap tiles
 # Re-declares the base headers so Ops Center keeps them regardless of Netlify's merge order.
 [[headers]]
   for = "/ops-center/*"
@@ -32,4 +32,4 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://unpkg.com; font-src 'self'; connect-src 'self' https://www.fema.gov https://api.weather.gov https://www.nhc.noaa.gov https://services3.arcgis.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://unpkg.com; style-src 'self' 'unsafe-inline' https://unpkg.com; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://unpkg.com https://*.basemaps.cartocdn.com; font-src 'self'; connect-src 'self' https://www.fema.gov https://api.weather.gov https://www.nhc.noaa.gov https://services3.arcgis.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
