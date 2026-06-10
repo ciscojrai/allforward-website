@@ -1841,7 +1841,7 @@
             <input type="hidden" name="tier" id="afqHidTier">
             <input type="hidden" name="industry" id="afqHidIndustry">
             <p hidden><label>Don't fill this out: <input name="bot-field"></label></p>
-            <input type="email" name="email" id="afqEmail" placeholder="you@email.com" required>
+            <input type="email" name="email" id="afqEmail" placeholder="you@email.com" required pattern="[^\s@]+@[^\s@]+\.[A-Za-z]{2,}" title="Enter a valid email address, e.g. you@email.com">
             <button type="submit">Unlock It →</button>
           </form>
           <div class="afq-unlocked" id="afqUnlocked">
@@ -2348,9 +2348,9 @@
 
     <div class="contact-layout">
       <div>
-        <form action="https://formspree.io/f/xpqerend" method="POST" id="contactForm">
-          <!-- Hidden field so Formspree email subject is useful -->
-          <input type="hidden" name="_subject" value="New Consultation Request — All Forward">
+        <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="contactForm">
+          <input type="hidden" name="form-name" value="contact">
+          <p hidden><label>Don't fill this out: <input name="bot-field"></label></p>
           <div class="form-row">
             <div class="form-group">
               <label for="fname">First Name</label>
@@ -2368,7 +2368,7 @@
             </div>
             <div class="form-group">
               <label for="email">Email Address</label>
-              <input type="email" id="email" name="email" placeholder="you@email.com" required>
+              <input type="email" id="email" name="email" placeholder="you@email.com" required pattern="[^\s@]+@[^\s@]+\.[A-Za-z]{2,}" title="Enter a valid email address, e.g. you@email.com">
             </div>
           </div>
           <div class="form-group">
@@ -2392,10 +2392,35 @@
             <textarea id="message" name="message" placeholder="Briefly describe your situation — the more detail, the better we can help..."></textarea>
           </div>
           <button type="submit" class="btn-primary" style="width:100%; text-align:center;">Send My Free Consultation Request →</button>
-          <div class="form-success" id="formSuccess">
-            ✅ Thank you! We'll be in touch within 1 business day.
-          </div>
         </form>
+        <div class="form-success" id="formSuccess">
+          ✅ Thank you! We'll be in touch within 1 business day.
+        </div>
+        <script>
+        (function(){
+          var f = document.getElementById('contactForm');
+          if (!f) return;
+          f.addEventListener('submit', function(e){
+            e.preventDefault();
+            var btn = f.querySelector('button[type="submit"]');
+            if (btn){ btn.disabled = true; btn.textContent = 'Sending…'; }
+            fetch('/', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: new URLSearchParams(new FormData(f)).toString()
+            })
+            .then(function(r){
+              if (!r.ok) throw new Error('HTTP ' + r.status);
+              f.style.display = 'none';
+              document.getElementById('formSuccess').style.display = 'block';
+            })
+            .catch(function(){
+              if (btn){ btn.disabled = false; btn.textContent = 'Send My Free Consultation Request →'; }
+              alert('Something went wrong sending your request. Please email info@allforwardllc.com directly.');
+            });
+          });
+        })();
+        </script>
       </div>
 
       <div class="contact-info-list">
