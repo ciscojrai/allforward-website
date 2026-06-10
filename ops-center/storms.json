@@ -3,11 +3,11 @@
   "storms": [
     {
       "name": "Cristina",
-      "classification": "TS",
-      "intensity": "35",
+      "classification": "TD",
+      "intensity": "30",
       "lat": 12.5,
       "lon": -88.8
     }
   ],
-  "updated_at": "2026-06-10T16:45:17.132Z"
+  "updated_at": "2026-06-10T19:44:38.309Z"
 }
