@@ -92,21 +92,16 @@
   function buildOutlook(code) {
     var mount = document.getElementById("f31-mount");
     if (!mount) return;
-    // Blank state: nothing to show until the operator picks a state.
-    if (!code || !byCode[code]) {
-      mount.innerHTML = '<p class="drawer-loading">Select a state above to see its 31-day hazard outlook.</p>';
-      var rg0 = document.getElementById("f31-range"); if (rg0) rg0.textContent = "";
-      var lg0 = document.getElementById("f31-legend"); if (lg0) lg0.innerHTML = "";
-      var ap0 = document.getElementById("f31-active"); if (ap0) ap0.innerHTML = "";
-      return;
-    }
+    // Blank mode (no state picked yet): still render the empty calendar grid so the
+    // widget is visible at first glance — dots only light up once a state is chosen.
+    var blank = !code || !byCode[code];
     var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    var hazards = outlookHazards(code);
-    var name = (code && byCode[code]) ? byCode[code].state : "United States";
+    var hazards = blank ? [] : outlookHazards(code);
+    var name = blank ? "" : byCode[code].state;
     var today = new Date(); today.setHours(0, 0, 0, 0);
     var end = new Date(today); end.setDate(today.getDate() + 30);
     var rg = document.getElementById("f31-range");
-    if (rg) rg.textContent = name + " · " + MON[today.getMonth()] + " " + today.getDate() + " – " + MON[end.getMonth()] + " " + end.getDate();
+    if (rg) rg.textContent = (blank ? "" : name + " · ") + MON[today.getMonth()] + " " + today.getDate() + " – " + MON[end.getMonth()] + " " + end.getDate();
 
     var gridStart = new Date(today); gridStart.setDate(today.getDate() - today.getDay()); // Sunday of this week
     var weeks = Math.ceil((Math.round((end - gridStart) / 86400000) + 1) / 7);
@@ -150,9 +145,11 @@
     var ap = document.getElementById("f31-active");
     if (ap) {
       ap.innerHTML = "";
-      ap.appendChild(el("h4", null, "Active next 30 days — " + name));
+      ap.appendChild(el("h4", null, "Active next 30 days" + (blank ? "" : " — " + name)));
       var actives = hazards.filter(function (h) { return outlookInB(today.getMonth(), h.range) || outlookInB(end.getMonth(), h.range); });
-      if (!actives.length) {
+      if (blank) {
+        ap.appendChild(el("div", "none", "Select a state above to light up its hazard seasons on the calendar."));
+      } else if (!actives.length) {
         ap.appendChild(el("div", "none", "No major hazard seasons active in the next 30 days."));
       } else {
         actives.forEach(function (h) {
