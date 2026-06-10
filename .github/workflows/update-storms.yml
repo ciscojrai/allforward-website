@@ -1,0 +1,44 @@
+name: Update storms data
+
+# Fetches the NHC active-storm feed and writes ops-center/storms.json.
+# Replaces the per-visitor netlify/functions/storms.mjs proxy: the Ops Center now
+# reads a static file (zero Netlify function invocations). A commit — and therefore
+# a Netlify deploy — only happens when the storm data actually changes, so off-season
+# this workflow runs quietly with no commits and no rebuilds.
+
+on:
+  schedule:
+    - cron: "17 * * * *" # hourly at :17 (off-peak minute dodges cron congestion)
+  workflow_dispatch: {} # allow manual runs from the Actions tab
+
+permissions:
+  contents: write # needed to commit storms.json back to the repo
+
+concurrency:
+  group: update-storms
+  cancel-in-progress: false # let an in-flight run finish before the next starts
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Fetch NHC storms → ops-center/storms.json
+        run: node scripts/fetch-storms.mjs
+
+      - name: Commit & push if changed
+        run: |
+          if git diff --quiet -- ops-center/storms.json; then
+            echo "No storm-data change; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ops-center/storms.json
+          git commit -m "data: refresh NHC active-storm snapshot"
+          git push
