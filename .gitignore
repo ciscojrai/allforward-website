@@ -8,3 +8,11 @@ node_modules/
 .netlify
 HANDOFF.md
 DEPLOY_VIA_TERMINAL.md
+
+# Secrets — never commit (public repo). Keys live in Netlify env vars.
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.npmrc
