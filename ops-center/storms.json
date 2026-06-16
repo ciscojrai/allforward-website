@@ -1,5 +1,13 @@
 {
-  "count": 0,
-  "storms": [],
-  "updated_at": "2026-06-11T16:21:08.332Z"
+  "count": 1,
+  "storms": [
+    {
+      "name": "One",
+      "classification": "PC",
+      "intensity": "25",
+      "lat": 27,
+      "lon": -98
+    }
+  ],
+  "updated_at": "2026-06-16T17:21:01.236Z"
 }
