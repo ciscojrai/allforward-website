@@ -2,12 +2,12 @@
   "count": 1,
   "storms": [
     {
-      "name": "One",
-      "classification": "PC",
-      "intensity": "25",
-      "lat": 28.3,
-      "lon": -96.2
+      "name": "Arthur",
+      "classification": "TS",
+      "intensity": "40",
+      "lat": 28.8,
+      "lon": -95.5
     }
   ],
-  "updated_at": "2026-06-17T14:00:48.865Z"
+  "updated_at": "2026-06-17T17:24:09.377Z"
 }
