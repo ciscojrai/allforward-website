@@ -1,13 +1,5 @@
 {
-  "count": 1,
-  "storms": [
-    {
-      "name": "Arthur",
-      "classification": "PTC",
-      "intensity": "30",
-      "lat": 29.7,
-      "lon": -94.5
-    }
-  ],
-  "updated_at": "2026-06-18T07:06:10.811Z"
+  "count": 0,
+  "storms": [],
+  "updated_at": "2026-06-18T11:17:16.457Z"
 }
