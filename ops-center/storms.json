@@ -3,11 +3,11 @@
   "storms": [
     {
       "name": "Arthur",
-      "classification": "TS",
-      "intensity": "35",
-      "lat": 29.4,
-      "lon": -94.9
+      "classification": "PTC",
+      "intensity": "30",
+      "lat": 29.7,
+      "lon": -94.5
     }
   ],
-  "updated_at": "2026-06-18T01:41:50.496Z"
+  "updated_at": "2026-06-18T07:06:10.811Z"
 }
