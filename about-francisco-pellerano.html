@@ -289,6 +289,16 @@
     <li><a href="/#why">Why Us</a></li>
     <li><a href="/#contact">Contact</a></li>
     <li><a href="tel:5045719320" class="nav-cta">📞 504-571-9320</a></li>
+    <li class="lang-selector-li" style="display: inline-flex; align-items: center; margin-left: 12px; vertical-align: middle;">
+      <select class="lang-selector" id="global-lang-select" aria-label="Select Language" onchange="window.setGlobalLanguage(this.value)" style="background: rgba(14, 36, 68, 0.7); border: 1px solid rgba(41, 121, 255, 0.2); border-radius: 6px; color: #ffffff; font-size: 0.82rem; padding: 6px 10px; cursor: pointer; outline: none; transition: all 0.2s ease;">
+        <option value="en">🇺🇸 EN</option>
+        <option value="es">🇪🇸 ES</option>
+        <option value="fr">🇫🇷 FR</option>
+        <option value="de">🇩🇪 DE</option>
+        <option value="it">🇮🇹 IT</option>
+        <option value="pt">🇵🇹 PT</option>
+      </select>
+    </li>
   </ul>
   <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
@@ -388,5 +398,60 @@
   document.addEventListener('click',(e)=>{const m=document.getElementById('mobileMenu'),n=document.getElementById('navbar');if(n&&m&&!n.contains(e.target)&&!m.contains(e.target))m.classList.remove('open');});
 </script>
 
+<!-- Google Translate Integration & Language Selector Runtime -->
+<style>
+  .skiptranslate, .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame {
+    display: none !important;
+  }
+  body {
+    top: 0 !important;
+  }
+</style>
+<div id="google_translate_element" style="display:none;"></div>
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'en,es,fr,de,it,pt',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, 'google_translate_element');
+  }
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script type="text/javascript">
+  (function () {
+    var savedLang = localStorage.getItem("ops-language") || "en";
+    
+    // Sync the custom dropdown on load
+    window.addEventListener("DOMContentLoaded", function () {
+      var sel = document.getElementById("global-lang-select");
+      if (sel) sel.value = savedLang;
+    });
+
+    window.setGlobalLanguage = function (val) {
+      localStorage.setItem("ops-language", val);
+      var gtCombo = document.querySelector('.goog-te-combo');
+      if (gtCombo) {
+        gtCombo.value = val;
+        gtCombo.dispatchEvent(new Event('change'));
+      } else {
+        window.location.reload();
+      }
+    };
+
+    // Keep checking for Google Translate dropdown to sync it on page load
+    var checkInterval = setInterval(function () {
+      var gtCombo = document.querySelector('.goog-te-combo');
+      if (gtCombo) {
+        clearInterval(checkInterval);
+        if (gtCombo.value !== savedLang) {
+          gtCombo.value = savedLang;
+          gtCombo.dispatchEvent(new Event('change'));
+        }
+      }
+    }, 150);
+    setTimeout(function () { clearInterval(checkInterval); }, 8000);
+  })();
+</script>
 </body>
 </html>

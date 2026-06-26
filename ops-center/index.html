@@ -49,6 +49,16 @@
       </div>
     </div>
     <div class="brand">
+      <div class="lang-selector-wrapper">
+        <select class="lang-selector" id="global-lang-select" aria-label="Select Language" onchange="window.setGlobalLanguage(this.value)">
+          <option value="en">🇺🇸 EN</option>
+          <option value="es">🇪🇸 ES</option>
+          <option value="fr">🇫🇷 FR</option>
+          <option value="de">🇩🇪 DE</option>
+          <option value="it">🇮🇹 IT</option>
+          <option value="pt">🇵🇹 PT</option>
+        </select>
+      </div>
       <span class="ops-clock" id="ops-clock">--:--:-- ET</span>
       <a class="home-link" href="/"><img src="/logo.png" alt="All Forward logo"></a>
     </div>
@@ -131,6 +141,14 @@
       <div class="f31-legend" id="f31-legend"></div>
       <div class="f31-grid2">
         <div id="f31-mount"><p class="drawer-loading">Building outlook…</p></div>
+        <div id="f31-weather" class="f31-weather-card">
+          <div class="weather-widget">
+            <div class="weather-widget-header">
+              <h4>Weather Outlook</h4>
+            </div>
+            <div class="drawer-loading" style="padding: 20px 0;">Select a state to view weather outlook...</div>
+          </div>
+        </div>
         <aside class="f31-active" id="f31-active"></aside>
       </div>
       <div class="map-foot">Typical hazard seasons — planning windows, not a forecast. <a href="/ops-center/calendar/">Full calendar by state →</a></div>
@@ -244,5 +262,53 @@
 <script src="assets/fema-hazard-map.js"></script>
 <script src="assets/ops-center.js"></script>
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+
+<!-- Google Translate Integration & Language Selector Runtime -->
+<div id="google_translate_element" style="display:none;"></div>
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'en',
+      includedLanguages: 'en,es,fr,de,it,pt',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
+    }, 'google_translate_element');
+  }
+</script>
+<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script type="text/javascript">
+  (function () {
+    var savedLang = localStorage.getItem("ops-language") || "en";
+    
+    // Sync the custom dropdown on load
+    window.addEventListener("DOMContentLoaded", function () {
+      var sel = document.getElementById("global-lang-select");
+      if (sel) sel.value = savedLang;
+    });
+
+    window.setGlobalLanguage = function (val) {
+      localStorage.setItem("ops-language", val);
+      var gtCombo = document.querySelector('.goog-te-combo');
+      if (gtCombo) {
+        gtCombo.value = val;
+        gtCombo.dispatchEvent(new Event('change'));
+      } else {
+        window.location.reload();
+      }
+    };
+
+    // Keep checking for Google Translate dropdown to sync it on page load
+    var checkInterval = setInterval(function () {
+      var gtCombo = document.querySelector('.goog-te-combo');
+      if (gtCombo) {
+        clearInterval(checkInterval);
+        if (gtCombo.value !== savedLang) {
+          gtCombo.value = savedLang;
+          gtCombo.dispatchEvent(new Event('change'));
+        }
+      }
+    }, 150);
+    setTimeout(function () { clearInterval(checkInterval); }, 8000);
+  })();
+</script>
 </body>
 </html>

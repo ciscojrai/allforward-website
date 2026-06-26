@@ -17,6 +17,7 @@
   var STATE_GEO = null;     // GeoJSON object
   var stormMarkers = [];    // Maplibre Markers for storms
   var femaMarkers = [];     // Maplibre Markers for FEMA disasters
+  var globalFemaMarkers = []; // Maplibre Markers for global FEMA disasters
   var radarVisible = false;  // WeatherAPI radar visibility state
 
   // Precise coordinate centers and zoom levels for 3D globe camera flying
@@ -146,6 +147,7 @@
     return NATIONAL_SEASONS;
   }
   function buildOutlook(code) {
+    updateWeather(code);
     var mount = document.getElementById("f31-mount");
     if (!mount) return;
     var blank = !code || !byCode[code];
@@ -421,6 +423,8 @@
         essential: true,
         duration: 1500
       });
+      // Hide global FEMA markers
+      globalFemaMarkers.forEach(function (m) { m.remove(); });
     } else if (!code) {
       // Zoom out to general US view
       map.flyTo({
@@ -432,6 +436,8 @@
       // Clear FEMA markers on close
       femaMarkers.forEach(function (m) { m.remove(); });
       femaMarkers = [];
+      // Restore global FEMA markers
+      globalFemaMarkers.forEach(function (m) { m.addTo(map); });
     }
   }
 
@@ -569,7 +575,7 @@
     });
   }
 
-  /* ---------- WeatherAPI.com Weather Radar tiles toggle ---------- */
+  /* ---------- RainViewer Live Weather Radar tiles toggle ---------- */
   function setupRadarToggle() {
     var btn = document.getElementById("toggle-radar");
     if (!btn) return;
@@ -585,41 +591,60 @@
         btn.style.background = "rgba(13, 148, 136, 0.25)";
         btn.style.borderColor = "#0d9488";
 
-        // Add the WeatherAPI tile source if it hasn't been added yet
-        if (!map.getSource('weatherapi-radar')) {
-          var key = "c844c9f1a78f4068ba7222653262206"; // User's WeatherAPI Key
-          map.addSource('weatherapi-radar', {
-            type: 'raster',
-            tiles: [
-              'https://api.weatherapi.com/v1/map/tiles/precipitation/{z}/{x}/{y}.png?key=' + key
-            ],
-            tileSize: 256,
-            attribution: '© WeatherAPI.com'
+        // Fetch current RainViewer radar frames
+        fetch('https://api.rainviewer.com/public/weather-maps.json')
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            var host = data.host;
+            var past = data.radar.past;
+            if (!past || !past.length) return;
+            var latest = past[past.length - 1];
+            var path = latest.path; // e.g. /v2/radar/abcdef...
+            var tileUrl = host + path + '/256/{z}/{x}/{y}/2/1_0.png'; // color scheme 2
+
+            // Add the RainViewer tile source if it hasn't been added yet
+            if (!map.getSource('weatherapi-radar')) {
+              map.addSource('weatherapi-radar', {
+                type: 'raster',
+                tiles: [tileUrl],
+                tileSize: 256,
+                attribution: '© RainViewer'
+              });
+            } else {
+              // Update source tiles dynamically
+              map.getSource('weatherapi-radar').setTiles([tileUrl]);
+            }
+
+            // Insert the radar layer beneath any symbol/label layers to keep labels readable
+            if (!map.getLayer('radar-layer')) {
+              var layers = map.getStyle().layers;
+              var firstLabelId = null;
+              for (var i = 0; i < layers.length; i++) {
+                if (layers[i].type === 'symbol' || layers[i].id.indexOf('label') !== -1) {
+                  firstLabelId = layers[i].id;
+                  break;
+                }
+              }
+
+              map.addLayer({
+                id: 'radar-layer',
+                type: 'raster',
+                source: 'weatherapi-radar',
+                paint: {
+                  'raster-opacity': 0.65
+                }
+              }, firstLabelId);
+            } else {
+              map.setLayoutProperty('radar-layer', 'visibility', 'visible');
+            }
+          })
+          .catch(function (e) {
+            console.warn("Failed to load RainViewer radar tiles", e);
+            radarVisible = false;
+            btn.textContent = "📡 Show Radar";
+            btn.style.background = "var(--surface)";
+            btn.style.borderColor = "var(--border)";
           });
-        }
-
-        // Insert the radar layer beneath any symbol/label layers to keep labels readable
-        if (!map.getLayer('radar-layer')) {
-          var layers = map.getStyle().layers;
-          var firstLabelId = null;
-          for (var i = 0; i < layers.length; i++) {
-            if (layers[i].type === 'symbol' || layers[i].id.indexOf('label') !== -1) {
-              firstLabelId = layers[i].id;
-              break;
-            }
-          }
-
-          map.addLayer({
-            id: 'radar-layer',
-            type: 'raster',
-            source: 'weatherapi-radar',
-            paint: {
-              'raster-opacity': 0.65
-            }
-          }, firstLabelId);
-        } else {
-          map.setLayoutProperty('radar-layer', 'visibility', 'visible');
-        }
       } else {
         btn.textContent = "📡 Show Radar";
         btn.style.background = "var(--surface)";
@@ -696,6 +721,7 @@
     hydrateAlerts();   // NWS -> choropleth + flood module
     hydrateStorms();   // NHC
     hydrateWildfire(); // NIFC
+    hydrateGlobalFema(); // FEMA -> global markers
   }
 
   function setModule(mod, value, status, isActive) {
@@ -938,6 +964,192 @@
     STATES.forEach(function (s) {
       var o = el("option", null, s.state); o.value = s.code; sel.appendChild(o);
     });
+  }
+
+  /* ---------- global FEMA hazards on startup ---------- */
+  function hydrateGlobalFema() {
+    var url = FEMA + "?$orderby=declarationDate desc&$top=60" +
+      "&$select=state,disasterNumber,declarationType,declarationDate,incidentType,declarationTitle";
+    fetch(url)
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        var rows = j.DisasterDeclarationsSummaries || [];
+        var seen = {}, unique = [];
+        rows.forEach(function (d) {
+          if (seen[d.disasterNumber]) return;
+          seen[d.disasterNumber] = 1; unique.push(d);
+        });
+        plotGlobalFema(unique);
+      })
+      .catch(function (e) {
+        console.warn("Global FEMA fetch failed", e);
+      });
+  }
+
+  function plotGlobalFema(declarations) {
+    var map = window.femaMap;
+    if (!map || !window.maplibregl) return;
+
+    // Clear existing global FEMA markers
+    globalFemaMarkers.forEach(function (m) { m.remove(); });
+    globalFemaMarkers = [];
+
+    declarations.forEach(function (d) {
+      var stateCode = d.state;
+      var stateLoc = STATE_CENTERS[stateCode];
+      if (!stateLoc) return;
+
+      // Add a small random offset so multiple declarations in the same state don't stack perfectly
+      var angle = Math.random() * 2 * Math.PI;
+      var radius = 0.18 + (Math.random() * 0.22);
+      var lng = stateLoc.center[0] + Math.cos(angle) * radius;
+      var lat = stateLoc.center[1] + Math.sin(angle) * radius;
+
+      var elFema = document.createElement('div');
+      elFema.className = 'fema-global-marker';
+      elFema.style.cssText = "position: relative; width: 12px; height: 12px; border-radius: 50%; background: rgba(220, 38, 38, 0.82); border: 1.5px solid #fff; box-shadow: 0 0 6px rgba(220, 38, 38, 0.6); cursor: pointer;";
+
+      // Add small inner pulse ring
+      var pulse = document.createElement('div');
+      pulse.style.cssText = "position: absolute; top: -4px; left: -4px; width: 17px; height: 17px; border-radius: 50%; border: 1.5px solid rgba(220, 38, 38, 0.5); animation: femapulse 2.2s infinite ease-in-out;";
+      elFema.appendChild(pulse);
+
+      var marker = new window.maplibregl.Marker({ element: elFema })
+        .setLngLat([lng, lat])
+        .addTo(map);
+
+      var title = d.declarationTitle || cap(d.incidentType || "Disaster");
+      var type = cap(d.incidentType || "Incident");
+      var dateStr = fmtDate(d.declarationDate);
+      var num = d.disasterNumber;
+
+      var popupHTML = "<div style='font-family: var(--sans); color: #f0f2f5; padding: 4px; font-size: 0.82rem;'>" +
+        "<strong style='color: #ef4444; font-weight: 700;'>Recent FEMA Declaration (" + stateCode + ")</strong>" +
+        "<div style='font-weight: 600; margin: 4px 0 2px 0; color: #ffffff;'>" + title + "</div>" +
+        "<div style='font-size: 0.72rem; color: #9aa3b8;'>FEMA DR-" + num + " · " + dateStr + "</div>" +
+        "</div>";
+
+      var popup = new window.maplibregl.Popup({ offset: 8 }).setHTML(popupHTML);
+      marker.setPopup(popup);
+
+      globalFemaMarkers.push(marker);
+    });
+  }
+
+  /* ---------- live weather forecast widget ( Fahrenheit & mph) ---------- */
+  function updateWeather(code) {
+    var mount = document.getElementById("f31-weather");
+    if (!mount) return;
+
+    var stateEntry = byCode[code];
+    var query = stateEntry ? stateEntry.state : "Washington, D.C.";
+    var displayName = stateEntry ? stateEntry.state : "United States (D.C.)";
+
+    // Get selected language from localStorage
+    var lang = localStorage.getItem("ops-language") || "en";
+
+    // Show loading state
+    mount.innerHTML = '<div class="weather-widget"><div class="weather-widget-header"><h4>Weather Outlook — ' + displayName + '</h4></div><div class="drawer-loading" style="padding: 30px 0;">Loading weather...</div></div>';
+
+    var key = "c844c9f1a78f4068ba7222653262206"; // User's WeatherAPI Key
+    var url = "https://api.weatherapi.com/v1/forecast.json?key=" + key + "&q=" + encodeURIComponent(query) + "&days=5&lang=" + lang;
+
+    fetch(url)
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (!data || !data.current) {
+          throw new Error("Invalid weather data");
+        }
+        renderWeatherCard(data, displayName, mount);
+      })
+      .catch(function (e) {
+        console.warn("Weather fetch failed", e);
+        mount.innerHTML = '<div class="weather-widget"><div class="weather-widget-header"><h4>Weather Outlook — ' + displayName + '</h4></div><div class="drawer-loading" style="color: #ef4444; padding: 30px 0;">Weather data currently unavailable.</div></div>';
+      });
+  }
+
+  function renderWeatherCard(data, displayName, mount) {
+    var current = data.current;
+    var condition = current.condition || {};
+    var forecastDays = (data.forecast && data.forecast.forecastday) || [];
+
+    // Localized labels based on language
+    var lang = localStorage.getItem("ops-language") || "en";
+    var labels = {
+      en: { title: "Weather Outlook", wind: "Wind", precip: "Precip", pressure: "Pressure", powered: "Powered by" },
+      es: { title: "Clima Actual", wind: "Viento", precip: "Precip", pressure: "Presión", powered: "Con tecnología de" },
+      fr: { title: "Perspectives Météo", wind: "Vent", precip: "Précip", pressure: "Pression", powered: "Propulsé par" },
+      de: { title: "Wetterausblick", wind: "Wind", precip: "Niederschl", pressure: "Druck", powered: "Unterstützt durch" },
+      it: { title: "Prospettive Meteo", wind: "Vento", precip: "Precip", pressure: "Pressione", powered: "Offerto da" },
+      pt: { title: "Perspectiva do Tempo", wind: "Vento", precip: "Precip", pressure: "Pressão", powered: "Desenvolvido por" }
+    };
+    var l = labels[lang] || labels.en;
+
+    var card = el("div", "weather-widget");
+
+    // Header
+    var header = el("div", "weather-widget-header");
+    var h3 = el("h4", null, l.title + " — " + displayName);
+    header.appendChild(h3);
+    card.appendChild(header);
+
+    // Body container
+    var body = el("div", "weather-widget-body");
+
+    // Left side: Large Icon + Condition
+    var left = el("div", "weather-left");
+    var iconUrl = condition.icon ? "https:" + condition.icon : "";
+    var img = el("img", "weather-main-icon");
+    img.src = iconUrl;
+    img.alt = condition.text || "Weather Icon";
+    var condText = el("div", "weather-cond-text", condition.text || "");
+    left.appendChild(img);
+    left.appendChild(condText);
+
+    // Right side: Temp + Details
+    var right = el("div", "weather-right");
+    var tempVal = el("div", "weather-temp-large", Math.round(current.temp_f) + "°F");
+    
+    var details = el("div", "weather-details");
+    details.appendChild(el("span", "weather-detail-item", l.wind + ": " + Math.round(current.wind_mph) + " mph"));
+    details.appendChild(el("span", "weather-detail-item", l.precip + ": " + current.precip_in + " in"));
+    details.appendChild(el("span", "weather-detail-item", l.pressure + ": " + Math.round(current.pressure_mb) + " mb"));
+
+    right.appendChild(tempVal);
+    right.appendChild(details);
+
+    body.appendChild(left);
+    body.appendChild(right);
+    card.appendChild(body);
+
+    // Forecast row
+    if (forecastDays.length > 0) {
+      var forecastRow = el("div", "weather-forecast-row");
+      forecastDays.forEach(function (day) {
+        var date = new Date(day.date + "T00:00:00");
+        var dayName = date.toLocaleDateString(lang, { weekday: "short" });
+        
+        var col = el("div", "weather-forecast-col");
+        col.appendChild(el("div", "weather-fore-day", dayName));
+        
+        var fIcon = el("img", "weather-fore-icon");
+        fIcon.src = day.day.condition.icon ? "https:" + day.day.condition.icon : "";
+        fIcon.alt = day.day.condition.text || "";
+        col.appendChild(fIcon);
+        
+        col.appendChild(el("div", "weather-fore-temp", Math.round(day.day.avgtemp_f) + "°F"));
+        forecastRow.appendChild(col);
+      });
+      card.appendChild(forecastRow);
+    }
+
+    // Footer with link back
+    var footer = el("div", "weather-widget-footer");
+    footer.innerHTML = l.powered + ' <a href="https://www.weatherapi.com/" title="Free Weather API" target="_blank" rel="noopener" style="color: #4fc3f7; text-decoration: underline; font-weight: 500;">WeatherAPI.com</a>';
+    card.appendChild(footer);
+
+    mount.innerHTML = "";
+    mount.appendChild(card);
   }
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
