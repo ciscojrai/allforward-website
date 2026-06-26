@@ -1,5 +1,5 @@
-/* All Forward — FEMA-Inspired Hazard Map (Leaflet Edition)
-   Professional GIS interface with dark basemap, layer controls, and live hazard overlays. */
+/* All Forward — FEMA-Inspired Hazard Map (Maplibre 3D Globe Edition)
+   Professional GIS interface with dark 3D interactive globe, layer controls, and live hazard overlays. */
 
 (function () {
   "use strict";
@@ -7,11 +7,11 @@
   // Robust initialization with retries
   let initRetries = 0;
   function robustInit() {
-    if (window.L) {
+    if (window.maplibregl) {
       initFemaMap();
     } else if (initRetries < 10) {
       initRetries++;
-      console.log(`Leaflet not ready, retry ${initRetries}...`);
+      console.log(`Maplibre not ready, retry ${initRetries}...`);
       setTimeout(robustInit, 500);
     } else {
       const mapMount = document.getElementById("map-mount");
@@ -26,7 +26,7 @@
   }
 
   function initFemaMap() {
-    console.log("Initializing Professional FEMA Hazard Map...");
+    console.log("Initializing Professional 3D FEMA Hazard Map...");
     const mapMount = document.getElementById("map-mount");
     if (!mapMount) return;
 
@@ -36,51 +36,53 @@
     mapContainer.style.cssText = "position: relative; width: 100%; height: 600px; background: #1a1f2e; border-radius: 10px; overflow: hidden;";
 
     const mapEl = document.createElement("div");
-    mapEl.id = "leaflet-map";
+    mapEl.id = "maplibre-map";
     mapEl.style.cssText = "width: 100%; height: 100%; min-height: 600px; z-index: 1;";
-    mapEl.innerHTML = '<p style="color: #9aa3b8; text-align: center; padding-top: 250px;">Initializing professional GIS map...</p>';
+    mapEl.innerHTML = '<p style="color: #9aa3b8; text-align: center; padding-top: 250px;">Initializing professional 3D GIS globe...</p>';
     mapContainer.appendChild(mapEl);
 
     // Replace the map mount content
     mapMount.innerHTML = "";
     mapMount.appendChild(mapContainer);
 
-    // Initialize Leaflet Map
-    const map = L.map(mapEl, {
-      center: [39.8283, -98.5795], // Center of US
-      zoom: 4,
-      minZoom: 3,
-      maxZoom: 8,
-      maxBounds: [[5, -180], [72, -50]],    // keep US in view incl. AK/HI/PR + Gulf/EPAC storms
-      maxBoundsViscosity: 0.8,
-      zoomControl: false,
-      attributionControl: false,
-      // Interactive map. The clickable states are a real GeoJSON layer (added in
-      // ops-center.js), so they pan/zoom WITH the basemap and stay aligned. Scroll-
-      // wheel zoom stays OFF so scrolling the page near the map isn't trapped — pan by
-      // dragging, zoom with the +/- buttons or double-click.
-      scrollWheelZoom: false,
-      dragging: true,
+    // Use OpenFreeMap Dark as the primary default style.
+    // This style is completely unrestricted, open-source, keyless, and works flawlessly on any domain.
+    const styleUrl = 'https://tiles.openfreemap.org/styles/dark';
+
+    // Initialize Maplibre GL JS Map
+    const map = new window.maplibregl.Map({
+      container: mapEl,
+      style: styleUrl,
+      center: [-98.5795, 39.8283], // Center of US
+      zoom: 3.2,
+      minZoom: 2,
+      maxZoom: 10,
+      scrollZoom: false, // Scroll-wheel zoom stays OFF so scrolling page isn't trapped
+      dragRotate: true,
+      pitchWithRotate: false, // keep it flat relative to ground when dragging
+      dragPan: true,
+      keyboard: true,
       doubleClickZoom: true,
-      boxZoom: false,
-      touchZoom: true,
-      keyboard: true
+      touchZoomRotate: true,
+      attributionControl: false // Omitted to avoid cluttering layout, attribution in footer
     });
 
-    // Add Dark Basemap (CartoDB Dark Matter)
-    L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-      maxZoom: 19
-    }).addTo(map);
+    // Enable 3D Globe Projection
+    map.on('style.load', function () {
+      map.setProjection({
+        type: 'globe'
+      });
+      console.log("3D Globe Projection enabled.");
+    });
 
-    L.control.zoom({ position: "topleft" }).addTo(map);
+    // Add navigation controls (Zoom +/- and compass)
+    map.addControl(new window.maplibregl.NavigationControl({
+      showCompass: true,
+      showZoom: true,
+      visualizePitch: false
+    }), 'top-left');
 
-    // Real active storms are plotted by ops-center.js (hydrateStorms -> plotStorms)
-    // from the live NHC proxy. No mock hazard pins.
-
-    // Clickable state GeoJSON layer is added by ops-center.js once states.json loads
-    // (it owns the state data, severity choropleth, and recovery drawer).
-
-    console.log("Professional FEMA Hazard Map initialized successfully.");
+    console.log("3D FEMA Hazard Map initialized successfully.");
     
     // Dispatch event for other scripts to know map is ready
     window.femaMap = map;

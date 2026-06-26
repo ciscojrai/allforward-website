@@ -1,23 +1,79 @@
-/* All Forward — Operations Center · client runtime
+/* All Forward — Operations Center · client runtime (Maplibre 3D Globe Edition)
    Loads the static states.json reference, hydrates live public-API data on top,
-   and drives the choropleth map + state drawer. Every live call degrades
+   and drives the 3D choropleth map + state drawer. Every live call degrades
    gracefully: if a feed is unreachable (CORS/outage), the UI shows a dash and
-   the static reference data still renders. No API keys are used. */
+   the static reference data still renders. */
 (function () {
   "use strict";
 
   var FEMA = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries";
   var NWS = "https://api.weather.gov/alerts/active";
-  var NHC = "https://www.nhc.noaa.gov/CurrentStorms.json";
   var NIFC = "https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Incident_Locations_Current/FeatureServer/0/query?where=1%3D1&returnCountOnly=true&f=json";
 
   var STATES = [];          // from states.json
   var byCode = {};          // code -> entry
   var byFips = {};          // 2-digit fips -> entry
   var drawerCache = {};     // code -> fetched FEMA declarations
-  var STATE_GEO = null;     // L.geoJSON layer (clickable states on the basemap)
-  var stateLayers = {};     // code -> Leaflet layer
-  var stormLayer = null;    // L.layerGroup of live NHC storm markers
+  var STATE_GEO = null;     // GeoJSON object
+  var stormMarkers = [];    // Maplibre Markers for storms
+  var femaMarkers = [];     // Maplibre Markers for FEMA disasters
+  var radarVisible = false;  // WeatherAPI radar visibility state
+
+  // Precise coordinate centers and zoom levels for 3D globe camera flying
+  var STATE_CENTERS = {
+    AL: { center: [-86.9023, 32.3182], zoom: 5.8 },
+    AK: { center: [-152.4044, 61.3707], zoom: 4.2 },
+    AZ: { center: [-111.0937, 34.0489], zoom: 5.8 },
+    AR: { center: [-92.3731, 34.9697], zoom: 6.0 },
+    CA: { center: [-119.4179, 36.7783], zoom: 5.0 },
+    CO: { center: [-105.7821, 39.5501], zoom: 6.0 },
+    CT: { center: [-72.7575, 41.6032], zoom: 7.8 },
+    DE: { center: [-75.5277, 38.9108], zoom: 7.8 },
+    DC: { center: [-77.0369, 38.9072], zoom: 9.5 },
+    FL: { center: [-81.5158, 27.6648], zoom: 5.5 },
+    GA: { center: [-83.6431, 32.1656], zoom: 5.8 },
+    HI: { center: [-155.5828, 19.8968], zoom: 6.5 },
+    ID: { center: [-114.7420, 44.0682], zoom: 5.5 },
+    IL: { center: [-89.3985, 40.6331], zoom: 5.8 },
+    IN: { center: [-86.1349, 40.5512], zoom: 5.8 },
+    IA: { center: [-93.0977, 42.0115], zoom: 5.8 },
+    KS: { center: [-98.4842, 38.5266], zoom: 6.0 },
+    KY: { center: [-84.2700, 37.8393], zoom: 6.0 },
+    LA: { center: [-91.9623, 31.1695], zoom: 6.0 },
+    ME: { center: [-69.4455, 45.2538], zoom: 5.8 },
+    MD: { center: [-76.6413, 39.0458], zoom: 7.0 },
+    MA: { center: [-71.3824, 42.4072], zoom: 7.5 },
+    MI: { center: [-85.6024, 43.3266], zoom: 5.5 },
+    MN: { center: [-93.9002, 45.6945], zoom: 5.5 },
+    MS: { center: [-89.3985, 32.7416], zoom: 5.8 },
+    MO: { center: [-92.2884, 38.4561], zoom: 5.8 },
+    MT: { center: [-110.3626, 46.8797], zoom: 5.5 },
+    NE: { center: [-99.9018, 41.4925], zoom: 6.0 },
+    NV: { center: [-116.4194, 38.8026], zoom: 5.5 },
+    NH: { center: [-71.5724, 43.1939], zoom: 7.2 },
+    NJ: { center: [-74.4057, 40.0583], zoom: 7.2 },
+    NM: { center: [-105.8701, 34.5199], zoom: 5.8 },
+    NY: { center: [-74.2179, 42.1657], zoom: 5.8 },
+    NC: { center: [-79.0193, 35.7596], zoom: 5.8 },
+    ND: { center: [-101.0020, 47.5289], zoom: 6.0 },
+    OH: { center: [-82.9071, 40.4173], zoom: 6.0 },
+    OK: { center: [-97.0929, 35.5659], zoom: 6.0 },
+    OR: { center: [-120.5542, 43.8041], zoom: 5.5 },
+    PA: { center: [-77.1945, 41.2033], zoom: 6.2 },
+    RI: { center: [-71.4774, 41.5801], zoom: 8.5 },
+    SC: { center: [-81.1637, 33.8361], zoom: 6.0 },
+    SD: { center: [-99.9018, 44.2998], zoom: 6.0 },
+    TN: { center: [-86.5804, 35.5175], zoom: 6.0 },
+    TX: { center: [-99.9018, 31.9686], zoom: 4.8 },
+    UT: { center: [-111.0937, 39.3210], zoom: 5.8 },
+    VT: { center: [-72.5778, 44.5588], zoom: 7.2 },
+    VA: { center: [-78.6569, 37.4316], zoom: 5.8 },
+    WA: { center: [-120.7401, 47.7511], zoom: 5.5 },
+    WV: { center: [-80.9540, 38.5976], zoom: 6.2 },
+    WI: { center: [-89.6165, 43.7844], zoom: 5.5 },
+    WY: { center: [-107.2903, 43.0760], zoom: 6.0 },
+    PR: { center: [-66.5901, 18.2208], zoom: 7.8 }
+  };
 
   function $(s, r) { return (r || document).querySelector(s); }
   function el(tag, cls, txt) { var e = document.createElement(tag); if (cls) e.className = cls; if (txt != null) e.textContent = txt; return e; }
@@ -92,8 +148,6 @@
   function buildOutlook(code) {
     var mount = document.getElementById("f31-mount");
     if (!mount) return;
-    // Blank mode (no state picked yet): still render the empty calendar grid so the
-    // widget is visible at first glance — dots only light up once a state is chosen.
     var blank = !code || !byCode[code];
     var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
     var hazards = blank ? [] : outlookHazards(code);
@@ -103,7 +157,7 @@
     var rg = document.getElementById("f31-range");
     if (rg) rg.textContent = (blank ? "" : name + " · ") + MON[today.getMonth()] + " " + today.getDate() + " – " + MON[end.getMonth()] + " " + end.getDate();
 
-    var gridStart = new Date(today); gridStart.setDate(today.getDate() - today.getDay()); // Sunday of this week
+    var gridStart = new Date(today); gridStart.setDate(today.getDate() - today.getDay());
     var weeks = Math.ceil((Math.round((end - gridStart) / 86400000) + 1) / 7);
 
     var wrap = el("div", "wkcal");
@@ -141,7 +195,6 @@
       });
     }
 
-    // Side panel: hazards active in the next 30 days (fills the space beside the calendar).
     var ap = document.getElementById("f31-active");
     if (ap) {
       ap.innerHTML = "";
@@ -184,9 +237,6 @@
   }
 
   /* ---------- map load ---------- */
-  // The dark basemap is created in fema-hazard-map.js (window.femaMap). We wait for
-  // it, then add the clickable states as a real GeoJSON layer so they stay aligned
-  // with the basemap on pan/zoom.
   function loadMap() {
     return waitForMap().then(function (map) { if (map) return addStateLayer(map); });
   }
@@ -202,53 +252,197 @@
     });
   }
 
-  function baseStyle() { return { color: "rgba(240,242,245,.28)", weight: 1, fillColor: "#3a445e", fillOpacity: .3 }; }
-  function levelStyle(lvl) {
-    if (lvl === 2) return { fillColor: "#dc2626", fillOpacity: .62, color: "rgba(255,255,255,.35)", weight: 1 };
-    if (lvl === 1) return { fillColor: "#d4a843", fillOpacity: .55, color: "rgba(255,255,255,.3)", weight: 1 };
-    return baseStyle();
-  }
-  function paintState(layer) {
-    if (!layer) return;
-    var s = levelStyle(layer._lvl || 0);
-    if (layer._selected) s = Object.assign({}, s, { color: "#d4a843", weight: 2.5, fillOpacity: Math.max(s.fillOpacity, .5) });
-    layer.setStyle(s);
-  }
-
   function addStateLayer(map) {
-    if (!map || !window.L) return Promise.resolve();
-    return fetch("assets/us-states.geojson")
-      .then(function (r) { return r.json(); })
-      .then(function (geo) {
-        STATE_GEO = window.L.geoJSON(geo, {
-          style: baseStyle,
-          onEachFeature: function (feature, layer) {
-            var entry = byFips[feature.id];
-            if (!entry) { layer.setStyle({ fillOpacity: .1, weight: .5 }); return; } // PR / unmatched
-            var code = entry.code;
-            layer._code = code; layer._lvl = 0;
-            stateLayers[code] = layer;
-            // Permanent 2-letter state code, centered in the state.
-            layer.bindTooltip(code, { permanent: true, direction: "center", className: "state-label", opacity: 1 });
-            layer.on("mouseover", function () { if (!layer._selected) layer.setStyle({ weight: 2, color: "#4fc3f7" }); });
-            layer.on("mouseout", function () { paintState(layer); });
-            layer.on("click", function () { openDrawer(code); });
-          }
-        }).addTo(map);
-      })
-      .catch(function (e) { console.warn("state geojson unavailable", e); });
+    if (!map || !window.maplibregl) return Promise.resolve();
+    
+    return new Promise(function (resolve) {
+      function proceed() {
+        fetch("assets/us-states.geojson")
+          .then(function (r) { return r.json(); })
+          .then(function (geo) {
+            // Pre-process GeoJSON features to convert string IDs into integers for robust feature-state management
+            geo.features.forEach(function (f) {
+              var entry = byFips[f.id];
+              f.id = parseInt(f.id, 10);
+              if (entry) {
+                f.properties.code = entry.code;
+              }
+            });
+            STATE_GEO = geo;
+
+            // Add the states GeoJSON source
+            map.addSource('states', {
+              type: 'geojson',
+              data: STATE_GEO
+            });
+
+            // Add Fill layer for coloring states (Choropleth for warnings, highlights for hover & select)
+            map.addLayer({
+              id: 'states-fill',
+              type: 'fill',
+              source: 'states',
+              paint: {
+                'fill-color': [
+                  'case',
+                  ['boolean', ['feature-state', 'selected'], false], '#d4a843',
+                  ['==', ['feature-state', 'level'], 2], '#dc2626',
+                  ['==', ['feature-state', 'level'], 1], '#d4a843',
+                  '#3a445e'
+                ],
+                'fill-opacity': [
+                  'case',
+                  ['boolean', ['feature-state', 'selected'], false], 0.55,
+                  ['boolean', ['feature-state', 'hover'], false], 0.45,
+                  ['==', ['feature-state', 'level'], 2], 0.62,
+                  ['==', ['feature-state', 'level'], 1], 0.55,
+                  0.28
+                ]
+              }
+            });
+
+            // Add Line layer for state boundaries
+            map.addLayer({
+              id: 'states-outline',
+              type: 'line',
+              source: 'states',
+              paint: {
+                'line-color': [
+                  'case',
+                  ['boolean', ['feature-state', 'selected'], false], '#d4a843',
+                  ['boolean', ['feature-state', 'hover'], false], '#4fc3f7',
+                  ['==', ['feature-state', 'level'], 2], 'rgba(255,255,255,.4)',
+                  ['==', ['feature-state', 'level'], 1], 'rgba(255,255,255,.3)',
+                  'rgba(240,242,245,.2)'
+                ],
+                'line-width': [
+                  'case',
+                  ['boolean', ['feature-state', 'selected'], false], 2.5,
+                  ['boolean', ['feature-state', 'hover'], false], 2.0,
+                  1.0
+                ]
+              }
+            });
+
+            // Add Text Label layer centered in each state (displays permanent 2-letter state code)
+            map.addLayer({
+              id: 'states-labels',
+              type: 'symbol',
+              source: 'states',
+              layout: {
+                'text-field': ['get', 'code'],
+                'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                'text-size': 11,
+                'text-justify': 'center',
+                'text-anchor': 'center'
+              },
+              paint: {
+                'text-color': '#ffffff',
+                'text-halo-color': '#1a1f2e',
+                'text-halo-width': 1.5,
+                'text-opacity': 0.85
+              }
+            });
+
+            // Interactivity - click to select state and open drawer
+            map.on('click', 'states-fill', function (e) {
+              if (e.features && e.features.length > 0) {
+                var feature = e.features[0];
+                var fipsStr = String(feature.id).padStart(2, '0');
+                var entry = byFips[fipsStr];
+                if (entry) {
+                  openDrawer(entry.code);
+                }
+              }
+            });
+
+            // Interactivity - hover styles using feature state
+            var hoveredStateId = null;
+            map.on('mousemove', 'states-fill', function (e) {
+              if (e.features && e.features.length > 0) {
+                map.getCanvas().style.cursor = 'pointer';
+                var currentId = e.features[0].id;
+                
+                if (hoveredStateId !== null && hoveredStateId !== currentId) {
+                  map.setFeatureState(
+                    { source: 'states', id: hoveredStateId },
+                    { hover: false }
+                  );
+                }
+                
+                hoveredStateId = currentId;
+                map.setFeatureState(
+                  { source: 'states', id: hoveredStateId },
+                  { hover: true }
+                );
+              }
+            });
+
+            map.on('mouseleave', 'states-fill', function () {
+              map.getCanvas().style.cursor = '';
+              if (hoveredStateId !== null) {
+                map.setFeatureState(
+                  { source: 'states', id: hoveredStateId },
+                  { hover: false }
+                );
+                hoveredStateId = null;
+              }
+            });
+
+            // Wire up the WeatherAPI Radar overlay controls
+            setupRadarToggle();
+            resolve();
+          })
+          .catch(function (e) {
+            console.warn("state geojson unavailable", e);
+            resolve();
+          });
+      }
+
+      if (map.isStyleLoaded()) {
+        proceed();
+      } else {
+        map.once('load', proceed);
+      }
+    });
   }
 
   function highlightState(code) {
-    Object.keys(stateLayers).forEach(function (c) {
-      stateLayers[c]._selected = (c === code);
-      paintState(stateLayers[c]);
+    var map = window.femaMap;
+    if (!map) return;
+
+    // Reset and apply selection states
+    Object.keys(byCode).forEach(function (c) {
+      var entry = byCode[c];
+      var fipsInt = parseInt(entry.fips, 10);
+      map.setFeatureState(
+        { source: 'states', id: fipsInt },
+        { selected: (c === code) }
+      );
     });
-    var ly = stateLayers[code];
-    if (ly && ly.bringToFront) ly.bringToFront();
+
+    if (code && STATE_CENTERS[code]) {
+      var loc = STATE_CENTERS[code];
+      map.flyTo({
+        center: loc.center,
+        zoom: loc.zoom,
+        essential: true,
+        duration: 1500
+      });
+    } else if (!code) {
+      // Zoom out to general US view
+      map.flyTo({
+        center: [-98.5795, 39.8283],
+        zoom: 3.2,
+        essential: true,
+        duration: 1500
+      });
+      // Clear FEMA markers on close
+      femaMarkers.forEach(function (m) { m.remove(); });
+      femaMarkers = [];
+    }
   }
 
-  /* ---------- live storm markers (real NHC positions via the proxy) ---------- */
+  /* ---------- live storm markers (real NHC positions plotted on Maplibre) ---------- */
   function stormColor(c) {
     c = (c || "").toUpperCase();
     if (c === "HU" || c === "MH") return "#dc2626";        // hurricane
@@ -262,18 +456,186 @@
   }
   function plotStorms(storms) {
     var map = window.femaMap;
-    if (!map || !window.L) return;
-    if (stormLayer) { map.removeLayer(stormLayer); stormLayer = null; }
+    if (!map || !window.maplibregl) return;
+    
+    // Clear existing markers
+    stormMarkers.forEach(function (m) { m.remove(); });
+    stormMarkers = [];
+    
     if (!storms || !storms.length) return;
-    stormLayer = window.L.layerGroup().addTo(map);
+    
     storms.forEach(function (s) {
       if (typeof s.lat !== "number" || typeof s.lon !== "number") return;
       var col = stormColor(s.classification);
       var label = stormLabel(s.classification);
-      window.L.circleMarker([s.lat, s.lon], { radius: 8, color: "#fff", weight: 1.5, fillColor: col, fillOpacity: .95 })
-        .addTo(stormLayer)
-        .bindTooltip(s.name + " — " + label, { direction: "top" })
-        .bindPopup("<strong>" + s.name + "</strong><br>" + label + (s.intensity ? (" · " + s.intensity + " kt") : ""));
+      
+      // Create element for custom storm pin
+      var elPin = document.createElement('div');
+      elPin.className = 'storm-marker';
+      elPin.style.cssText = "width: 16px; height: 16px; border-radius: 50%; background: " + col + "; border: 2px solid #fff; box-shadow: 0 0 10px " + col + "; cursor: pointer;";
+      
+      // Setup Maplibre Marker
+      var marker = new window.maplibregl.Marker({ element: elPin })
+        .setLngLat([s.lon, s.lat])
+        .addTo(map);
+        
+      var popupHTML = "<div style='color: #f0f2f5; font-family: var(--sans); font-size: 0.85rem; padding: 2px;'>" +
+        "<strong style='color: #4fc3f7; font-weight: 700;'>" + s.name + "</strong><br>" +
+        label + (s.intensity ? (" · " + s.intensity + " kt") : "") +
+        "</div>";
+        
+      var popup = new window.maplibregl.Popup({ offset: 10 }).setHTML(popupHTML);
+      marker.setPopup(popup);
+      
+      stormMarkers.push(marker);
+    });
+  }
+
+  /* ---------- live FEMA disasters plotting on Maplibre ---------- */
+  function plotFemaDisasters(declarations, entry) {
+    var map = window.femaMap;
+    if (!map || !window.maplibregl) return;
+
+    // Clear existing FEMA markers
+    femaMarkers.forEach(function (m) { m.remove(); });
+    femaMarkers = [];
+
+    if (!declarations || !declarations.length) return;
+
+    var stateCode = entry.code;
+    var stateLoc = STATE_CENTERS[stateCode] || { center: [-98.5795, 39.8283] };
+    var baseCenter = stateLoc.center;
+
+    // Pulse and Maplibre popup style setup if not present
+    if (!document.getElementById('fema-pulse-style')) {
+      var style = document.createElement('style');
+      style.id = 'fema-pulse-style';
+      style.textContent = "@keyframes femapulse { 0% { transform: scale(0.5); opacity: 1; } 100% { transform: scale(1.6); opacity: 0; } }" +
+        " .maplibregl-popup-content { background: rgba(26, 31, 46, 0.9) !important; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12); border-radius: 8px !important; color: #f0f2f5 !important; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5) !important; padding: 12px 16px 10px 16px !important; }" +
+        " .maplibregl-popup-anchor-top .maplibregl-popup-tip { border-bottom-color: rgba(26, 31, 46, 0.9) !important; }" +
+        " .maplibregl-popup-anchor-bottom .maplibregl-popup-tip { border-top-color: rgba(26, 31, 46, 0.9) !important; }" +
+        " .maplibregl-popup-anchor-left .maplibregl-popup-tip { border-right-color: rgba(26, 31, 46, 0.9) !important; }" +
+        " .maplibregl-popup-anchor-right .maplibregl-popup-tip { border-left-color: rgba(26, 31, 46, 0.9) !important; }" +
+        " .maplibregl-popup-close-button { color: #9aa3b8 !important; font-size: 14px !important; padding: 4px 8px !important; }" +
+        " .maplibregl-popup-close-button:hover { background-color: rgba(255, 255, 255, 0.05) !important; color: #ffffff !important; border-radius: 0 8px 0 0 !important; }";
+      document.head.appendChild(style);
+    }
+
+    // Slice recent declarations (max 10) to avoid visual clutter
+    var list = declarations.slice(0, 10);
+
+    list.forEach(function (d, index) {
+      // Deterministically offset each disaster marker around the state centroid
+      var angle = (index * 2 * Math.PI) / Math.min(list.length, 6);
+      var radius = 0.5 + (index * 0.18);
+      
+      var latOffset = Math.sin(angle) * radius * 0.7;
+      var lonOffset = Math.cos(angle) * radius * 0.9;
+
+      // Geographic scaling for larger states
+      if (stateCode === 'AK') {
+        latOffset *= 4.0;
+        lonOffset *= 6.0;
+      } else if (stateCode === 'TX' || stateCode === 'CA') {
+        latOffset *= 1.8;
+        lonOffset *= 1.8;
+      }
+
+      var lng = baseCenter[0] + lonOffset;
+      var lat = baseCenter[1] + latOffset;
+
+      // FEMA red glowing element
+      var elFema = document.createElement('div');
+      elFema.className = 'fema-hazard-marker';
+      elFema.style.cssText = "position: relative; width: 18px; height: 18px; border-radius: 50%; background: rgba(220, 38, 38, 0.95); border: 2px solid #fff; box-shadow: 0 0 10px rgba(220, 38, 38, 0.8); cursor: pointer;";
+      
+      // Pulsing secondary ring
+      var pulseRing = document.createElement('div');
+      pulseRing.style.cssText = "position: absolute; top: -6px; left: -6px; width: 26px; height: 26px; border-radius: 50%; border: 2px solid rgba(220, 38, 38, 0.6); animation: femapulse 2s infinite ease-in-out;";
+      elFema.appendChild(pulseRing);
+
+      var marker = new window.maplibregl.Marker({ element: elFema })
+        .setLngLat([lng, lat])
+        .addTo(map);
+
+      var title = d.declarationTitle || cap(d.incidentType || "Disaster");
+      var type = cap(d.incidentType || "Incident");
+      var dateStr = fmtDate(d.declarationDate);
+      var num = d.disasterNumber;
+
+      var popupHTML = "<div style='font-family: var(--sans); color: #f0f2f5; padding: 4px; font-size: 0.82rem;'>" +
+        "<strong style='color: #ef4444; font-weight: 700;'>" + type + " Declaration</strong>" +
+        "<div style='font-weight: 600; margin: 4px 0 2px 0; color: #ffffff;'>" + title + "</div>" +
+        "<div style='font-size: 0.72rem; color: #9aa3b8;'>FEMA DR-" + num + " · " + dateStr + "</div>" +
+        "</div>";
+
+      var popup = new window.maplibregl.Popup({ offset: 12 }).setHTML(popupHTML);
+      marker.setPopup(popup);
+
+      femaMarkers.push(marker);
+    });
+  }
+
+  /* ---------- WeatherAPI.com Weather Radar tiles toggle ---------- */
+  function setupRadarToggle() {
+    var btn = document.getElementById("toggle-radar");
+    if (!btn) return;
+
+    btn.addEventListener("click", function () {
+      var map = window.femaMap;
+      if (!map) return;
+
+      radarVisible = !radarVisible;
+
+      if (radarVisible) {
+        btn.textContent = "📡 Hide Radar";
+        btn.style.background = "rgba(13, 148, 136, 0.25)";
+        btn.style.borderColor = "#0d9488";
+
+        // Add the WeatherAPI tile source if it hasn't been added yet
+        if (!map.getSource('weatherapi-radar')) {
+          var key = "c844c9f1a78f4068ba7222653262206"; // User's WeatherAPI Key
+          map.addSource('weatherapi-radar', {
+            type: 'raster',
+            tiles: [
+              'https://api.weatherapi.com/v1/map/tiles/precipitation/{z}/{x}/{y}.png?key=' + key
+            ],
+            tileSize: 256,
+            attribution: '© WeatherAPI.com'
+          });
+        }
+
+        // Insert the radar layer beneath any symbol/label layers to keep labels readable
+        if (!map.getLayer('radar-layer')) {
+          var layers = map.getStyle().layers;
+          var firstLabelId = null;
+          for (var i = 0; i < layers.length; i++) {
+            if (layers[i].type === 'symbol' || layers[i].id.indexOf('label') !== -1) {
+              firstLabelId = layers[i].id;
+              break;
+            }
+          }
+
+          map.addLayer({
+            id: 'radar-layer',
+            type: 'raster',
+            source: 'weatherapi-radar',
+            paint: {
+              'raster-opacity': 0.65
+            }
+          }, firstLabelId);
+        } else {
+          map.setLayoutProperty('radar-layer', 'visibility', 'visible');
+        }
+      } else {
+        btn.textContent = "📡 Show Radar";
+        btn.style.background = "var(--surface)";
+        btn.style.borderColor = "var(--border)";
+
+        if (map.getLayer('radar-layer')) {
+          map.setLayoutProperty('radar-layer', 'visibility', 'none');
+        }
+      }
     });
   }
 
@@ -356,7 +718,7 @@
       .then(function (r) { return r.json(); })
       .then(function (j) {
         var feats = j.features || [];
-        var level = {};   // fips -> 1 watch, 2 warn
+        var level = {};
         var floodSevere = 0;
         feats.forEach(function (f) {
           var p = f.properties || {};
@@ -386,19 +748,21 @@
   }
 
   function applyChoropleth(level) {
-    // level: fips -> 1 (watch) | 2 (warning). Recolor the GeoJSON state layer.
-    Object.keys(stateLayers).forEach(function (code) {
+    var map = window.femaMap;
+    if (!map) return;
+
+    Object.keys(byCode).forEach(function (code) {
       var entry = byCode[code];
       var lvl = (entry && level[entry.fips]) || 0;
-      stateLayers[code]._lvl = lvl;
-      paintState(stateLayers[code]);
+      var fipsInt = parseInt(entry.fips, 10);
+      map.setFeatureState(
+        { source: 'states', id: fipsInt },
+        { level: lvl }
+      );
     });
   }
 
   function hydrateStorms() {
-    // Static snapshot generated by the "Update storms data" GitHub Action
-    // (scripts/fetch-storms.mjs) — no Netlify function, zero invocation cost.
-    // Genuinely 0 in the off-season; a missing file degrades to a dash via catch().
     fetch("storms.json")
       .then(function (r) { return r.json(); })
       .then(function (j) {
@@ -429,7 +793,6 @@
   }
 
   function renderFunding() {
-    // Static count: federal recovery programs tracked across jurisdictions.
     var total = 0, cdbg = 0;
     STATES.forEach(function (s) {
       (s.funding_programs || []).forEach(function (p) {
@@ -513,14 +876,17 @@
   }
 
   function ctaFor(entry) {
-    // Option A routing: send to relevant All Forward manual/service.
     var top = (entry.risk_profile.top_disasters || [])[0] || "";
-    // Federal recovery work routes to the Strike Pack offer.
     return "/strike-pack.html?state=" + entry.code + "&hazard=" + encodeURIComponent(top);
   }
 
   function loadDeclarations(entry, mount) {
-    if (drawerCache[entry.code]) { renderDeclarations(drawerCache[entry.code], mount); return; }
+    if (drawerCache[entry.code]) { 
+      var cached = drawerCache[entry.code];
+      renderDeclarations(cached, mount); 
+      plotFemaDisasters(cached.uniq, entry);
+      return; 
+    }
     var url = FEMA + "?$filter=" + encodeURIComponent("state eq '" + entry.code + "'") +
       "&$orderby=declarationDate desc&$top=400" +
       "&$select=disasterNumber,declarationType,declarationDate,incidentType,declarationTitle,fyDeclared";
@@ -538,6 +904,7 @@
         var payload = { uniq: uniq, recent: recent };
         drawerCache[entry.code] = payload;
         renderDeclarations(payload, mount);
+        plotFemaDisasters(uniq, entry);
       })
       .catch(function (e) {
         console.warn("FEMA declarations failed", e);

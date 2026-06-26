@@ -27,8 +27,9 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="assets/ops-center.css">
 <link rel="stylesheet" href="assets/fema-hazard-map.css">
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Maplibre GL JS (v5.24.0) for 3D Interactive Globe -->
+<link href="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.css" rel="stylesheet" />
+<script src="https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.js"></script>
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebApplication","name":"All Forward Operations Center","applicationCategory":"BusinessApplication","operatingSystem":"Web","url":"https://allforwardllc.com/ops-center/","description":"Live U.S. disaster-recovery intelligence dashboard tracking storms, wildfires, flood and severe-weather alerts, FEMA declarations, and federal recovery funding by state.","author":{"@type":"Person","name":"Francisco Pellerano","jobTitle":"FEMA-certified Disaster Recovery & Federal Grant Consultant","url":"https://allforwardllc.com/about-francisco-pellerano","worksFor":{"@type":"Organization","name":"All Forward LLC","url":"https://allforwardllc.com"}},"provider":{"@type":"Person","name":"Francisco Pellerano","url":"https://allforwardllc.com/about-francisco-pellerano"}}
 </script>
@@ -109,6 +110,7 @@
           <span><i class="swatch sw-clear"></i> Clear</span>
           <span><i class="swatch sw-watch"></i> Watch / Advisory</span>
           <span><i class="swatch sw-warn"></i> Warning (Severe+)</span>
+          <button id="toggle-radar" class="radar-btn" type="button" style="margin-left: 15px; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; color: var(--text); font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 4px;">📡 Show Radar</button>
         </div>
       </div>
       <div id="map-mount" aria-live="polite"><p class="drawer-loading">Loading map…</p></div>
