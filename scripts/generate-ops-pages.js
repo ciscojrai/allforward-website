@@ -1,9 +1,9 @@
 #!/usr/bin/env node
-/* All Forward — Command Center per-state page generator.
+/* All Forward — Operations Center per-state page generator.
  *
- * Reads command-center/states.json (the single source of truth), pulls real
+ * Reads ops-center/states.json (the single source of truth), pulls real
  * historical FEMA declaration data per state from the public OpenFEMA API,
- * and stamps 51 crawlable static pages at command-center/<slug>.html. Live data
+ * and stamps 51 crawlable static pages at ops-center/<slug>.html. Live data
  * still hydrates client-side on the main board; these pages exist for SEO and
  * as a no-JS fallback, so all stats are baked into static HTML text.
  *
@@ -16,7 +16,7 @@ const fs = require("fs");
 const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
-const OPS = path.join(ROOT, "command-center");
+const OPS = path.join(ROOT, "ops-center");
 const FEMA = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries";
 const SITE = "https://allforwardllc.com";
 const NOW = new Date();
@@ -65,7 +65,7 @@ function page(s, stats) {
   const top = (s.risk_profile.top_disasters || [])[0] || "disaster";
   const title = `${s.state} Disaster Recovery & FEMA Funding Guide | Francisco Pellerano · All Forward`;
   const desc = `${s.state} federal disaster recovery brief by Francisco Pellerano of All Forward LLC: ${stats.total != null ? stats.total + " FEMA declarations on record, " : ""}top hazards (${(s.risk_profile.top_disasters || []).map(hz).join(", ")}), CDBG-DR and FEMA funding programs, and the state emergency-management directory.`;
-  const url = `${SITE}/command-center/${s.slug}.html`;
+  const url = `${SITE}/ops-center/${s.slug}.html`;
 
   const declRows = (stats.recent || []).slice(0, 12).map(d =>
     `<tr><td>${esc(d.declarationTitle || cap(d.incidentType || "Disaster"))}</td><td>${esc(cap(d.incidentType || "—"))}</td><td>DR-${esc(d.disasterNumber)}</td><td>${esc(fmtDate(d.declarationDate))}</td></tr>`
@@ -109,7 +109,7 @@ function page(s, stats) {
     "breadcrumb": {
       "@type": "BreadcrumbList",
       "itemListElement": [
-        { "@type": "ListItem", "position": 1, "name": "Command Center", "item": `${SITE}/command-center/` },
+        { "@type": "ListItem", "position": 1, "name": "Operations Center", "item": `${SITE}/ops-center/` },
         { "@type": "ListItem", "position": 2, "name": s.state, "item": url }
       ]
     }
@@ -149,7 +149,7 @@ function page(s, stats) {
 <meta property="og:url" content="${url}">
 <meta property="og:image" content="${SITE}/og-image.jpg">
 <meta property="article:author" content="Francisco Pellerano">
-<link rel="stylesheet" href="assets/command-center.css">
+<link rel="stylesheet" href="assets/ops-center.css">
 <script type="application/ld+json">${JSON.stringify(ld)}</script>
 <script type="application/ld+json">${JSON.stringify(personLd)}</script>
 </head>
@@ -158,19 +158,14 @@ function page(s, stats) {
   <div class="wrap">
     <div class="ops-title">
       <span class="live-dot" aria-hidden="true"></span>
-      <div><h1>The Command Center</h1><span class="sub">Live U.S. Disaster Intel</span></div>
+      <div><h1>The Operations Center</h1><span class="sub">Live U.S. Disaster Intel</span></div>
     </div>
-    <div class="brand">
-      <select class="lang-selector" id="global-lang-select" aria-label="Select Language" onchange="window.setGlobalLanguage(this.value)">
-        <option value="en">🇺🇸 EN</option><option value="es">🇪🇸 ES</option><option value="fr">🇫🇷 FR</option><option value="de">🇩🇪 DE</option><option value="it">🇮🇹 IT</option><option value="pt">🇵🇹 PT</option><option value="ar">🇸🇦 AR</option><option value="zh-CN">🇨🇳 ZH</option><option value="el">🇬🇷 EL</option>
-      </select>
-      <a class="home-link" href="/"><img src="/logo.png" alt="All Forward logo"></a>
-    </div>
+    <div class="brand"><a class="home-link" href="/"><img src="/logo.png" alt="All Forward logo"></a></div>
   </div>
 </header>
 <main class="wrap">
   <div class="sp-hero">
-    <div class="crumb"><a href="/command-center/">Command Center</a> › ${esc(s.state)}</div>
+    <div class="crumb"><a href="/ops-center/">Operations Center</a> › ${esc(s.state)}</div>
     <h1>${esc(s.state)} Disaster Recovery &amp; FEMA Funding</h1>
     <p class="lede">Federal disaster recovery intelligence for ${esc(s.state)} (${esc(s.code)}) — historical FEMA declarations, hazard risk profile, and the federal funding programs that follow a disaster. Need to pursue recovery work here? <strong>Francisco Pellerano</strong> and the All Forward team help organizations win and manage FEMA, HUD, and CDBG-DR funding.</p>
     <p class="byline" style="font-size:.82rem;color:var(--text-2);margin-top:10px">By <a href="/about-francisco-pellerano"><strong>Francisco Pellerano</strong></a> — FEMA-certified disaster recovery &amp; federal grant consultant, All Forward LLC.</p>
@@ -227,14 +222,9 @@ function page(s, stats) {
     <div>© ${NOW.getFullYear()} All Forward LLC · <a href="/">allforwardllc.com</a> · <a href="/about-francisco-pellerano">Francisco Pellerano</a>
       <div class="disclaimer">Compiled by Francisco Pellerano. Historical figures sourced from FEMA OpenFEMA (public). Stamped ${esc(fmtDate(NOW))}. For situational awareness and planning only — not an official emergency service.</div>
     </div>
-    <div><a href="/command-center/">← Command Center</a></div>
+    <div><a href="/ops-center/">← Operations Center</a></div>
   </div>
 </footer>
-<style>.skiptranslate,.goog-te-banner-frame,#goog-gt-tt,.goog-te-balloon-frame{display:none!important}body{top:0!important}[dir="rtl"]{text-align:right}[dir="rtl"] .lang-selector{direction:ltr}</style>
-<div id="google_translate_element" style="display:none;"></div>
-<script>function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'en',includedLanguages:'en,es,fr,de,it,pt,ar,zh-CN,el',layout:google.translate.TranslateElement.InlineLayout.SIMPLE},'google_translate_element')}</script>
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<script>(function(){var s=localStorage.getItem("ops-language")||"en";window.addEventListener("DOMContentLoaded",function(){var sel=document.getElementById("global-lang-select");if(sel)sel.value=s;if(s==="ar")document.documentElement.setAttribute("dir","rtl")});window.setGlobalLanguage=function(v){localStorage.setItem("ops-language",v);document.documentElement.setAttribute("dir",v==="ar"?"rtl":"ltr");var g=document.querySelector(".goog-te-combo");if(g){g.value=v;g.dispatchEvent(new Event("change"))}else window.location.reload()};var t=setInterval(function(){var g=document.querySelector(".goog-te-combo");if(g){clearInterval(t);if(g.value!==s){g.value=s;g.dispatchEvent(new Event("change"))}}},150);setTimeout(function(){clearInterval(t)},8000)})()</script>
 </body>
 </html>
 `;

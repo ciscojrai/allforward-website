@@ -238,9 +238,6 @@ tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
       <option value="de">🇩🇪 DE</option>
       <option value="it">🇮🇹 IT</option>
       <option value="pt">🇵🇹 PT</option>
-      <option value="ar">🇸🇦 AR</option>
-      <option value="zh-CN">🇨🇳 ZH</option>
-      <option value="el">🇬🇷 EL</option>
     </select>
   </div>
   <div style="font-size:11px;color:var(--muted);margin-right:.6rem"><span class="save-pulse"></span>Auto-saved locally</div>
@@ -944,16 +941,13 @@ loadAll();
   body {
     top: 0 !important;
   }
-  [dir="rtl"] { text-align: right; }
-  [dir="rtl"] .nav-menu, [dir="rtl"] nav ul { flex-direction: row-reverse; }
-  [dir="rtl"] .lang-selector { direction: ltr; }
 </style>
 <div id="google_translate_element" style="display:none;"></div>
 <script type="text/javascript">
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({
       pageLanguage: 'en',
-      includedLanguages: 'en,es,fr,de,it,pt,ar,zh-CN,el',
+      includedLanguages: 'en,es,fr,de,it,pt',
       layout: google.translate.TranslateElement.InlineLayout.SIMPLE
     }, 'google_translate_element');
   }
@@ -969,14 +963,8 @@ loadAll();
       if (sel) sel.value = savedLang;
     });
 
-    function applyRTL(lang) {
-      var isRTL = (lang === 'ar');
-      document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
-    }
-
     window.setGlobalLanguage = function (val) {
       localStorage.setItem("ops-language", val);
-      applyRTL(val);
       var gtCombo = document.querySelector('.goog-te-combo');
       if (gtCombo) {
         gtCombo.value = val;
