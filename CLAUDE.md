@@ -20,15 +20,15 @@ Keywords to weave naturally: FEMA, HUD, CDBG-DR, Public Assistance, Hazard Mitig
 - **Do NOT modify the original marketing site** (`index.html`, `strike-pack.html`, `about-francisco-pellerano.html`, `blog/`) unless explicitly asked. New features go in their own directory.
 - Adding pages → also add them to `sitemap.xml`.
 
-## Operations Center (`ops-center/`)
-Live U.S. disaster-intel dashboard + 51 per-state SEO pages. Live at `/ops-center/`.
-- `ops-center/states.json` — single source of truth, 51 jurisdictions (risk profiles, funding programs, state EM orgs).
-- `ops-center/index.html` — dashboard: clickable SVG map, 5 live modules, state drawer, Netlify alert form.
-- `ops-center/<slug>.html` × 51 — generated SEO pages with real FEMA history.
-- `ops-center/assets/` — `ops-center.css`, `ops-center.js`, `us-states-clean.svg`.
+## Command Center (`command-center/`)
+Live U.S. disaster-intel dashboard + 51 per-state SEO pages. Live at `/command-center/`.
+- `command-center/states.json` — single source of truth, 51 jurisdictions (risk profiles, funding programs, state EM orgs).
+- `command-center/index.html` — dashboard: clickable SVG map, 5 live modules, state drawer, Netlify alert form.
+- `command-center/<slug>.html` × 51 — generated SEO pages with real FEMA history.
+- `command-center/assets/` — `command-center.css`, `command-center.js`, `us-states-clean.svg`.
 
 **Regenerate the 51 pages:** `node scripts/generate-ops-pages.js`
-- Re-renders all 51 from cache (`ops-center/.fema-cache.json`) in <1s, **no network** — use this after any template/SEO edit to `page()` in `scripts/generate-ops-pages.js`.
+- Re-renders all 51 from cache (`command-center/.fema-cache.json`) in <1s, **no network** — use this after any template/SEO edit to `page()` in `scripts/generate-ops-pages.js`.
 - `FORCE=1 node scripts/generate-ops-pages.js` refetches live FEMA data from OpenFEMA (only needed to refresh disaster data). OpenFEMA rate-limits batch runs — never run two passes concurrently.
 
 **Live data feeds (client-side JS, no API keys):** FEMA OpenFEMA, NWS alerts, NIFC wildfires all work. **NHC storms shows "—" by design** (NHC blocks browser CORS) — not a bug; handled gracefully.

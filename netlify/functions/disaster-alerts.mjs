@@ -1,4 +1,4 @@
-// All Forward — Operations Center daily disaster-alert engine.
+// All Forward — Command Center daily disaster-alert engine.
 //
 // Runs once a day (Netlify Scheduled Function). For each subscriber of the
 // "ops-alerts" form, it checks OpenFEMA for NEW disaster declarations in the
@@ -26,7 +26,7 @@
 
 const FEMA_URL = "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries";
 const FORM_NAME = "ops-alerts-confirmed"; // double-opt-in: only confirmed subscribers
-const DEFAULT_FROM = "All Forward Ops Center <alerts@allforwardllc.com>";
+const DEFAULT_FROM = "All Forward Command Center <alerts@allforwardllc.com>";
 const SITE = "https://allforwardllc.com";
 
 // Subscriber hazard value -> keyword(s) matched (case-insensitively) against
@@ -152,14 +152,14 @@ function buildEmail(sub, matches) {
     <h2 style="margin:0 0 4px;color:#fff">New FEMA disaster declarations in your states</h2>
     <p style="color:#9fb0c6;margin:0 0 18px">Hi ${first} — these were just declared in the areas and hazards you're tracking.</p>
     <ul style="list-style:none;padding:0;margin:0 0 22px">${items}</ul>
-    <a href="${SITE}/ops-center/" style="display:inline-block;background:#f57c00;color:#fff;text-decoration:none;padding:12px 22px;border-radius:6px;font-weight:bold">Open the Operations Center →</a>
+    <a href="${SITE}/command-center/" style="display:inline-block;background:#f57c00;color:#fff;text-decoration:none;padding:12px 22px;border-radius:6px;font-weight:bold">Open the Command Center →</a>
     <p style="color:#7a8aa0;font-size:13px;margin:22px 0 0">Pursuing recovery funding for one of these? Reply to this email or see <a href="${SITE}/strike-pack.html" style="color:#4fc3f7">the Strike Pack</a>. — Francisco Pellerano, All Forward LLC</p>
-    <p style="color:#5a6b82;font-size:11px;margin:14px 0 0">You're receiving this because you activated alerts at allforwardllc.com/ops-center.</p>
+    <p style="color:#5a6b82;font-size:11px;margin:14px 0 0">You're receiving this because you activated alerts at allforwardllc.com/command-center.</p>
   </div>`;
   const text =
     `New FEMA disaster declarations in your states:\n\n` +
     matches.map((m) => `- ${m.state} ${m.incidentType}: ${m.title} (declared ${String(m.date).slice(0, 10)}, FEMA-${m.disasterNumber})`).join("\n") +
-    `\n\nOpen the Operations Center: ${SITE}/ops-center/\n— Francisco Pellerano, All Forward LLC`;
+    `\n\nOpen the Command Center: ${SITE}/command-center/\n— Francisco Pellerano, All Forward LLC`;
   return { html, text };
 }
 

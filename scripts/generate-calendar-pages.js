@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /* Generates one static, crawlable hazard & funding calendar page per state at
-   ops-center/calendar/<slug>.html from states.json, and registers them in sitemap.xml.
+   command-center/calendar/<slug>.html from states.json, and registers them in sitemap.xml.
    Static (server-rendered) so the season tables + FAQ are indexable by Google.
    Run:  node scripts/generate-calendar-pages.js  */
 
@@ -8,8 +8,8 @@ const fs = require("fs");
 const path = require("path");
 
 const ROOT = path.join(__dirname, "..");
-const OUT_DIR = path.join(ROOT, "ops-center", "calendar");
-const states = JSON.parse(fs.readFileSync(path.join(ROOT, "ops-center", "states.json"), "utf8")).states;
+const OUT_DIR = path.join(ROOT, "command-center", "calendar");
+const states = JSON.parse(fs.readFileSync(path.join(ROOT, "command-center", "states.json"), "utf8")).states;
 
 const MIDX = { jan: 0, feb: 1, mar: 2, apr: 3, may: 4, jun: 5, jul: 6, aug: 7, sep: 8, oct: 9, nov: 10, dec: 11 };
 const MABBR = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -76,7 +76,7 @@ function page(state) {
   const pageJsonLd = {
     "@context": "https://schema.org", "@type": "WebPage",
     "name": `${state.state} Disaster & Funding Calendar`,
-    "url": `https://allforwardllc.com/ops-center/calendar/${state.slug}.html`,
+    "url": `https://allforwardllc.com/command-center/calendar/${state.slug}.html`,
     "author": { "@type": "Person", "name": "Francisco Pellerano", "jobTitle": "FEMA-certified Disaster Recovery & Federal Grant Consultant", "url": "https://allforwardllc.com/about-francisco-pellerano", "worksFor": { "@type": "Organization", "name": "All Forward LLC", "url": "https://allforwardllc.com" } }
   };
 
@@ -95,16 +95,16 @@ function page(state) {
 <meta name="description" content="${esc(desc)}">
 <meta name="author" content="Francisco Pellerano">
 <meta name="keywords" content="${esc(state.state)} hurricane season, ${esc(state.state)} disaster calendar, ${esc(state.state)} FEMA funding, hazard season ${esc(state.state)}, Francisco Pellerano, All Forward LLC">
-<link rel="canonical" href="https://allforwardllc.com/ops-center/calendar/${state.slug}.html">
+<link rel="canonical" href="https://allforwardllc.com/command-center/calendar/${state.slug}.html">
 <meta name="robots" content="index,follow">
 <link rel="icon" href="/favicon.ico">
 <meta property="og:type" content="website">
 <meta property="og:title" content="${esc(state.state)} Disaster & Funding Calendar — Hazard Seasons & FEMA Deadlines">
 <meta property="og:description" content="${esc(desc)}">
-<meta property="og:url" content="https://allforwardllc.com/ops-center/calendar/${state.slug}.html">
+<meta property="og:url" content="https://allforwardllc.com/command-center/calendar/${state.slug}.html">
 <meta property="og:image" content="https://allforwardllc.com/og-image.jpg">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="stylesheet" href="../assets/ops-center.css">
+<link rel="stylesheet" href="../assets/command-center.css">
 <script type="application/ld+json">${JSON.stringify(pageJsonLd)}</script>
 <script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
 <style>
@@ -141,14 +141,14 @@ function page(state) {
 <body class="ops">
 <header class="ops-header">
   <div class="wrap">
-    <div class="ops-title"><span class="live-dot" aria-hidden="true"></span><div><h1>The Operations Center</h1><span class="sub">Live U.S. Disaster Intel</span></div></div>
-    <div class="brand"><a class="home-link" href="/ops-center/">← Dashboard</a><a class="home-link" href="/"><img src="/logo.png" alt="All Forward logo" style="height:34px;width:auto;vertical-align:middle;margin-left:14px"></a></div>
+    <div class="ops-title"><span class="live-dot" aria-hidden="true"></span><div><h1>The Command Center</h1><span class="sub">Live U.S. Disaster Intel</span></div></div>
+    <div class="brand"><a class="home-link" href="/command-center/">← Dashboard</a><a class="home-link" href="/"><img src="/logo.png" alt="All Forward logo" style="height:34px;width:auto;vertical-align:middle;margin-left:14px"></a></div>
   </div>
 </header>
 <main>
   <div class="cal-wrap">
     <div class="cal-intro">
-      <div class="crumb"><a href="/ops-center/">Operations Center</a> / <a href="/ops-center/calendar/">Calendar</a> / ${esc(state.state)}</div>
+      <div class="crumb"><a href="/command-center/">Command Center</a> / <a href="/command-center/calendar/">Calendar</a> / ${esc(state.state)}</div>
       <h1>${esc(state.state)} Disaster &amp; Funding Calendar</h1>
       <p>When ${esc(state.state)}'s hazards peak — and when the federal money windows open. The recurring hazard seasons (${esc(hazNames)}) alongside the SAM.gov, FEMA and grant deadlines that decide who's ready when disaster strikes.</p>
       <p class="cal-byline">Maintained by <a href="/about-francisco-pellerano"><strong>Francisco Pellerano</strong></a> — FEMA-certified disaster recovery &amp; federal grant consultant, All Forward LLC.</p>
@@ -168,11 +168,11 @@ function page(state) {
       <h2>💰 Funding &amp; deadline cycles</h2>
       <ul class="fund-list">
         <li><span>🔁</span><div><div class="ft">SAM.gov registration renewal — annual</div><div class="fd">Lapses lock you out of federal contracts &amp; grants. Renew ~60 days before expiry.</div></div></li>
-        <li><span>🏛️</span><div><div class="ft">FEMA Public Assistance &amp; HMGP — post-declaration</div><div class="fd">Windows open after a ${esc(state.state)} disaster is declared and close fast. Watch the <a href="/ops-center/">live map</a> for new declarations.</div></div></li>
+        <li><span>🏛️</span><div><div class="ft">FEMA Public Assistance &amp; HMGP — post-declaration</div><div class="fd">Windows open after a ${esc(state.state)} disaster is declared and close fast. Watch the <a href="/command-center/">live map</a> for new declarations.</div></div></li>
         <li><span>🏗️</span><div><div class="ft">HUD CDBG-DR — appropriation-driven</div><div class="fd">Funds follow major disasters via Congressional appropriation; action-plan deadlines follow.</div></div></li>
         <li><span>📅</span><div><div class="ft">Federal fiscal year — Oct 1</div><div class="fd">Grant cycles and mitigation notices (BRIC) reset. Position before Q4.</div></div></li>
       </ul>
-      <a class="cal-cta" href="/ops-center/#alerts">Get ${esc(state.state)} deadline &amp; declaration alerts →</a>
+      <a class="cal-cta" href="/command-center/#alerts">Get ${esc(state.state)} deadline &amp; declaration alerts →</a>
     </div>
 
     <div class="cal-card faq">
@@ -181,9 +181,9 @@ function page(state) {
     </div>
 
     <div class="cal-card">
-      <a class="cal-cta ghost" href="/ops-center/${state.slug}.html">${esc(state.state)} recovery profile &amp; FEMA history →</a>
-      <a class="cal-cta ghost" href="/ops-center/">Open the live map →</a>
-      <div class="cal-note">Seasons are typical historical windows for planning, not forecasts. For live conditions, see the <a href="/ops-center/">Operations Center</a>.</div>
+      <a class="cal-cta ghost" href="/command-center/${state.slug}.html">${esc(state.state)} recovery profile &amp; FEMA history →</a>
+      <a class="cal-cta ghost" href="/command-center/">Open the live map →</a>
+      <div class="cal-note">Seasons are typical historical windows for planning, not forecasts. For live conditions, see the <a href="/command-center/">Command Center</a>.</div>
     </div>
   </div>
 </main>
@@ -198,7 +198,7 @@ const urls = [];
 for (const state of states) {
   if (!state.slug) continue;
   fs.writeFileSync(path.join(OUT_DIR, state.slug + ".html"), page(state));
-  urls.push(`https://allforwardllc.com/ops-center/calendar/${state.slug}.html`);
+  urls.push(`https://allforwardllc.com/command-center/calendar/${state.slug}.html`);
   written++;
 }
 

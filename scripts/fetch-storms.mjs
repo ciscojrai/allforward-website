@@ -1,6 +1,6 @@
 // Build-time NHC storm fetch — replaces the per-visitor netlify/functions/storms.mjs.
 // Run on a schedule by .github/workflows/update-storms.yml; writes the static file
-// ops-center/storms.json, which ops-center.js reads directly (no Netlify function,
+// command-center/storms.json, which command-center.js reads directly (no Netlify function,
 // zero invocation cost). Mirrors the transform the old function used so the client
 // shape is unchanged: { count, storms: [{name, classification, intensity, lat, lon}] }.
 //
@@ -12,7 +12,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 
-const OUT = fileURLToPath(new URL("../ops-center/storms.json", import.meta.url));
+const OUT = fileURLToPath(new URL("../command-center/storms.json", import.meta.url));
 const NHC = "https://www.nhc.noaa.gov/CurrentStorms.json";
 
 function dataKey(obj) {

@@ -1,4 +1,4 @@
-# Ops Center — Disaster Alert Engine Setup
+# Command Center — Disaster Alert Engine Setup
 
 The daily alert engine lives at `netlify/functions/disaster-alerts.mjs`. Once a
 day it reads everyone who signed up via the **Activate Alerts** form, checks
@@ -11,7 +11,7 @@ until the three environment variables below are set.
 1. **Reads subscribers** from the `ops-alerts` Netlify form (name, email, states, hazards).
 2. **Polls OpenFEMA** for declarations in the last ~25 hours.
 3. **Matches** each declaration against each subscriber's states + hazard types.
-4. **Emails** only the people with a match, via Resend, with a link back to `/ops-center/`.
+4. **Emails** only the people with a match, via Resend, with a link back to `/command-center/`.
 
 Built on Node's built-in `fetch` — no npm packages, so the zero-build site stays zero-build.
 
@@ -37,7 +37,7 @@ Netlify → your site → **Site configuration → Environment variables** → a
 | `RESEND_API_KEY` | `re_...` from step 1 |
 | `NETLIFY_AUTH_TOKEN` | token from step 2 |
 | `NETLIFY_SITE_ID` | API ID from step 3 |
-| `ALERT_FROM` *(optional)* | `All Forward Ops Center <alerts@allforwardllc.com>` |
+| `ALERT_FROM` *(optional)* | `All Forward Command Center <alerts@allforwardllc.com>` |
 | `ALERT_TRIGGER_KEY` *(optional)* | any random string — guards the manual send URL |
 
 Then **redeploy** (Deploys → Trigger deploy) so the function picks up the vars.

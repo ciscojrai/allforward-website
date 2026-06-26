@@ -57,7 +57,7 @@ export default async (req) => {
       <p style="color:#9fb0c6;margin:0 0 20px">One click and you're set — we'll only email you about FEMA declarations in the states and hazards you chose.</p>
       <a href="${link}" style="display:inline-block;background:#f57c00;color:#fff;text-decoration:none;padding:13px 26px;border-radius:6px;font-weight:bold">Confirm my alerts →</a>
       <p style="color:#7a8aa0;font-size:12px;margin:22px 0 0">If you didn't request this, just ignore this email — no alerts will be sent. Link expires in 7 days.</p>
-      <p style="color:#5a6b82;font-size:11px;margin:10px 0 0">All Forward LLC · allforwardllc.com/ops-center</p>
+      <p style="color:#5a6b82;font-size:11px;margin:10px 0 0">All Forward LLC · allforwardllc.com/command-center</p>
     </div>`;
     const text = `Confirm your All Forward disaster alerts by opening this link (expires in 7 days):\n\n${link}\n\nIf you didn't request this, ignore this email.`;
 

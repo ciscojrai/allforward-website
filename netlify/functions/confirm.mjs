@@ -7,7 +7,7 @@
 import crypto from "node:crypto";
 
 const SITE = "https://allforwardllc.com";
-const CONFIRMED_PAGE = "/ops-center/alerts-confirmed.html";
+const CONFIRMED_PAGE = "/command-center/alerts-confirmed.html";
 const MAX_AGE_MS = 7 * 24 * 3600 * 1000;
 
 function sign(data, secret) { return crypto.createHmac("sha256", secret).update(data).digest("base64url"); }
@@ -15,11 +15,11 @@ function sign(data, secret) { return crypto.createHmac("sha256", secret).update(
 function page(title, msg, ok) {
   return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1"><title>${title}</title>
-<link rel="stylesheet" href="/ops-center/assets/ops-center.css"></head>
+<link rel="stylesheet" href="/command-center/assets/command-center.css"></head>
 <body class="ops"><main><div class="wrap" style="padding:80px 24px;text-align:center;max-width:600px">
 <div style="font-size:3rem;margin-bottom:16px">${ok ? "✅" : "⚠️"}</div>
 <h2 style="margin:0 0 12px">${title}</h2><p style="color:var(--text-2)">${msg}</p>
-<p style="margin-top:28px"><a class="drawer-cta" style="display:inline-block;padding:12px 26px" href="/ops-center/">← Back to the Operations Center</a></p>
+<p style="margin-top:28px"><a class="drawer-cta" style="display:inline-block;padding:12px 26px" href="/command-center/">← Back to the Command Center</a></p>
 </div></main></body></html>`;
 }
 
