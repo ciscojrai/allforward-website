@@ -323,24 +323,17 @@
               }
             });
 
-            // Add Text Label layer centered in each state (displays permanent 2-letter state code)
-            map.addLayer({
-              id: 'states-labels',
-              type: 'symbol',
-              source: 'states',
-              layout: {
-                'text-field': ['get', 'code'],
-                'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-                'text-size': 11,
-                'text-justify': 'center',
-                'text-anchor': 'center'
-              },
-              paint: {
-                'text-color': '#ffffff',
-                'text-halo-color': '#1a1f2e',
-                'text-halo-width': 1.5,
-                'text-opacity': 0.85
-              }
+            // Add permanent HTML markers for 2-letter state code labels (no glyphs/external fonts needed!)
+            Object.keys(STATE_CENTERS).forEach(function (code) {
+              var loc = STATE_CENTERS[code];
+              var elLabel = document.createElement('div');
+              elLabel.className = 'state-map-label';
+              elLabel.textContent = code;
+              elLabel.style.cssText = "color: rgba(255,255,255,0.75); font-weight: bold; font-family: var(--sans); font-size: 10px; text-shadow: 0 0 3px #1a1f2e; pointer-events: none; user-select: none;";
+              
+              new window.maplibregl.Marker({ element: elLabel, anchor: 'center' })
+                .setLngLat(loc.center)
+                .addTo(map);
             });
 
             // Interactivity - click to select state and open drawer

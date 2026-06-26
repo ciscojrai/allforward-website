@@ -45,14 +45,39 @@
     mapMount.innerHTML = "";
     mapMount.appendChild(mapContainer);
 
-    // Use OpenFreeMap Dark as the primary default style.
-    // This style is completely unrestricted, open-source, keyless, and works flawlessly on any domain.
-    const styleUrl = 'https://tiles.openfreemap.org/styles/dark';
+    // Define CartoDB Dark Matter raster tiles as a direct style object.
+    // This is 100% unrestricted, whitelisted, loads instantly without any key,
+    // and completely avoids any CORS/CSP or domain-lock errors.
+    const styleObj = {
+      "version": 8,
+      "sources": {
+        "cartodb-dark": {
+          "type": "raster",
+          "tiles": [
+            "https://a.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
+            "https://b.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
+            "https://c.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png",
+            "https://d.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}@2x.png"
+          ],
+          "tileSize": 256,
+          "attribution": "© CartoDB, © OpenStreetMap contributors"
+        }
+      },
+      "layers": [
+        {
+          "id": "cartodb-dark-layer",
+          "type": "raster",
+          "source": "cartodb-dark",
+          "minzoom": 0,
+          "maxzoom": 20
+        }
+      ]
+    };
 
     // Initialize Maplibre GL JS Map
     const map = new window.maplibregl.Map({
       container: mapEl,
-      style: styleUrl,
+      style: styleObj,
       center: [-98.5795, 39.8283], // Center of US
       zoom: 3.2,
       minZoom: 2,
