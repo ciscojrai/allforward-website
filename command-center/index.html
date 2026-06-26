@@ -55,19 +55,7 @@
     <li><a href="/blog/">Blog</a></li>
     <li><a href="/about-francisco-pellerano">About</a></li>
     <li><a href="/#contact">Contact</a></li>
-    <!-- Language Selector Dropdown -->
-    <li>
-      <div class="lang-selector-wrapper" style="display: inline-flex; align-items: center; vertical-align: middle;">
-        <select class="lang-selector" id="global-lang-select" aria-label="Select Language" onchange="window.setGlobalLanguage(this.value)">
-          <option value="en">🇺🇸 EN</option>
-          <option value="es">🇪🇸 ES</option>
-          <option value="fr">🇫🇷 FR</option>
-          <option value="de">🇩🇪 DE</option>
-          <option value="it">🇮🇹 IT</option>
-          <option value="pt">🇵🇹 PT</option>
-        </select>
-      </div>
-    </li>
+
     <!-- EST Workstation Clock -->
     <li><span class="ops-clock" id="ops-clock" style="font-family: var(--mono); font-size: 0.78rem; color: var(--text-2); margin-left: 8px;">--:--:-- ET</span></li>
     <li><a href="tel:5045719320" class="nav-cta">📞 504-571-9320</a></li>
@@ -297,51 +285,6 @@
 <script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
 
 <!-- Google Translate Integration & Language Selector Runtime -->
-<div id="google_translate_element" style="display:none;"></div>
-<script type="text/javascript">
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-      pageLanguage: 'en',
-      includedLanguages: 'en,es,fr,de,it,pt',
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-    }, 'google_translate_element');
-  }
-</script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<script type="text/javascript">
-  (function () {
-    var savedLang = localStorage.getItem("ops-language") || "en";
-    
-    // Sync the custom dropdown on load
-    window.addEventListener("DOMContentLoaded", function () {
-      var sel = document.getElementById("global-lang-select");
-      if (sel) sel.value = savedLang;
-    });
 
-    window.setGlobalLanguage = function (val) {
-      localStorage.setItem("ops-language", val);
-      var gtCombo = document.querySelector('.goog-te-combo');
-      if (gtCombo) {
-        gtCombo.value = val;
-        gtCombo.dispatchEvent(new Event('change'));
-      } else {
-        window.location.reload();
-      }
-    };
-
-    // Keep checking for Google Translate dropdown to sync it on page load
-    var checkInterval = setInterval(function () {
-      var gtCombo = document.querySelector('.goog-te-combo');
-      if (gtCombo) {
-        clearInterval(checkInterval);
-        if (gtCombo.value !== savedLang) {
-          gtCombo.value = savedLang;
-          gtCombo.dispatchEvent(new Event('change'));
-        }
-      }
-    }, 150);
-    setTimeout(function () { clearInterval(checkInterval); }, 8000);
-  })();
-</script>
 </body>
 </html>

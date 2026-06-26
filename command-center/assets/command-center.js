@@ -1055,14 +1055,11 @@
     var query = stateEntry ? stateEntry.state : "Washington, D.C.";
     var displayName = stateEntry ? stateEntry.state : "United States (D.C.)";
 
-    // Get selected language from localStorage
-    var lang = localStorage.getItem("ops-language") || "en";
-
     // Show loading state
     mount.innerHTML = '<div class="weather-widget"><div class="weather-widget-header"><h4>Weather Outlook — ' + displayName + '</h4></div><div class="drawer-loading" style="padding: 30px 0;">Loading weather...</div></div>';
 
     var key = "c844c9f1a78f4068ba7222653262206"; // User's WeatherAPI Key
-    var url = "https://api.weatherapi.com/v1/forecast.json?key=" + key + "&q=" + encodeURIComponent(query) + "&days=5&lang=" + lang;
+    var url = "https://api.weatherapi.com/v1/forecast.json?key=" + key + "&q=" + encodeURIComponent(query) + "&days=5&lang=en";
 
     fetch(url)
       .then(function (r) { return r.json(); })
@@ -1083,23 +1080,11 @@
     var condition = current.condition || {};
     var forecastDays = (data.forecast && data.forecast.forecastday) || [];
 
-    // Localized labels based on language
-    var lang = localStorage.getItem("ops-language") || "en";
-    var labels = {
-      en: { title: "Weather Outlook", wind: "Wind", precip: "Precip", pressure: "Pressure", powered: "Powered by" },
-      es: { title: "Clima Actual", wind: "Viento", precip: "Precip", pressure: "Presión", powered: "Con tecnología de" },
-      fr: { title: "Perspectives Météo", wind: "Vent", precip: "Précip", pressure: "Pression", powered: "Propulsé par" },
-      de: { title: "Wetterausblick", wind: "Wind", precip: "Niederschl", pressure: "Druck", powered: "Unterstützt durch" },
-      it: { title: "Prospettive Meteo", wind: "Vento", precip: "Precip", pressure: "Pressione", powered: "Offerto da" },
-      pt: { title: "Perspectiva do Tempo", wind: "Vento", precip: "Precip", pressure: "Pressão", powered: "Desenvolvido por" }
-    };
-    var l = labels[lang] || labels.en;
-
     var card = el("div", "weather-widget");
 
     // Header
     var header = el("div", "weather-widget-header");
-    var h3 = el("h4", null, l.title + " — " + displayName);
+    var h3 = el("h4", null, "Weather Outlook — " + displayName);
     header.appendChild(h3);
     card.appendChild(header);
 
@@ -1121,9 +1106,9 @@
     var tempVal = el("div", "weather-temp-large", Math.round(current.temp_f) + "°F");
     
     var details = el("div", "weather-details");
-    details.appendChild(el("span", "weather-detail-item", l.wind + ": " + Math.round(current.wind_mph) + " mph"));
-    details.appendChild(el("span", "weather-detail-item", l.precip + ": " + current.precip_in + " in"));
-    details.appendChild(el("span", "weather-detail-item", l.pressure + ": " + Math.round(current.pressure_mb) + " mb"));
+    details.appendChild(el("span", "weather-detail-item", "Wind: " + Math.round(current.wind_mph) + " mph"));
+    details.appendChild(el("span", "weather-detail-item", "Precip: " + current.precip_in + " in"));
+    details.appendChild(el("span", "weather-detail-item", "Pressure: " + Math.round(current.pressure_mb) + " mb"));
 
     right.appendChild(tempVal);
     right.appendChild(details);
@@ -1137,7 +1122,7 @@
       var forecastRow = el("div", "weather-forecast-row");
       forecastDays.forEach(function (day) {
         var date = new Date(day.date + "T00:00:00");
-        var dayName = date.toLocaleDateString(lang, { weekday: "short" });
+        var dayName = date.toLocaleDateString("en-US", { weekday: "short" });
         
         var col = el("div", "weather-forecast-col");
         col.appendChild(el("div", "weather-fore-day", dayName));
@@ -1155,7 +1140,7 @@
 
     // Footer with link back
     var footer = el("div", "weather-widget-footer");
-    footer.innerHTML = l.powered + ' <a href="https://www.weatherapi.com/" title="Free Weather API" target="_blank" rel="noopener" style="color: #4fc3f7; text-decoration: underline; font-weight: 500;">WeatherAPI.com</a>';
+    footer.innerHTML = 'Powered by <a href="https://www.weatherapi.com/" title="Free Weather API" target="_blank" rel="noopener" style="color: #4fc3f7; text-decoration: underline; font-weight: 500;">WeatherAPI.com</a>';
     card.appendChild(footer);
 
     mount.innerHTML = "";
