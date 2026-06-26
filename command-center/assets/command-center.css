@@ -1,5 +1,12 @@
 /* All Forward — Command Center · Phase 1
    Design tokens are LOCKED. Aesthetic: professional intel workstation. */
+@media(max-width:768px){
+  #navbar ul{display:none!important}
+  #navbar .hamburger{display:flex!important}
+}
+.mobile-menu{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(26,31,46,.97);z-index:999;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding-top:60px}
+.mobile-menu.open{display:flex}
+.mobile-menu a{color:#f0f2f5;text-decoration:none;font-size:1.1rem;padding:10px 20px}
 :root{
   --bg:#1a1f2e; --surface:#242b3d; --border:#343d52;
   --text:#f0f2f5; --text-2:#9aa3b8;

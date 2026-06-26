@@ -39,34 +39,49 @@
 </head>
 <body class="ops">
 
-<header class="ops-header">
-  <div class="wrap">
-    <div class="ops-title">
-      <span class="live-dot" aria-hidden="true"></span>
-      <div>
-        <h1>The Command Center</h1>
-        <span class="sub">Live U.S. Disaster Intel</span>
-      </div>
+<nav id="navbar" style="background:var(--surface,#0e1726);border-bottom:1px solid var(--border,rgba(255,255,255,.08));padding:10px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:1000;">
+  <a href="/" class="nav-logo" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <img src="/logo.png" alt="All Forward logo" style="height:48px;width:auto;border-radius:8px;display:block;">
+    <div>
+      <span style="font-size:.7rem;color:var(--text-2,#8b95a5);text-transform:uppercase;letter-spacing:.08em;">Recovery &amp; GovCon</span>
     </div>
-    <div class="brand">
-      <div class="lang-selector-wrapper">
-        <select class="lang-selector" id="global-lang-select" aria-label="Select Language" onchange="window.setGlobalLanguage(this.value)">
-          <option value="en">🇺🇸 EN</option>
-          <option value="es">🇪🇸 ES</option>
-          <option value="fr">🇫🇷 FR</option>
-          <option value="de">🇩🇪 DE</option>
-          <option value="it">🇮🇹 IT</option>
-          <option value="pt">🇵🇹 PT</option>
-          <option value="ar">🇸🇦 AR</option>
-          <option value="zh-CN">🇨🇳 ZH</option>
-          <option value="el">🇬🇷 EL</option>
-        </select>
-      </div>
-      <span class="ops-clock" id="ops-clock">--:--:-- ET</span>
-      <a class="home-link" href="/"><img src="/logo.png" alt="All Forward logo"></a>
-    </div>
+  </a>
+  <ul style="list-style:none;display:flex;align-items:center;gap:18px;margin:0;padding:0;flex-wrap:wrap;">
+    <li><a href="/" style="color:var(--text,#f0f2f5);text-decoration:none;font-size:.85rem;">Home</a></li>
+    <li><a href="/command-center/" style="color:var(--blue,#2979ff);text-decoration:none;font-size:.85rem;font-weight:600;">Command Center</a></li>
+    <li><a href="/blog" style="color:var(--text,#f0f2f5);text-decoration:none;font-size:.85rem;">Blog</a></li>
+    <li><a href="/about-francisco-pellerano" style="color:var(--text,#f0f2f5);text-decoration:none;font-size:.85rem;">About</a></li>
+    <li><a href="/#contact" style="color:var(--text,#f0f2f5);text-decoration:none;font-size:.85rem;">Contact</a></li>
+    <li><a href="tel:5045719320" style="background:linear-gradient(135deg,#ff6a00,#ff8a2b);color:#fff;padding:6px 14px;border-radius:6px;text-decoration:none;font-size:.82rem;font-weight:600;">📞 504-571-9320</a></li>
+    <li style="display:inline-flex;align-items:center;margin-left:4px;">
+      <select class="lang-selector" id="global-lang-select" aria-label="Select Language" onchange="window.setGlobalLanguage(this.value)" style="background:rgba(14,36,68,0.7);border:1px solid rgba(41,121,255,0.2);border-radius:6px;color:#fff;font-size:0.82rem;padding:6px 10px;cursor:pointer;outline:none;">
+        <option value="en">🇺🇸 EN</option>
+        <option value="es">🇪🇸 ES</option>
+        <option value="fr">🇫🇷 FR</option>
+        <option value="de">🇩🇪 DE</option>
+        <option value="it">🇮🇹 IT</option>
+        <option value="pt">🇵🇹 PT</option>
+        <option value="ar">🇸🇦 AR</option>
+        <option value="zh-CN">🇨🇳 ZH</option>
+        <option value="el">🇬🇷 EL</option>
+      </select>
+    </li>
+  </ul>
+  <div class="hamburger" onclick="toggleMenu()" aria-label="Menu" style="display:none;cursor:pointer;flex-direction:column;gap:5px;">
+    <span style="width:24px;height:2px;background:#fff;display:block;"></span>
+    <span style="width:24px;height:2px;background:#fff;display:block;"></span>
+    <span style="width:24px;height:2px;background:#fff;display:block;"></span>
   </div>
-</header>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/" onclick="toggleMenu()">Home</a>
+  <a href="/command-center/" onclick="toggleMenu()">Command Center</a>
+  <a href="/blog" onclick="toggleMenu()">Blog</a>
+  <a href="/about-francisco-pellerano" onclick="toggleMenu()">About</a>
+  <a href="/#contact" onclick="toggleMenu()">Contact</a>
+  <a href="tel:5045719320" onclick="toggleMenu()">📞 504-571-9320</a>
+</div>
+<script>function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}</script>
 
 <main>
   <div class="wrap ops-intro">
