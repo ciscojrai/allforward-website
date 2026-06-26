@@ -8,6 +8,17 @@
   directory = "netlify/functions"
   node_bundler = "esbuild"
 
+# 301 redirect: preserve SEO juice from old /ops-center/ URLs
+[[redirects]]
+  from = "/ops-center/*"
+  to = "/command-center/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/ops-center"
+  to = "/command-center/"
+  status = 301
+
 # Site-wide security headers (no-breakage set; CSP omitted globally because the
 # marketing pages are not yet audited for inline/third-party content).
 [[headers]]
@@ -18,20 +29,18 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
 
-# Enforcing CSP scoped to the Ops Center (fully controlled + tested against its live
+# Enforcing CSP scoped to the Command Center (fully controlled + tested against its live
 # data feeds). Allowlist derived empirically from the dashboard's network calls:
 #   connect: FEMA OpenFEMA (drawer), NWS alerts, NHC storms, NIFC wildfires, Google Analytics
 #   script:  self + GA tag manager + unpkg (Leaflet map lib) (+ 'unsafe-inline' for inline snippets)
 #   style:   self + unpkg (Leaflet CSS) + 'unsafe-inline' (inline style attributes in the markup)
 #   img:     self + data: + GA + unpkg (Leaflet markers) + CARTO basemap tiles
-# Re-declares the base headers so Ops Center keeps them regardless of Netlify's merge order.
+# Re-declares the base headers so Command Center keeps them regardless of Netlify's merge order.
 [[headers]]
-  for = "/ops-center/*"
+  for = "/command-center/*"
   [headers.values]
     X-Frame-Options = "SAMEORIGIN"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "geolocation=(), microphone=(), camera=()"
-    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://unpkg.com https://analytics.ahrefs.com https://translate.google.com https://translate.googleapis.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://translate.googleapis.com; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://unpkg.com https://*.basemaps.cartocdn.com https://*.mapbox.com https://*.weatherapi.com https://*.openfreemap.org https://*.rainviewer.com https://translate.google.com https://translate.googleapis.com https://www.gstatic.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://www.fema.gov https://api.weather.gov https://www.nhc.noaa.gov https://services3.arcgis.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://analytics.ahrefs.com https://api.mapbox.com https://*.mapbox.com https://tiles.openfreemap.org https://api.weatherapi.com https://*.weatherapi.com https://*.basemaps.cartocdn.com https://basemaps.cartocdn.com https://api.rainviewer.com https://*.rainviewer.com https://translate.google.com https://translate.googleapis.com; worker-src 'self' blob:; child-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
-
-
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://unpkg.com https://analytics.ahrefs.com https://translate.google.com https://translate.googleapis.com; style-src 'self' 'unsafe-inline' https://unpkg.com https://translate.googleapis.com; img-src 'self' data: https://www.google-analytics.com https://www.googletagmanager.com https://unpkg.com https://*.basemaps.cartocdn.com https://*.mapbox.com https://*.weatherapi.com https://*.openfreemap.org https://*.rainviewer.com https://translate.google.com https://translate.googleapis.com https://www.gstatic.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://www.fema.gov https://api.weather.gov https://www.nhc.noaa.gov https://services3.arcgis.com https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com https://analytics.ahrefs.com https://api.mapbox.com https://*.mapbox.com https://tiles.openfreemap.org https://api.weatherapi.com https://*.weatherapi.com https://*.basemaps.cartocdn.com https://basemaps.cartocdn.com https://api.rainviewer.com https://*.rainviewer.com https://translate.google.com https://translate.googleapis.com; worker-src 'self' blob:; child-src 'self' blob: https://translate.google.com; frame-src https://translate.google.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
