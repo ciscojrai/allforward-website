@@ -91,9 +91,7 @@ a:hover{text-decoration:underline}
 .module[data-mod="alerts"]:hover .ico svg{transform-origin:50% 12%;animation:bell-ring 1s ease}
 
 /* ---------- Map ---------- */
-.map-section{padding:14px 0 56px;display:grid;grid-template-columns:1fr minmax(260px,320px);gap:20px;align-items:start}
-@media(max-width:900px){.map-section{grid-template-columns:1fr}}
-.map-section .f31-weather-card{align-self:start}
+.map-section{padding:14px 0 56px}
 .map-shell{display:grid; grid-template-columns:1fr; gap:18px}
 .map-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px 18px 10px}
 .map-head{display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap; margin-bottom:6px}
