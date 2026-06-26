@@ -119,12 +119,18 @@
 </head>
 <body>
 <nav id="navbar">
-  <a href="/" class="nav-logo"><img src="/logo.png" alt="All Forward logo" style="height:48px;width:auto;border-radius:8px;display:block;"></a>
+  <a href="/" class="nav-logo">
+    <img src="/logo.png" alt="All Forward logo" style="height:48px;width:auto;border-radius:8px;display:block;">
+    <div class="nav-logo-text" style="display: flex; flex-direction: column; line-height: 1; margin-left: 12px;">
+      <span class="brand" style="font-family: 'Rajdhani', sans-serif; font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: 2px; text-transform: uppercase; font-family: 'Bebas Neue', sans-serif;">ALL FORWARD</span>
+      <span class="sub" style="font-family: 'Rajdhani', sans-serif; font-size: 10px; color: var(--orange-light); letter-spacing: 3px; text-transform: uppercase;">Recovery &amp; GovCon</span>
+    </div>
+  </a>
   <ul class="nav-links">
+    <li><a href="/">Home</a></li>
     <li><a href="/#services">Services</a></li>
-    <li><a href="/#serve">Who We Serve</a></li>
-    <li><a href="/ops-center/">Ops Center</a></li>
-    <li><a href="/blog">Blog</a></li>
+    <li><a href="/command-center/">Command Center</a></li>
+    <li><a href="/blog/">Blog</a></li>
     <li><a href="/about-francisco-pellerano">About</a></li>
     <li><a href="/#contact">Contact</a></li>
     <li><a href="tel:5045719320" class="nav-cta">📞 504-571-9320</a></li>
@@ -132,10 +138,10 @@
   <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
+  <a href="/" onclick="toggleMenu()">Home</a>
   <a href="/#services" onclick="toggleMenu()">Services</a>
-  <a href="/#serve" onclick="toggleMenu()">Who We Serve</a>
-  <a href="/ops-center/" onclick="toggleMenu()">Ops Center</a>
-  <a href="/blog" onclick="toggleMenu()">Blog</a>
+  <a href="/command-center/" onclick="toggleMenu()">Command Center</a>
+  <a href="/blog/" onclick="toggleMenu()">Blog</a>
   <a href="/about-francisco-pellerano" onclick="toggleMenu()">About</a>
   <a href="/#contact" onclick="toggleMenu()">Contact</a>
   <a href="tel:5045719320" onclick="toggleMenu()">📞 504-571-9320</a>
@@ -254,7 +260,7 @@
     <p>© 2026 All Forward LLC · Francisco Pellerano, Principal Consultant · New Orleans, Louisiana.</p>
     <div class="foot-links">
       <a href="/">Home</a>
-      <a href="/ops-center/">Ops Center</a>
+      <a href="/command-center/">Command Center</a>
       <a href="/blog">Blog</a>
       <a href="/about-francisco-pellerano">About</a>
       <a href="/#contact">Contact</a>

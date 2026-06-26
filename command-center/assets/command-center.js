@@ -18,7 +18,7 @@
   var stormMarkers = [];    // Maplibre Markers for storms
   var femaMarkers = [];     // Maplibre Markers for FEMA disasters
   var globalFemaMarkers = []; // Maplibre Markers for global FEMA disasters
-  var radarVisible = false;  // WeatherAPI radar visibility state
+  var radarVisible = true;  // WeatherAPI radar visibility state
 
   // Precise coordinate centers and zoom levels for 3D globe camera flying
   var STATE_CENTERS = {
@@ -102,7 +102,7 @@
         wireMap();
         hydrateLive();
       })
-      .catch(function (e) { console.error("command-center boot failed", e); });
+      .catch(function (e) { console.error("ops-center boot failed", e); });
 
     var ab = $("#drawer-backdrop");
     if (ab) ab.addEventListener("click", closeDrawer);
@@ -580,11 +580,9 @@
     var btn = document.getElementById("toggle-radar");
     if (!btn) return;
 
-    btn.addEventListener("click", function () {
+    function updateRadarState() {
       var map = window.femaMap;
       if (!map) return;
-
-      radarVisible = !radarVisible;
 
       if (radarVisible) {
         btn.textContent = "📡 Hide Radar";
@@ -654,7 +652,17 @@
           map.setLayoutProperty('radar-layer', 'visibility', 'none');
         }
       }
+    }
+
+    btn.addEventListener("click", function () {
+      radarVisible = !radarVisible;
+      updateRadarState();
     });
+
+    // Load radar tiles immediately if radar is active by default
+    if (radarVisible) {
+      updateRadarState();
+    }
   }
 
   /* ---------- map wiring ---------- */
@@ -1036,6 +1044,8 @@
     });
   }
 
+
+
   /* ---------- live weather forecast widget ( Fahrenheit & mph) ---------- */
   function updateWeather(code) {
     var mount = document.getElementById("f31-weather");
@@ -1151,6 +1161,11 @@
     mount.innerHTML = "";
     mount.appendChild(card);
   }
+
+  window.toggleMenu = function () {
+    var menu = document.getElementById("mobileMenu");
+    if (menu) menu.classList.toggle("open");
+  };
 
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();

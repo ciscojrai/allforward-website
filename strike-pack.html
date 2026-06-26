@@ -230,16 +230,7 @@ tr:nth-child(even) td{background:rgba(255,255,255,0.02)}
 <!-- STICKY ACTION BAR -->
 <div class="actionbar no-print">
   <div class="ab-brand">ALL FORWARD · STRIKE PACK</div>
-  <div class="lang-selector-wrapper" style="margin-right: 12px; display: inline-flex; align-items: center; vertical-align: middle;">
-    <select class="lang-selector" id="global-lang-select" aria-label="Select Language" onchange="window.setGlobalLanguage(this.value)" style="background: var(--bg3); border: 1px solid var(--border); border-radius: 4px; color: var(--white); font-family: 'Space Mono', monospace; font-size: 11px; padding: 4px 8px; cursor: pointer; outline: none; transition: all 0.2s ease;">
-      <option value="en">🇺🇸 EN</option>
-      <option value="es">🇪🇸 ES</option>
-      <option value="fr">🇫🇷 FR</option>
-      <option value="de">🇩🇪 DE</option>
-      <option value="it">🇮🇹 IT</option>
-      <option value="pt">🇵🇹 PT</option>
-    </select>
-  </div>
+
   <div style="font-size:11px;color:var(--muted);margin-right:.6rem"><span class="save-pulse"></span>Auto-saved locally</div>
   <button class="ab-btn" onclick="printOnly('cap')">⎙ Cap Statement PDF</button>
   <button class="ab-btn" onclick="printOnly('check')">⎙ Checklist PDF</button>
@@ -933,60 +924,6 @@ function printOnly(which) {
 loadAll();
 </script>
 
-<!-- Google Translate Integration & Language Selector Runtime -->
-<style>
-  .skiptranslate, .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame {
-    display: none !important;
-  }
-  body {
-    top: 0 !important;
-  }
-</style>
-<div id="google_translate_element" style="display:none;"></div>
-<script type="text/javascript">
-  function googleTranslateElementInit() {
-    new google.translate.TranslateElement({
-      pageLanguage: 'en',
-      includedLanguages: 'en,es,fr,de,it,pt',
-      layout: google.translate.TranslateElement.InlineLayout.SIMPLE
-    }, 'google_translate_element');
-  }
-</script>
-<script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-<script type="text/javascript">
-  (function () {
-    var savedLang = localStorage.getItem("ops-language") || "en";
-    
-    // Sync the custom dropdown on load
-    window.addEventListener("DOMContentLoaded", function () {
-      var sel = document.getElementById("global-lang-select");
-      if (sel) sel.value = savedLang;
-    });
 
-    window.setGlobalLanguage = function (val) {
-      localStorage.setItem("ops-language", val);
-      var gtCombo = document.querySelector('.goog-te-combo');
-      if (gtCombo) {
-        gtCombo.value = val;
-        gtCombo.dispatchEvent(new Event('change'));
-      } else {
-        window.location.reload();
-      }
-    };
-
-    // Keep checking for Google Translate dropdown to sync it on page load
-    var checkInterval = setInterval(function () {
-      var gtCombo = document.querySelector('.goog-te-combo');
-      if (gtCombo) {
-        clearInterval(checkInterval);
-        if (gtCombo.value !== savedLang) {
-          gtCombo.value = savedLang;
-          gtCombo.dispatchEvent(new Event('change'));
-        }
-      }
-    }, 150);
-    setTimeout(function () { clearInterval(checkInterval); }, 8000);
-  })();
-</script>
 </body>
 </html>
