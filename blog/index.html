@@ -111,18 +111,23 @@
   <ul class="nav-links">
     <li><a href="/#services">Services</a></li>
     <li><a href="/#serve">Who We Serve</a></li>
-    <li><a href="/ops-center/">Ops Center</a></li>
+    <li><a href="/command-center/">Command Center</a></li>
     <li><a href="/blog">Blog</a></li>
     <li><a href="/about-francisco-pellerano">About</a></li>
     <li><a href="/#contact">Contact</a></li>
     <li><a href="tel:5045719320" class="nav-cta">📞 504-571-9320</a></li>
+    <li style="display:inline-flex;align-items:center;margin-left:12px;">
+      <select class="lang-selector" id="global-lang-select" aria-label="Select Language" onchange="window.setGlobalLanguage(this.value)" style="background:rgba(14,36,68,0.7);border:1px solid rgba(41,121,255,0.2);border-radius:6px;color:#fff;font-size:0.82rem;padding:6px 10px;cursor:pointer;outline:none;">
+        <option value="en">🇺🇸 EN</option><option value="es">🇪🇸 ES</option><option value="fr">🇫🇷 FR</option><option value="de">🇩🇪 DE</option><option value="it">🇮🇹 IT</option><option value="pt">🇵🇹 PT</option><option value="ar">🇸🇦 AR</option><option value="zh-CN">🇨🇳 ZH</option><option value="el">🇬🇷 EL</option>
+      </select>
+    </li>
   </ul>
   <button class="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
   <a href="/#services" onclick="toggleMenu()">Services</a>
   <a href="/#serve" onclick="toggleMenu()">Who We Serve</a>
-  <a href="/ops-center/" onclick="toggleMenu()">Ops Center</a>
+  <a href="/command-center/" onclick="toggleMenu()">Command Center</a>
   <a href="/blog" onclick="toggleMenu()">Blog</a>
   <a href="/about-francisco-pellerano" onclick="toggleMenu()">About</a>
   <a href="/#contact" onclick="toggleMenu()">Contact</a>
@@ -174,7 +179,7 @@
     <p>© 2026 All Forward LLC · Francisco Pellerano, Principal Consultant · New Orleans, Louisiana.</p>
     <div class="foot-links">
       <a href="/">Home</a>
-      <a href="/ops-center/">Ops Center</a>
+      <a href="/command-center/">Command Center</a>
       <a href="/blog">Blog</a>
       <a href="/about-francisco-pellerano">About</a>
       <a href="/#contact">Contact</a>
@@ -186,5 +191,10 @@
   function toggleMenu(){document.getElementById('mobileMenu').classList.toggle('open');}
   document.addEventListener('click',(e)=>{const m=document.getElementById('mobileMenu'),n=document.getElementById('navbar');if(n&&m&&!n.contains(e.target)&&!m.contains(e.target))m.classList.remove('open');});
 </script>
+<style>.skiptranslate,.goog-te-banner-frame,#goog-gt-tt,.goog-te-balloon-frame{display:none!important}body{top:0!important}[dir="rtl"]{text-align:right}[dir="rtl"] .lang-selector{direction:ltr}[dir="rtl"] nav ul{flex-direction:row-reverse}</style>
+<div id="google_translate_element" style="display:none;"></div>
+<script>function googleTranslateElementInit(){new google.translate.TranslateElement({pageLanguage:'en',includedLanguages:'en,es,fr,de,it,pt,ar,zh-CN,el',layout:google.translate.TranslateElement.InlineLayout.SIMPLE},'google_translate_element')}</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script>(function(){var s=localStorage.getItem("ops-language")||"en";window.addEventListener("DOMContentLoaded",function(){var sel=document.getElementById("global-lang-select");if(sel)sel.value=s;if(s==="ar")document.documentElement.setAttribute("dir","rtl")});window.setGlobalLanguage=function(v){localStorage.setItem("ops-language",v);document.documentElement.setAttribute("dir",v==="ar"?"rtl":"ltr");var g=document.querySelector(".goog-te-combo");if(g){g.value=v;g.dispatchEvent(new Event("change"))}else window.location.reload()};var t=setInterval(function(){var g=document.querySelector(".goog-te-combo");if(g){clearInterval(t);if(g.value!==s){g.value=s;g.dispatchEvent(new Event("change"))}}},150);setTimeout(function(){clearInterval(t)},8000)})()</script>
 </body>
 </html>

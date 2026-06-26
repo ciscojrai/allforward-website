@@ -1584,7 +1584,7 @@
 
   <ul class="nav-links">
     <li><a href="#scorecard">Readiness Test</a></li>
-    <li><a href="/ops-center/">Ops Center</a></li>
+    <li><a href="/command-center/">Command Center</a></li>
     <li><a href="#manual">Field Manuals</a></li>
     <li><a href="#membership">Membership</a></li>
     <li><a href="#serve">Who We Serve</a></li>
@@ -1602,6 +1602,9 @@
         <option value="de">🇩🇪 DE</option>
         <option value="it">🇮🇹 IT</option>
         <option value="pt">🇵🇹 PT</option>
+        <option value="ar">🇸🇦 AR</option>
+        <option value="zh-CN">🇨🇳 ZH</option>
+        <option value="el">🇬🇷 EL</option>
       </select>
     </li>
   </ul>
@@ -1614,7 +1617,7 @@
 <!-- Mobile Menu -->
 <div class="mobile-menu" id="mobileMenu">
   <a href="#scorecard" onclick="toggleMenu()">Readiness Test</a>
-  <a href="/ops-center/" onclick="toggleMenu()">Ops Center</a>
+  <a href="/command-center/" onclick="toggleMenu()">Command Center</a>
   <a href="#manual" onclick="toggleMenu()">Field Manuals</a>
   <a href="#membership" onclick="toggleMenu()">Membership</a>
   <a href="#serve" onclick="toggleMenu()">Who We Serve</a>
@@ -2525,7 +2528,7 @@
     <div class="footer-bottom">
       <p>© 2026 All Forward · Francisco Pellerano, Principal Consultant · New Orleans, Louisiana.</p>
       <div class="footer-contact-links">
-        <a href="/ops-center/">Ops Center</a>
+        <a href="/command-center/">Command Center</a>
         <a href="/blog">Blog</a>
         <a href="/about-francisco-pellerano">About Francisco Pellerano</a>
         <a href="tel:5045719320">📞 504-571-9320</a>
@@ -2661,13 +2664,16 @@
   body {
     top: 0 !important;
   }
+  [dir="rtl"] { text-align: right; }
+  [dir="rtl"] .nav-menu, [dir="rtl"] nav ul { flex-direction: row-reverse; }
+  [dir="rtl"] .lang-selector { direction: ltr; }
 </style>
 <div id="google_translate_element" style="display:none;"></div>
 <script type="text/javascript">
   function googleTranslateElementInit() {
     new google.translate.TranslateElement({
       pageLanguage: 'en',
-      includedLanguages: 'en,es,fr,de,it,pt',
+      includedLanguages: 'en,es,fr,de,it,pt,ar,zh-CN,el',
       layout: google.translate.TranslateElement.InlineLayout.SIMPLE
     }, 'google_translate_element');
   }
@@ -2681,10 +2687,17 @@
     window.addEventListener("DOMContentLoaded", function () {
       var sel = document.getElementById("global-lang-select");
       if (sel) sel.value = savedLang;
+      applyRTL(savedLang);
     });
+
+    function applyRTL(lang) {
+      var isRTL = (lang === 'ar');
+      document.documentElement.setAttribute('dir', isRTL ? 'rtl' : 'ltr');
+    }
 
     window.setGlobalLanguage = function (val) {
       localStorage.setItem("ops-language", val);
+      applyRTL(val);
       var gtCombo = document.querySelector('.goog-te-combo');
       if (gtCombo) {
         gtCombo.value = val;
