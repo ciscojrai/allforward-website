@@ -100,6 +100,14 @@
       console.log("3D Globe Projection enabled.");
     });
 
+    // Clear placeholder text on load
+    map.on('load', function () {
+      const p = mapEl.querySelector('p');
+      if (p) p.remove();
+      console.log("Placeholder text removed on map load.");
+    });
+
+
     // Add navigation controls (Zoom +/- and compass)
     map.addControl(new window.maplibregl.NavigationControl({
       showCompass: true,
