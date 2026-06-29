@@ -92,10 +92,8 @@ function page(s, stats) {
 
   const author = {
     "@type": "Person",
-    "name": "Francisco Pellerano",
-    "url": `${SITE}/about-francisco-pellerano`,
-    "jobTitle": "FEMA-certified Disaster Recovery & Federal Grant Consultant",
-    "worksFor": { "@type": "Organization", "name": "All Forward LLC", "url": SITE }
+    "@id": `${SITE}/#francisco-pellerano`,
+    "name": "Francisco Pellerano"
   };
   const ld = {
     "@context": "https://schema.org",
@@ -117,11 +115,20 @@ function page(s, stats) {
   const personLd = {
     "@context": "https://schema.org",
     "@type": "Person",
+    "@id": `${SITE}/#francisco-pellerano`,
     "name": "Francisco Pellerano",
     "url": `${SITE}/about-francisco-pellerano`,
     "jobTitle": "FEMA-certified Disaster Recovery & Federal Grant Consultant",
     "worksFor": { "@type": "Organization", "name": "All Forward LLC", "url": SITE },
-    "knowsAbout": ["FEMA Public Assistance", "HUD CDBG-DR", "Hazard Mitigation", `Disaster Recovery in ${s.state}`, "Federal Grant Management"]
+    "knowsAbout": ["FEMA Public Assistance", "HUD CDBG-DR", "Hazard Mitigation", `Disaster Recovery in ${s.state}`, "Federal Grant Management"],
+    "sameAs": [
+      "https://www.linkedin.com/in/franciscopellerano",
+      "https://www.zillow.com/profile/franciscopellerano",
+      "https://allforwardllc.gumroad.com",
+      "https://www.instagram.com/francisco_pellerano",
+      "https://www.facebook.com/Ciscopellerano",
+      "https://www.pinterest.com/francisco_pellerano"
+    ]
   };
 
   return `<!DOCTYPE html>

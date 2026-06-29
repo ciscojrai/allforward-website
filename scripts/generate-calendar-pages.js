@@ -77,7 +77,23 @@ function page(state) {
     "@context": "https://schema.org", "@type": "WebPage",
     "name": `${state.state} Disaster & Funding Calendar`,
     "url": `https://allforwardllc.com/command-center/calendar/${state.slug}.html`,
-    "author": { "@type": "Person", "name": "Francisco Pellerano", "jobTitle": "FEMA-certified Disaster Recovery & Federal Grant Consultant", "url": "https://allforwardllc.com/about-francisco-pellerano", "worksFor": { "@type": "Organization", "name": "All Forward LLC", "url": "https://allforwardllc.com" } }
+    "author": { "@type": "Person", "@id": "https://allforwardllc.com/#francisco-pellerano", "name": "Francisco Pellerano" }
+  };
+  const personJsonLd = {
+    "@context": "https://schema.org", "@type": "Person",
+    "@id": "https://allforwardllc.com/#francisco-pellerano",
+    "name": "Francisco Pellerano",
+    "url": "https://allforwardllc.com/about-francisco-pellerano",
+    "jobTitle": "FEMA-certified Disaster Recovery & Federal Grant Consultant",
+    "worksFor": { "@type": "Organization", "name": "All Forward LLC", "url": "https://allforwardllc.com" },
+    "sameAs": [
+      "https://www.linkedin.com/in/franciscopellerano",
+      "https://www.zillow.com/profile/franciscopellerano",
+      "https://allforwardllc.gumroad.com",
+      "https://www.instagram.com/francisco_pellerano",
+      "https://www.facebook.com/Ciscopellerano",
+      "https://www.pinterest.com/francisco_pellerano"
+    ]
   };
 
   const title = `${state.state} Disaster & Funding Calendar 2026 — Hazard Seasons & FEMA Deadlines | Francisco Pellerano`;
@@ -106,6 +122,7 @@ function page(state) {
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="../assets/command-center.css">
 <script type="application/ld+json">${JSON.stringify(pageJsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(personJsonLd)}</script>
 <script type="application/ld+json">${JSON.stringify(faqJsonLd)}</script>
 <style>
   .cal-wrap{max-width:880px;margin:0 auto;padding:0 18px 60px}
